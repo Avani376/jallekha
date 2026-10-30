@@ -1,26 +1,127 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * JalLekha art direction: a water-accounting instrument.
+ * Deep ink for the cinematic landing, warm off-white operator surfaces,
+ * aqua/water-blue for flow, amber for review states, emerald only ever
+ * paired with an icon + label (never color-only).
+ */
+
+@theme {
+  --color-ink: #061a24;
+  --color-ink-soft: #0d2835;
+  --color-ink-line: #123a4a;
+  --color-aqua: #25d8d1;
+  --color-aqua-deep: #0e9488;
+  --color-water: #3188ff;
+  --color-water-deep: #1d5fd0;
+  --color-offwhite: #f5f8f7;
+  --color-paper: #ffffff;
+  --color-amber: #e9ae45;
+  --color-amber-soft: #fdf3e0;
+  --color-amber-deep: #8a5a00;
+  --color-verd: #0e8a5f;
+  --color-verd-soft: #e3f5ec;
+  --color-danger: #c2410c;
+  --color-danger-soft: #fdeee4;
+  --color-slate-ink: #22414f;
+
+  --font-display: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
+  --font-body: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
+
+  --animate-wave-drift: wave-drift 12s ease-in-out infinite;
+  --animate-wave-drift-slow: wave-drift 18s ease-in-out infinite reverse;
+  --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.5s ease both;
+  --animate-flow: flow-dash 1.6s linear infinite;
+  --animate-ripple: ripple 2.4s ease-out infinite;
+  --animate-shimmer: shimmer 1.6s linear infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes wave-drift {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-24px); }
+  100% { transform: translateX(0); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes flow-dash {
+  to { stroke-dashoffset: -16; }
+}
+@keyframes ripple {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to { background-position: 400px 0; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Focus visibility everywhere */
+:focus-visible {
+  outline: 2px solid var(--color-water);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Restrained scroll reveal used on the landing page (JS adds .revealed) */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Persistent reduce-motion control + media query both honored. */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.001s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001s !important;
+  scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* Ledger row sheen on insert/correction (brief, then stable) */
+.row-flash {
+  animation: row-flash 1.4s ease-out 1;
+}
+@keyframes row-flash {
+  0% { background-color: color-mix(in srgb, var(--color-aqua) 22%, transparent); }
+  100% { background-color: transparent; }
+}
+
+/* Printable review: readable without color or animation */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .print-card { border: 1px solid #999 !important; break-inside: avoid; }
 }

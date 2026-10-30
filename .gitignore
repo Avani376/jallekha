@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+test-results/
+playwright-report/
 
 # next.js
 /.next/
@@ -30,8 +32,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — only .env.example may be committed
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +42,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# deploy stage (local only)
+.zcode-site/
+
+# PRIVATE — never commit (defense in depth; these live OUTSIDE this repo at
+# the workspace root, but ignore them here too in case of future moves)
+.private-context/
+.private-submission/
+JALLEKHA_CONTEXT_PRIVATE*.txt
+JALLEKHA_RESUME_PRIVATE*.txt
+JALLEKHA_SUBMISSION_PRIVATE*
+*.pem
+*.key
