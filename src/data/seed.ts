@@ -1,11 +1,8 @@
 /**
- * Synthetic demo workspace seed (fixtures v1). Every site, supplier,
- * receipt, person and note here is SYNTHETIC and labeled as such.
- * The four sites are the signature guided-demo cases:
- *   A  Sunrise Campus baseline        -> within uncertainty
- *   B  Sunrise legacy ledger week     -> duplicate receipt -> reviewed void
- *   C  Lake View Hostel               -> missing closing reading
- *   D  Hillcrest Academy              -> unexplained residual (cause open)
+ * Synthetic demo workspace (fixtures v1). Every site, supplier, receipt and
+ * person here is labeled synthetic. The four sites are the guided-demo
+ * signature cases: A baseline, B duplicate receipt, C missing reading,
+ * D unexplained residual.
  */
 
 import type {

@@ -1,7 +1,4 @@
-/**
- * Small deterministic string hash (djb2-style) for stable IDs and import
- * idempotency keys. NOT cryptographic and not used for security.
- */
+/** djb2 string hash for stable content-derived IDs. Not cryptographic. */
 export function stableHash(s: string): string {
   let h = 5381;
   for (let i = 0; i < s.length; i += 1) {

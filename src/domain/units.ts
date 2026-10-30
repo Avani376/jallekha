@@ -1,8 +1,6 @@
 /**
- * Unit conversion and numeric safety. Internal storage unit is the liter.
- * Exactly 1 kL = 1,000 L and 1 m3 = 1,000 L.
- * Values are rounded to 3 decimals (mL precision) after conversion.
- * NaN, Infinity and negative quantities are rejected, never clamped.
+ * Liters are the internal unit (3 decimal places, mL precision). Invalid
+ * quantities — NaN, Infinity, negatives — throw; nothing is clamped.
  */
 
 import type { VolumeUnit } from "./types";
@@ -58,12 +56,6 @@ export function toLiters(
     }
   }
 }
-
-export const UNIT_FACTORS: Record<VolumeUnit, string> = {
-  L: "L",
-  kL: "1 kL = 1,000 L",
-  m3: "1 m³ = 1,000 L",
-};
 
 /** Formats liters with Indian-style grouping for display. */
 export function formatLiters(n: number | null | undefined): string {

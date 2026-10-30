@@ -1,15 +1,9 @@
 /**
- * Finding generation: duplicate-candidate detection, invalid-reading and
- * balance findings. Pure functions with stable, deterministic IDs.
- *
- * Duplicate policy:
- * - A candidate is NOT proof. Exact = same normalized supplier + receipt
- *   number + site. Fuzzy = same supplier + same volume within 24h when a
- *   receipt identifier is missing, so it cannot be confirmed.
- * - Flagged records stay in the as-recorded totals until a reviewer voids
- *   one with a reason. Nothing is auto-deleted or auto-voided.
- * - Legitimate repeat deliveries (different receipts, or farther apart in
- *   time) must not be flagged.
+ * Duplicate-candidate detection and finding construction. A candidate is
+ * review input, not proof: exact means same site + supplier + receipt number;
+ * fuzzy means same supplier and volume within 24 h with a receipt missing.
+ * Flagged rows stay in as-recorded totals until a reviewer voids one with a
+ * documented reason — nothing is auto-deleted.
  */
 
 import type { Delivery, Finding, FindingSeverity, FindingType } from "./types";

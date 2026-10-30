@@ -10,6 +10,7 @@
 import { useRouter } from "next/navigation";
 import { useWorkspace } from "@/data/store";
 import { Button, Card, StatusPill } from "@/components/ui";
+import { IconArrowRight } from "@/components/icons";
 
 export default function DemoPage() {
   const router = useRouter();
@@ -145,7 +146,7 @@ function Step({
           </div>
         </div>
         <Button size="sm" variant={highlight ? "primary" : "secondary"} onClick={go}>
-          Open this case →
+          Open this case <IconArrowRight />
         </Button>
       </div>
       <div className="mt-3 space-y-2 pl-11 text-[14px] leading-relaxed text-white/70">{children}</div>

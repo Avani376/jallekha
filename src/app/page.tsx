@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { TankCutaway } from "@/components/tank-cutaway";
 import { StatusPill } from "@/components/ui";
+import { MotionToggle } from "@/components/motion-preference";
 import { useWorkspace } from "@/data/store";
 
 export default function LandingPage() {
@@ -34,8 +35,8 @@ function Hero() {
     <header className="relative overflow-hidden">
       {/* ambient background washes */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-40 -top-40 h-[480px] w-[480px] rounded-full bg-water/25 blur-[120px]" />
-        <div className="absolute -right-32 top-1/3 h-[420px] w-[420px] rounded-full bg-aqua/20 blur-[120px]" />
+        <div className="absolute -left-40 -top-40 h-[480px] w-[480px] rounded-full bg-water/20 blur-[100px]" />
+        <div className="absolute -right-32 top-1/3 h-[420px] w-[420px] rounded-full bg-aqua/15 blur-[100px]" />
         <svg className="absolute bottom-0 left-0 w-full opacity-[0.16]" viewBox="0 0 1440 120" preserveAspectRatio="none">
           <path d="M0 60 Q 180 20 360 60 T 720 60 T 1080 60 T 1440 60 V 120 H 0 Z" fill="#25D8D1" className="animate-wave-drift" />
           <path d="M0 80 Q 240 40 480 80 T 960 80 T 1440 80 V 120 H 0 Z" fill="#3188FF" className="animate-wave-drift-slow" />
@@ -54,6 +55,7 @@ function Hero() {
           <Link href="/workspace" className="rounded-xl border border-white/20 px-3.5 py-2 transition hover:border-aqua hover:text-aqua">
             Open workspace
           </Link>
+          <MotionToggle onDark />
         </div>
       </nav>
 
@@ -64,7 +66,7 @@ function Hero() {
           </p>
           <h1 className="font-display text-4xl font-extrabold leading-[1.06] tracking-tight sm:text-5xl lg:text-[3.4rem]">
             Every delivery. Every reading.
-            <span className="block bg-gradient-to-r from-aqua to-water bg-clip-text text-transparent">
+            <span className="block text-aqua">
               A clearer water balance.
             </span>
           </h1>
@@ -307,34 +309,34 @@ function StatusSection() {
           <Reveal>
             <div className="h-full rounded-2xl border border-verd/30 bg-verd/[0.07] p-5">
               <StatusPill tone="ok">Working</StatusPill>
-              <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-white/65">
-                <li>• Deterministic reconciliation engine with conservative uncertainty intervals</li>
-                <li>• 38 automated domain tests covering the four signature scenarios and edge cases</li>
-                <li>• Duplicate vs missing-reading journeys with reviewable resolutions and audit trail</li>
-                <li>• CSV import with idempotent replay and validate-before-commit preview</li>
-                <li>• Printable documented review + safe CSV/JSON export</li>
+              <ul className="mt-3 list-disc space-y-2 pl-4 text-[13px] leading-relaxed text-white/65 marker:text-aqua/70">
+                <li>Deterministic reconciliation engine with conservative uncertainty intervals</li>
+                <li>38 automated domain tests covering the four signature scenarios and edge cases</li>
+                <li>Duplicate vs missing-reading journeys with reviewable resolutions and audit trail</li>
+                <li>CSV import with idempotent replay and validate-before-commit preview</li>
+                <li>Printable documented review + safe CSV/JSON export</li>
               </ul>
             </div>
           </Reveal>
           <Reveal delay={90}>
             <div className="h-full rounded-2xl border border-amber/30 bg-amber/[0.07] p-5">
               <StatusPill tone="review">Prototype boundary</StatusPill>
-              <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-white/65">
-                <li>• Synthetic demonstration data only — no field pilot has been conducted</li>
-                <li>• Demo data is stored per-visitor in the browser, not on a shared server</li>
-                <li>• Core accounting runs with AI fully off; no live AI calls in this build</li>
-                <li>• Boundary readings are matched exactly (tolerance 0) in rule version recon-v1.0</li>
+              <ul className="mt-3 list-disc space-y-2 pl-4 text-[13px] leading-relaxed text-white/65 marker:text-aqua/70">
+                <li>Synthetic demonstration data only — no field pilot has been conducted</li>
+                <li>Demo data is stored per-visitor in the browser, not on a shared server</li>
+                <li>Core accounting runs with AI fully off; no live AI calls in this build</li>
+                <li>Boundary readings are matched exactly (tolerance 0) in rule version recon-v1.0</li>
               </ul>
             </div>
           </Reveal>
           <Reveal delay={180}>
             <div className="h-full rounded-2xl border border-white/10 bg-white/[0.05] p-5">
               <StatusPill tone="info">Next</StatusPill>
-              <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-white/65">
-                <li>• A permissioned pilot at one campus or society, with documented measurement quality</li>
-                <li>• Operator review of labels and usefulness</li>
-                <li>• Optional bounded AI assistance for note structuring — calculations stay deterministic</li>
-                <li>• Shared authenticated workspaces when a backend is configured</li>
+              <ul className="mt-3 list-disc space-y-2 pl-4 text-[13px] leading-relaxed text-white/65 marker:text-aqua/70">
+                <li>A permissioned pilot at one campus or society, with documented measurement quality</li>
+                <li>Operator review of labels and usefulness</li>
+                <li>Optional bounded AI assistance for note structuring — calculations stay deterministic</li>
+                <li>Shared authenticated workspaces when a backend is configured</li>
               </ul>
             </div>
           </Reveal>

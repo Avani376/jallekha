@@ -1,12 +1,10 @@
 /**
- * Dual-mode data access. The SAME domain code runs in both modes:
- *  - LocalDemoAdapter: per-visitor browser localStorage, explicitly labeled
- *    synthetic demo data. NOT shared cloud storage. Used when no backend
- *    credentials are configured (the current shipped mode).
- *  - InMemoryAdapter: tests and server rendering fallback.
- * A configured shared backend (e.g. Supabase with RLS) would implement the
- * same interface; nothing in the UI may special-case storage except for the
- * visible "demo data lives in this browser only" disclosure.
+ * Data access. Both modes run the same domain code:
+ *  - LocalDemoAdapter: per-visitor browser localStorage, labeled synthetic
+ *    demo data (the shipped mode; no backend credentials required).
+ *  - InMemoryAdapter: tests and server rendering.
+ * A shared backend implements the same interface; the UI never special-cases
+ * storage beyond the visible demo disclosure.
  */
 
 import type { WorkspaceState } from "@/domain/types";

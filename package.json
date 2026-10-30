@@ -1,7 +1,9 @@
 {
   "name": "jallekha",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "Water delivery and consumption reconciliation for campuses and housing societies — deterministic balance, uncertainty bounds, verification cases, documented audit trail.",
+  "author": "Team SevaForge",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,9 +12,21 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "preflight": "node scripts/preflight-check.mjs",
     "verify": "npm run typecheck && npm run lint && npm run test && npm run build",
     "build:static": "cross-env NEXT_STATIC=1 next build && node scripts/fix-static-prefetch.mjs"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Avani376/jallekha"
+  },
+  "keywords": [
+    "water-accounting",
+    "reconciliation",
+    "uncertainty",
+    "audit-trail",
+    "civic-tech"
+  ],
   "dependencies": {
     "motion": "^14.9.0",
     "next": "16.4.3",

@@ -5,6 +5,7 @@ import { activeRunFor, useWorkspace } from "@/data/store";
 import { EquationCard } from "@/components/equation-card";
 import { TankCutaway } from "@/components/tank-cutaway";
 import { Button, Card, CardHeader, EmptyState, StatusPill, type Tone } from "@/components/ui";
+import { IconArrowRight, IconPlus, IconRefresh, IconUpload } from "@/components/icons";
 import { formatLiters } from "@/domain/units";
 
 const INV_TONE: Record<string, Tone> = {
@@ -16,7 +17,7 @@ const INV_TONE: Record<string, Tone> = {
 };
 
 export default function OverviewPage() {
-  const { state, selectedSiteId } = useWorkspace();
+  const { state, selectedSiteId, actions } = useWorkspace();
   const site = state.sites.find((s) => s.id === selectedSiteId)!;
   const tank = state.tanks.find((t) => t.siteId === site.id)!;
   const run = activeRunFor(state, site.id);
@@ -35,9 +36,20 @@ export default function OverviewPage() {
           </h1>
           <p className="mt-0.5 text-[13px] text-slate-500">{site.description}</p>
         </div>
-        <Link href="/workspace/reconciliation">
-          <Button variant="secondary" size="sm">Open reconciliation →</Button>
-        </Link>
+        <div className="no-print flex flex-wrap gap-2">
+          <Link href="/workspace/ledger">
+            <Button size="sm" variant="secondary"><IconPlus /> Add delivery</Button>
+          </Link>
+          <Link href="/workspace/ledger">
+            <Button size="sm" variant="secondary"><IconUpload /> Import CSV</Button>
+          </Link>
+          <Button size="sm" variant="secondary" onClick={() => actions.runReconciliation(site.id)}>
+            <IconRefresh /> Recompute
+          </Button>
+          <Link href="/workspace/reconciliation">
+            <Button size="sm">Reconciliation <IconArrowRight /></Button>
+          </Link>
+        </div>
       </div>
 
       {run ? (

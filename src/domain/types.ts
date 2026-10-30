@@ -1,7 +1,7 @@
 /**
- * JalLekha domain types. Pure TypeScript, no framework imports.
- * All timestamps are ISO 8601 UTC strings; all stored volumes are liters.
- * 1 kL = 1,000 L and 1 m3 = 1,000 L exactly.
+ * Domain entities. Timestamps are ISO 8601 UTC; stored volumes are liters
+ * (1 kL = 1,000 L; 1 m³ = 1,000 L). Uncertainty is an absolute +/- liters
+ * span; null means "not quantified" and never produces an interval.
  */
 
 export type Liters = number;

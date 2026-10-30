@@ -1,11 +1,8 @@
 /**
- * CSV import pipeline: parse -> map columns -> validate rows -> preview
- * (valid / error / exact-duplicate / fuzzy-duplicate) -> confirm permitted
- * rows. Exact replays are idempotent: the same file never doubles totals.
- *
- * CSV text is treated strictly as DATA: never executed, HTML-escaped at
- * render time, and spreadsheet formula prefixes (=,+,-,@) are neutralized
- * when user-supplied cells are exported.
+ * CSV import: parse → map columns → validate rows → preview (valid / error /
+ * exact-duplicate / fuzzy-duplicate) → confirm valid rows only. Replaying the
+ * same file is idempotent. CSV text is data: never executed, HTML-escaped at
+ * render time, and spreadsheet formula prefixes are neutralized on export.
  */
 
 import type {
@@ -86,9 +83,6 @@ export function suggestColumnMapping(headers: string[]): Record<string, string> 
   }
   return mapping;
 }
-
-/** Deprecated alias of the shared stableHash (kept for import callers). */
-export const simpleHash = stableHash;
 
 /** Neutralizes spreadsheet formula prefixes for exported user cells. */
 export function sanitizeCell(value: string): string {

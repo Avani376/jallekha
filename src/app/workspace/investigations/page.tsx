@@ -11,9 +11,10 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { activeRunFor, useWorkspace } from "@/data/store";
 import { Button, Card, CardHeader, EmptyState, Field, Input, StatusPill, Textarea, type Tone } from "@/components/ui";
+import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 import { assertTransition, STATUS_LABELS } from "@/domain/state";
 import { formatLiters } from "@/domain/units";
-import { istDate, istToUtc } from "@/app/workspace/ledger/page";
+import { istDate, istToUtc } from "@/lib/datetime";
 import type { InvestigationStatus, ResolutionOutcome } from "@/domain/types";
 
 const TONE: Record<InvestigationStatus, Tone> = {
@@ -88,7 +89,7 @@ function CaseList() {
                       {i.status === "resolved" ? `resolved ${i.resolution?.outcome}` : i.evidenceNotes.length > 0 ? `${i.evidenceNotes.length} evidence note(s)` : "no evidence yet"}
                     </p>
                   </div>
-                  <span aria-hidden className="text-slate-300">→</span>
+                  <IconArrowRight className="text-slate-300" />
                 </Link>
               </li>
             ))}
@@ -113,7 +114,7 @@ function CaseDetail({ id }: { id: string }) {
   if (!inv) {
     return (
       <div className="py-10">
-        <EmptyState title="Case not found" body="The case may belong to another demo site or was reset." action={<Link href="/workspace/investigations" className="text-[13px] font-bold text-water-deep">← All cases</Link>} />
+        <EmptyState title="Case not found" body="The case may belong to another demo site or was reset." action={<Link href="/workspace/investigations" className="text-[13px] font-bold text-water-deep"><span className="inline-flex items-center gap-1"><IconArrowLeft /> All cases</span></Link>} />
       </div>
     );
   }
@@ -135,7 +136,7 @@ function CaseDetail({ id }: { id: string }) {
           <h1 className="mt-1.5 font-display text-2xl font-extrabold tracking-tight text-ink">{inv.title}</h1>
           <p className="mt-1 max-w-3xl text-[13px] leading-relaxed text-slate-600">{inv.detail}</p>
         </div>
-        <Link href="/workspace/investigations" className="no-print text-[13px] font-bold text-water-deep hover:underline">← All cases</Link>
+        <Link href="/workspace/investigations" className="no-print text-[13px] font-bold text-water-deep hover:underline"><span className="inline-flex items-center gap-1"><IconArrowLeft /> All cases</span></Link>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.15fr_1fr]">

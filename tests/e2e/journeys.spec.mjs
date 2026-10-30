@@ -63,7 +63,7 @@ try {
   check("case detail: flagged row linked", await textVisible(page, "dlv-B2-dup"));
 
   // Void the duplicate from the ledger record detail.
-  await page.getByRole("link", { name: "Delivery ledger" }).first().click();
+  await page.getByRole("link", { name: "Deliveries" }).first().click();
   await page.waitForTimeout(500);
   const dupRow = page.locator("tr", { hasText: "Duplicate candidate" }).first();
   await dupRow.getByRole("button", { name: /Details/i }).click();
@@ -111,7 +111,7 @@ try {
 
   // ---------- 6. Import preview + idempotent replay (Sunrise) ----------
   await page.getByLabel("Select demo site").selectOption({ label: "Sunrise Campus (Synthetic)" });
-  await page.getByRole("link", { name: "Delivery ledger" }).first().click();
+  await page.getByRole("link", { name: "Deliveries" }).first().click();
   await page.waitForTimeout(600);
   await page.getByRole("button", { name: /Import CSV/i }).click();
   await page.getByRole("button", { name: /Load sample file/i }).click();

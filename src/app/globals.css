@@ -29,6 +29,9 @@
   --font-display: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
   --font-body: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
 
+  --shadow-card: 0 1px 2px rgba(6, 26, 36, 0.05), 0 6px 20px rgba(6, 26, 36, 0.06);
+  --shadow-pop: 0 12px 40px rgba(6, 26, 36, 0.16);
+
   --animate-wave-drift: wave-drift 12s ease-in-out infinite;
   --animate-wave-drift-slow: wave-drift 18s ease-in-out infinite reverse;
   --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;

@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useWorkspace } from "@/data/store";
 import { Card, CardHeader, Button, Field, Input, Select, Textarea, Modal, StatusPill } from "@/components/ui";
 import { formatLiters } from "@/domain/units";
-import { istDate, istToUtc } from "@/app/workspace/ledger/page";
+import { istDate, istToUtc } from "@/lib/datetime";
 import { DEMO_PERIOD } from "@/data/seed";
 import type { Quality } from "@/domain/types";
 

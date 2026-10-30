@@ -10,9 +10,10 @@ import { useState } from "react";
 import { activeRunFor, useWorkspace } from "@/data/store";
 import { EquationCard } from "@/components/equation-card";
 import { Button, Card, CardHeader, StatusPill, EmptyState } from "@/components/ui";
+import { IconRefresh } from "@/components/icons";
 import { formatLiters } from "@/domain/units";
 import { findingTone } from "@/app/workspace/page";
-import { istDate } from "@/app/workspace/ledger/page";
+import { istDate } from "@/lib/datetime";
 
 export default function ReconciliationPage() {
   const { state, selectedSiteId, actions } = useWorkspace();
@@ -37,7 +38,7 @@ export default function ReconciliationPage() {
           onClick={() => actions.runReconciliation(site.id)}
           variant="primary"
         >
-          ↻ Recompute balance
+          <IconRefresh /> Recompute balance
         </Button>
       </div>
 

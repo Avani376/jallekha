@@ -12,7 +12,7 @@ import { Button, Card, CardHeader, StatusPill } from "@/components/ui";
 import { EquationCard } from "@/components/equation-card";
 import { formatLiters } from "@/domain/units";
 import { sanitizeCell } from "@/domain/import";
-import { istDate } from "@/app/workspace/ledger/page";
+import { istDate } from "@/lib/datetime";
 
 function download(name: string, content: string, type: string) {
   const blob = new Blob([content], { type });

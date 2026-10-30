@@ -1,29 +1,17 @@
 /**
- * JalLekha deterministic reconciliation engine (rule version recon-v1.0).
+ * Water balance for one tank over a fully covered period:
  *
- * For one tank and one fully covered period:
+ *   R = O + D - U - C
  *
- *   R = opening stock O + recorded inflows D - measured outflows U - closing stock C
- *
- * O and C are STOCK quantities at the boundary instants. D and U are FLOW
- * totals inside the [start, end) period. Conservative interval bounds:
+ * O/C are stock at the boundary instants; D/U are flows inside [start, end).
+ * Bounds are the conservative sum of declared input uncertainties:
  *
  *   R_min = O_min + D_min - U_max - C_max
  *   R_max = O_max + D_max - U_min - C_min
  *
- * No root-sum-square: bounds are summed conservatively, which is an
- * operational assumption, not a calibrated confidence interval.
- *
- * Status precedence (higher blocks lower):
- *   1. invalid            - blocking input/coverage problems
- *   2. incomplete         - required boundary reading absent -> NO residual
- *   3. complete-unknown-bounds - residual provisional, uncertainty unquantified
- *   4. within-uncertainty - bounds contain zero (other findings retained)
- *   5. discrepancy        - bounds exclude zero (cause NOT determined)
- *
- * Duplicate and record-validation checks run even when no balance can be
- * calculated. This engine never asserts theft, leakage or any cause, never
- * substitutes zero for a missing reading, and never clamps bad values.
+ * Status precedence: invalid → incomplete (no residual) → provisional
+ * (unknown bounds) → within uncertainty → discrepancy. A discrepancy never
+ * asserts a cause; duplicate checks run regardless of balance availability.
  */
 
 import {

@@ -12,6 +12,7 @@ not a field pilot and not proof of liters saved.
 | 2026-10-31 | pre-push | same | `npm run build:static` | **9 static routes exported** | incl. prefetch shim (`scripts/fix-static-prefetch.mjs`) |
 | 2026-10-31 | pre-push | Chromium (Playwright 1.64.1) against production static build | `node tests/e2e/journeys.spec.mjs http://127.0.0.1:3000` | **27/27 passed** | Landing; guided demo → workspace; Scenario B numbers (+5,000 / [4,300, 5,700]); void journey → 0 L with history kept; Scenario C incomplete → completed → resolved; Scenario D (+2,000 / [1,400, 2,600]) with cause-not-determined wording; import preview (3 valid + 1 exact duplicate); replay fully idempotent; refresh persistence; **zero console/page errors** |
 | 2026-10-31 | deployment 2116272028938739712 | ZCode Sites (static) | `zcode-site deploy` | **live, health 200** | https://jallekha-na41.zai-ai.site |
+| 2026-10-31 | UI polish pass (same checks re-run after chrome/icon/nav rework) | same | tsc + lint + vitest + e2e | **all green again** | Nav item renamed ("Delivery ledger" → "Deliveries"); e2e locator updated to match. Deployed as 2116288239096061952. |
 
 ## Signature fixture expectations (fixtures v1)
 

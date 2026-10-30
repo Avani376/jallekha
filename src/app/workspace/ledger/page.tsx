@@ -11,6 +11,8 @@ import { useMemo, useState } from "react";
 import { useWorkspace } from "@/data/store";
 import { Card, Button, Field, Input, Select, Textarea, Modal, StatusPill, EmptyState, cx } from "@/components/ui";
 import { buildImportPreview, confirmImport, parseCsv, SAMPLE_CSV, suggestColumnMapping, type ImportPreview } from "@/domain/import";
+import { istDate, istToUtc } from "@/lib/datetime";
+import { IconPlus, IconUpload } from "@/components/icons";
 import { toLiters, formatLiters } from "@/domain/units";
 import type { Delivery } from "@/domain/types";
 
@@ -64,8 +66,8 @@ export default function LedgerPage() {
           </p>
         </div>
         <div className="no-print flex gap-2">
-          <Button variant="secondary" size="sm" onClick={() => setImportOpen(true)}>Import CSV</Button>
-          <Button size="sm" onClick={() => setAddOpen(true)}>+ Add delivery</Button>
+          <Button variant="secondary" size="sm" onClick={() => setImportOpen(true)}><IconUpload /> Import CSV</Button>
+          <Button size="sm" onClick={() => setAddOpen(true)}><IconPlus /> Add delivery</Button>
         </div>
       </div>
 
@@ -422,23 +424,4 @@ function ImportModal({ open, onClose }: { open: boolean; onClose: () => void }) 
       )}
     </Modal>
   );
-}
-
-/* ------------------------------ date helpers ----------------------------- */
-
-export function istDate(iso: string): string {
-  if (!iso) return "—";
-  const d0 = new Date(iso);
-  if (Number.isNaN(d0.getTime())) return iso;
-  return d0.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", hour12: false });
-}
-
-export function istToUtc(local: string): string {
-  // datetime-local value interpreted as Asia/Kolkata (+05:30)
-  if (!local) return new Date(NaN).toISOString();
-  const hasZone = /[Zz]|[+-]\d{2}:?\d{2}$/.test(local);
-  const s = hasZone ? local : `${local}:00+05:30`;
-  const t = new Date(s);
-  if (Number.isNaN(t.getTime())) throw new Error(`Invalid date/time: ${local}`);
-  return t.toISOString();
 }

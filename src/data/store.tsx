@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * Client workspace store. The adapter IS the external store; React subscribes
- * via useSyncExternalStore (the idiomatic React 19 pattern — no setState in
- * effects, no hydration mismatch). Every mutation writes an audit event;
- * corrections preserve history; a new run supersedes the previous one.
+ * Client workspace store. The adapter is the external store; React
+ * subscribes via useSyncExternalStore (no setState-in-effect, no hydration
+ * mismatch). Mutations write audit events; corrections preserve history; a
+ * new reconciliation run supersedes the previous one.
  */
 
 import {
@@ -18,7 +18,6 @@ import {
 import { reconcile } from "@/domain/balance";
 import type {
   Delivery,
-  Investigation,
   InvestigationStatus,
   Quality,
   ReconciliationResult,
@@ -481,8 +480,4 @@ export function activeRunFor(state: WorkspaceState, siteId: string): Reconciliat
       .sort((a, b) => a.generatedAt.localeCompare(b.generatedAt))
       .at(-1) ?? null
   );
-}
-
-export function openInvestigationsFor(state: WorkspaceState, siteId: string): Investigation[] {
-  return state.investigations.filter((i) => i.siteId === siteId);
 }

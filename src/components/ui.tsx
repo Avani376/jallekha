@@ -17,6 +17,7 @@ import {
   type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from "react";
+import { IconAlert, IconBan, IconCheck, IconClock, IconClose, IconDot, IconInfo } from "./icons";
 
 export function cx(...parts: (string | false | null | undefined)[]): string {
   return parts.filter(Boolean).join(" ");
@@ -26,12 +27,7 @@ export function Card({
   children, className, as: As = "section",
 }: { children: ReactNode; className?: string; as?: "section" | "div" | "article" }) {
   return (
-    <As
-      className={cx(
-        "rounded-2xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(6,26,36,0.06),0_8px_24px_rgba(6,26,36,0.06)]",
-        className,
-      )}
-    >
+    <As className={cx("rounded-2xl border border-slate-200 bg-white shadow-card", className)}>
       {children}
     </As>
   );
@@ -130,23 +126,24 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
   },
 );
 
-/* ---------- Status pills: color + icon + text, never color-only ---------- */
+/* ---------- Status pills: icon + label, never color-only ---------- */
 
 export type Tone = "ok" | "review" | "warn" | "info" | "neutral" | "danger";
 
-const TONES: Record<Tone, { cls: string; icon: string }> = {
-  ok: { cls: "bg-verd-soft text-verd border-verd/30", icon: "✓" },
-  review: { cls: "bg-amber-soft text-amber-deep border-amber/40", icon: "◷" },
-  warn: { cls: "bg-amber-soft text-amber-deep border-amber/40", icon: "⚠" },
-  info: { cls: "bg-[#e8f1ff] text-water-deep border-water/30", icon: "i" },
-  neutral: { cls: "bg-slate-100 text-slate-600 border-slate-300", icon: "·" },
-  danger: { cls: "bg-danger-soft text-danger border-danger/30", icon: "!" },
+const TONES: Record<Tone, { cls: string; icon: (p: { className?: string }) => ReactNode }> = {
+  ok: { cls: "bg-verd-soft text-verd border-verd/30", icon: IconCheck },
+  review: { cls: "bg-amber-soft text-amber-deep border-amber/40", icon: IconClock },
+  warn: { cls: "bg-amber-soft text-amber-deep border-amber/40", icon: IconAlert },
+  info: { cls: "bg-[#e8f1ff] text-water-deep border-water/30", icon: IconInfo },
+  neutral: { cls: "bg-slate-100 text-slate-600 border-slate-300", icon: IconDot },
+  danger: { cls: "bg-danger-soft text-danger border-danger/30", icon: IconBan },
 };
 
 export function StatusPill({ tone, children, className }: { tone: Tone; children: ReactNode; className?: string }) {
+  const { cls, icon: Icon } = TONES[tone];
   return (
-    <span className={cx("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-bold", TONES[tone].cls, className)}>
-      <span aria-hidden className="text-[11px]">{TONES[tone].icon}</span>
+    <span className={cx("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-bold", cls, className)}>
+      <Icon />
       {children}
     </span>
   );
@@ -226,7 +223,7 @@ export function Modal({
         <div className="sticky top-0 flex items-center justify-between border-b border-slate-100 bg-white/95 px-5 py-3.5">
           <h2 id={titleId} className="font-bold tracking-tight text-ink">{title}</h2>
           <button onClick={onClose} aria-label="Close dialog" className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-ink">
-            <span aria-hidden>✕</span>
+            <IconClose />
           </button>
         </div>
         <div className="px-5 py-4">{children}</div>
