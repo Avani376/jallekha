@@ -33,6 +33,9 @@ your browser** — it is not a shared server. A discrepancy is **not proof of th
 | **Dashboard** with authored SVG charts: balance waterfall, cumulative meter trend with delivery markers, deliveries by day, findings donut, measurement-quality mix, residual-across-runs band, tank gauge | `src/components/charts.tsx`, zero chart dependencies |
 | **Bring your own data**: a real-data workspace (own site/tank/meter, own reconciliation period), readings + deliveries CSV import, JSON workspace backup/restore | "My data" mode in the app |
 | **Bring your own AI key**: AI-assisted finding explanation and note→fields drafting (schema-validated, rule-based fallback) | Settings → AI assistance |
+| **Ask Bundu** — grounded Q&A chat over your records: answers cite the exact receipt/reading IDs, suggest follow-ups, and never invent numbers | `src/components/ai/ask-panel.tsx`, `src/lib/ai/context.ts` |
+| **Bundu the mascot** — a reactive droplet guide: blinks, bobs, celebrates closures, flags discrepancies, and offers the next best action on every screen | `src/components/mascot.tsx` |
+| **Animated charts** — bars grow, lines draw, donuts sweep, gauges sweep; all stilled by the reduce-motion control | `src/components/charts.tsx`, `src/app/globals.css` |
 
 ## The problem
 
@@ -122,6 +125,22 @@ Environment variables (none required for the demo): see `.env.example`
 See **[docs/VALIDATION.md](docs/VALIDATION.md)** for the dated run log (commands, environment,
 fixture counts, outcomes and limitations). Test fixtures are internal technical validation —
 **not a field pilot and not proof of liters saved**.
+
+## Bundu, the workspace guide
+
+Bundu (from *boond*, a drop of water) lives on every screen. The mascot
+reacts to your clicks and to real workspace events — celebrating a resolved
+case, sweating over an unexplained residual — and its speech bubble always
+offers the next best action for where you are. Reduced motion stills every
+animation; the guidance stays.
+
+## Ask Bundu (grounded AI chat)
+
+With a key configured, **Ask Bundu** answers questions about the open
+workspace — deliveries, readings, the balance, cases — using a deterministic
+snapshot of the records as its only source, citing record IDs, and offering
+follow-up questions. Setup state is honest: without a key the drawer shows
+exactly how to enable it.
 
 ## AI assistance (optional, bring your own key)
 

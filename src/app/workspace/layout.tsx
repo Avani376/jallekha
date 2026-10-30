@@ -8,6 +8,8 @@ import { IconDroplet, IconInfo } from "@/components/icons";
 import { MotionToggle } from "@/components/motion-preference";
 import { SettingsModal } from "@/components/settings-modal";
 import { RealOnboarding } from "@/components/real-onboarding";
+import { MascotAssistant } from "@/components/mascot";
+import { AskPanel } from "@/components/ai/ask-panel";
 import { Button, Modal, cx } from "@/components/ui";
 import { formatLiters } from "@/domain/units";
 import { istDate } from "@/lib/datetime";
@@ -192,6 +194,9 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
       </footer>
 
       <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+
+      <AskPanel />
+      {!needsOnboarding ? <MascotAssistant /> : null}
 
       <ModeDialog
         target={modeDialog}

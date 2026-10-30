@@ -10,6 +10,7 @@ import { useWorkspace } from "@/data/store";
 import { Card, CardHeader, Button, Field, Input, Select, Textarea, Modal, StatusPill } from "@/components/ui";
 import { formatLiters } from "@/domain/units";
 import { istDate, istToUtc } from "@/lib/datetime";
+import { mascotReact } from "@/components/mascot";
 import { IconUpload } from "@/components/icons";
 import { cx } from "@/components/ui";
 import {
@@ -316,6 +317,7 @@ function ReadingImportModal({ open, onClose, onError }: { open: boolean; onClose
       site.id,
     );
     actions.applyReadingImport(result.batch, result.tankReadings, result.usageReadings);
+    mascotReact("happy", 2800);
     onError(null);
     close();
   };

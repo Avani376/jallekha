@@ -12,6 +12,7 @@ import { useWorkspace } from "@/data/store";
 import { Card, Button, Field, Input, Select, Textarea, Modal, StatusPill, EmptyState, cx } from "@/components/ui";
 import { buildImportPreview, confirmImport, parseCsv, SAMPLE_CSV, suggestColumnMapping, type ImportPreview } from "@/domain/import";
 import { istDate, istToUtc, istToLocalInput } from "@/lib/datetime";
+import { mascotReact } from "@/components/mascot";
 import { IconPlus, IconUpload } from "@/components/icons";
 import { aiReady, loadAiSettings } from "@/lib/ai/settings";
 import { draftFromNote, AiError } from "@/lib/ai/client";
@@ -182,6 +183,7 @@ export default function LedgerPage() {
               <VoidForm
                 onSubmit={(reason) => {
                   actions.voidDelivery(detail.id, reason, "reviewer@demo (you)");
+                  mascotReact("happy", 2800);
                   setDetail(null);
                 }}
               />
@@ -378,6 +380,7 @@ function ImportModal({ open, onClose }: { open: boolean; onClose: () => void }) 
       preview, { filename, dateFormat, defaultUnit: "L", actor: "operator@demo (you)" }, site.id,
     );
     actions.applyImport(batch, createdDeliveries);
+    mascotReact("happy", 2800);
     close();
   };
 

@@ -11,6 +11,7 @@ import { useWorkspace } from "@/data/store";
 import { Button, Card, Field, Input, Textarea } from "@/components/ui";
 import { IconArrowRight, IconDroplet } from "@/components/icons";
 import { toLiters, QuantityError } from "@/domain/units";
+import { mascotReact } from "./mascot";
 
 export function RealOnboarding() {
   const { actions } = useWorkspace();
@@ -50,6 +51,7 @@ export function RealOnboarding() {
         actor,
       );
       setDone(true);
+      mascotReact("wave", 3200);
       setF({ site: "", location: "", tank: "", capacity: "20000", meter: "", boundary: "", note: "" });
       setErr(null);
       void tankId;

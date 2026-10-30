@@ -7,6 +7,7 @@ import { TankCutaway } from "@/components/tank-cutaway";
 import { Button, Card, CardHeader, EmptyState, StatusPill, type Tone } from "@/components/ui";
 import { IconArrowRight, IconPlus, IconRefresh, IconUpload } from "@/components/icons";
 import { formatLiters } from "@/domain/units";
+import { mascotReact } from "@/components/mascot";
 
 const INV_TONE: Record<string, Tone> = {
   open: "review",
@@ -43,7 +44,7 @@ export default function OverviewPage() {
           <Link href="/workspace/ledger">
             <Button size="sm" variant="secondary"><IconUpload /> Import CSV</Button>
           </Link>
-          <Button size="sm" variant="secondary" onClick={() => actions.runReconciliation(site.id)}>
+          <Button size="sm" variant="secondary" onClick={() => { mascotReact("think", 1400); actions.runReconciliation(site.id); mascotReact("happy", 2000); }}>
             <IconRefresh /> Recompute
           </Button>
           <Link href="/workspace/reconciliation">

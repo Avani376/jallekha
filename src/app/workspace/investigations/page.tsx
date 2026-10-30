@@ -15,6 +15,7 @@ import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 import { assertTransition, STATUS_LABELS } from "@/domain/state";
 import { formatLiters } from "@/domain/units";
 import { istDate, istToUtc } from "@/lib/datetime";
+import { mascotReact } from "@/components/mascot";
 import type { InvestigationStatus, ResolutionOutcome } from "@/domain/types";
 
 const TONE: Record<InvestigationStatus, Tone> = {
@@ -182,6 +183,7 @@ function CaseDetail({ id }: { id: string }) {
                     });
                     actions.addEvidence(inv.id, `Closing stock reading of ${liters} L recorded at the boundary instant; balance recomputed.`, "data-entry@demo (you)");
                     actions.setInvestigationStatus(inv.id, "in-review", "data-entry@demo (you)");
+                    mascotReact("happy", 2600);
                   }}
                   onError={setErr}
                 />
@@ -270,6 +272,7 @@ function CaseDetail({ id }: { id: string }) {
                   onClick={() => {
                     try {
                       actions.resolveInvestigation(inv.id, outcome, explanation.trim(), "reviewer@demo (you)");
+                      mascotReact("happy", 2800);
                       setErr(null);
                     } catch (e) { setErr((e as Error).message); }
                   }}

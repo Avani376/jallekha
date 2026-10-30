@@ -96,7 +96,7 @@ export function FlowWaterfall({
     <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Water balance waterfall">
       {geo.map((b) => (
         <g key={b.label}>
-          <rect x={b.x} y={b.y} width={barW} height={b.hPx} rx="4" fill={b.color} opacity={0.9}>
+          <rect x={b.x} y={b.y} width={barW} height={b.hPx} rx="4" fill={b.color} opacity={0.9} className="anim-grow" style={{ animationDelay: (b.i * 90) + "ms" }}>
             <title>{`${b.label}: ${formatLiters(b.value)} L`}</title>
           </rect>
           <text x={b.x + barW / 2} y={b.y - 7} textAnchor="middle" fontSize="11" fontWeight="700" fill={INK}>
@@ -144,7 +144,7 @@ export function DayBars({ data, unitLabel }: { data: { label: string; liters: nu
         const x = pad.l + i * ((W - pad.l - pad.r) / Math.max(data.length, 1)) + 3;
         return (
           <g key={d.label + i}>
-            <rect x={x} y={H - pad.b - h} width={Math.max(bw, 3)} height={Math.max(h, 1)} rx="3" fill={AQUA} opacity={0.9}>
+            <rect x={x} y={H - pad.b - h} width={Math.max(bw, 3)} height={Math.max(h, 1)} rx="3" fill={AQUA} opacity={0.9} className="anim-grow" style={{ animationDelay: (i * 45) + "ms" }}>
               <title>{`${d.label}: ${formatLiters(d.liters)} L`}</title>
             </rect>
             {i % labelEvery === 0 ? (
@@ -193,7 +193,7 @@ export function CumulativeLine({
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Cumulative meter trend">
       <path d={area} fill={WATER} opacity={0.08} />
-      <path d={path} fill="none" stroke={WATER} strokeWidth="2.5" strokeLinejoin="round" />
+      <path d={path} fill="none" stroke={WATER} strokeWidth="2.5" strokeLinejoin="round" className="anim-draw" style={{ "--draw-len": "1600" } as React.CSSProperties} />
       {points.map((p, i) => (
         <g key={p.label + i}>
           <circle
@@ -252,7 +252,7 @@ export function Donut({ slices, centerLabel, centerValue }: { slices: Slice[]; c
           <circle cx={cx} cy={cy} r={(R + r) / 2} fill="none" stroke="#E2E8F0" strokeWidth={R - r} />
         ) : (
           arcs.map((a) => (
-            <path key={a.label} d={a.d} fill={TONE_HEX[a.tone]} opacity={0.92}>
+            <path key={a.label} d={a.d} fill={TONE_HEX[a.tone]} opacity={0.92} className="anim-sweep" style={{ animationDelay: (slices.indexOf(a) * 120) + "ms" }}>
               <title>{`${a.label}: ${a.value}`}</title>
             </path>
           ))
@@ -327,6 +327,7 @@ export function RunsTrend({ points }: { points: { label: string; residual: numbe
         return (
           <g key={p.label + i}>
             <rect
+              className="anim-fade" style={{ animationDelay: (i * 70) + "ms" }}
               x={x(i) - 9} y={bandTop} width={18} height={Math.max(bandH, 4)} rx="5"
               fill={containsZero ? VERD : AMBER} opacity={p.active ? 0.85 : 0.3}
             >
@@ -364,6 +365,7 @@ export function LevelGauge({ fraction, liters, capacity }: { fraction: number; l
     <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={`Tank level ${Math.round(clamped * 100)}%`}>
       <path d={`M${cx - R},${cy} A${R},${R} 0 0 1 ${cx + R},${cy}`} fill="none" stroke="#E2E8F0" strokeWidth="16" strokeLinecap="round" />
       <path
+        className="anim-sweep"
         d={`M${cx - R},${cy} A${R},${R} 0 0 1 ${nx},${ny}`}
         fill="none"
         stroke={clamped > 0.5 ? AQUA : clamped > 0.2 ? AMBER : "#C2410C"}

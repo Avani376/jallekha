@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { TankCutaway } from "@/components/tank-cutaway";
 import { StatusPill } from "@/components/ui";
 import { MotionToggle } from "@/components/motion-preference";
+import { MascotAssistant } from "@/components/mascot";
 import { useWorkspace } from "@/data/store";
 
 export default function LandingPage() {
@@ -24,6 +25,7 @@ export default function LandingPage() {
       <Workflow />
       <StatusSection />
       <TeamFooter />
+      <MascotAssistant onDark />
     </div>
   );
 }
