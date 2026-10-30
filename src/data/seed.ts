@@ -75,6 +75,7 @@ interface SiteSpec {
   usageReadings: UsageReading[];
   scenario: "A" | "B" | "C" | "D";
   scenarioLabel: string;
+  period?: { start: string; end: string };
 }
 
 function d(p: Partial<Delivery> & { id: string; deliveredAt: string; quantityLiters: number }): Delivery {
@@ -232,7 +233,112 @@ export function buildSiteSpecs(): SiteSpec[] {
     ],
   };
 
-  return [A, B, C, D];
+  return [A, B, C, D, buildRiversideSpec()];
+}
+
+export function buildEmptyWorkspace(): WorkspaceState {
+  return {
+    schemaVersion: 1,
+    periods: {},
+    sites: [],
+    tanks: [],
+    meters: [],
+    deliveries: [],
+    tankReadings: [],
+    usageReadings: [],
+    runs: [],
+    investigations: [],
+    auditEvents: [],
+    importBatches: [],
+  };
+}
+
+/**
+ * A two-week synthetic history (Oct 16–30) used by the Dashboard: daily
+ * stock readings, daily cumulative meter values, eight deliveries, and one
+ * estimated-quality reading. Its reconciliation period is the last day.
+ */
+function buildRiversideSpec(): SiteSpec {
+  const siteId = "site-riverside";
+  const tankId = "tank-RV01";
+  const meterId = "meter-RVM01";
+  const days = 14; // Oct 17 .. Oct 30 (08:00 IST each day)
+  const startDayUTC = Date.UTC(2026, 9, 17, 2, 30); // 08:00 IST
+
+  const tankReadings: TankReading[] = [];
+  const usageReadings: UsageReading[] = [];
+  const deliveries: Delivery[] = [];
+  let cumulative = 412_000;
+  let stock = 11_000;
+
+  for (let di = 0; di < days; di += 1) {
+    const t = startDayUTC + di * 86_400_000;
+    const observedAt = new Date(t).toISOString();
+    const day = di + 1;
+    // alternate-morning tanker loads (10,000 L); the day-14 load falls inside
+    // the reconciliation period
+    if (day % 2 === 0) {
+      const qty = 10000;
+      deliveries.push(
+        d({
+          id: `dlv-RV-${day}`,
+          siteId, tankId,
+          supplierLabel: day % 4 === 0 ? "AquaServe Services" : "BlueWave Tankers",
+          receiptNumber: `R-5${String(day).padStart(2, "0")}`,
+          deliveredAt: new Date(t - 3.5 * 3600_000).toISOString(),
+          quantityLiters: qty,
+          sourceReference: "Physical receipt (synthetic)",
+        }),
+      );
+      stock += qty;
+    }
+    const usage = 4300 + ((day * 517) % 700); // ~4.3k–5.0k deterministic variety
+    stock -= usage;
+    const estimated = day === 9;
+    tankReadings.push(
+      tr({
+        id: `tr-RV-d${day}`,
+        siteId, tankId,
+        observedAt,
+        stockLiters: stock,
+        uncertaintyLiters: estimated ? 400 : 150,
+        quality: estimated ? "estimated" : "measured",
+        method: estimated ? "supplier statement" : "dipstick",
+      }),
+    );
+    cumulative += usage;
+    usageReadings.push(
+      ur({
+        id: `ur-RV-d${day}`,
+        siteId, meterId,
+        observedAt,
+        cumulativeLiters: cumulative,
+        uncertaintyLiters: 100,
+      }),
+    );
+  }
+
+  // Reconcile the last COMPLETE day pair (readings exist at both ends).
+  const periodStart = new Date(startDayUTC + (days - 2) * 86_400_000).toISOString();
+  const periodEnd = new Date(startDayUTC + (days - 1) * 86_400_000).toISOString();
+
+  return {
+    scenario: "A",
+    scenarioLabel: "Two-week operating history",
+    site: {
+      id: siteId,
+      name: "Riverside Apartments — 14-Day History (Synthetic)",
+      timezone: "Asia/Kolkata",
+      description: "Richer synthetic history feeding the Dashboard charts.",
+      isDemo: true,
+    },
+    tank: { id: tankId, siteId, name: "RV-01 Sump + Terrace", capacityLiters: 20000, readingMethodNote: "Daily dipstick; one supplier-statement estimate" },
+    meter: { id: meterId, siteId, name: "RVM-01 Outlet", boundaryDescription: "All measured outflow from RV-01", unit: "L", type: "cumulative" },
+    deliveries,
+    tankReadings,
+    usageReadings,
+    period: { start: periodStart, end: periodEnd },
+  };
 }
 
 export function buildSeedWorkspace(): WorkspaceState {
@@ -246,26 +352,31 @@ export function buildSeedWorkspace(): WorkspaceState {
   // Initial runs are computed deterministically at seed time so no screen is
   // ever empty; later recomputation supersedes these runs, never mutates them.
   // Each run receives ONLY its own site's records — cross-site records are
-  // rejected by the engine by design.
-  const runs: ReconciliationResult[] = specs.map((s) =>
-    reconcile({
+  // rejected by the engine by design. Sites may carry their own period
+  // (Riverside reconciles its last day); the demo default covers the rest.
+  const runs: ReconciliationResult[] = specs.map((s) => {
+    const period = s.period ?? { start: PERIOD_START, end: PERIOD_END };
+    return reconcile({
       siteId: s.site.id,
       tankId: s.tank.id,
       meterId: s.meter.id,
-      periodStart: PERIOD_START,
-      periodEnd: PERIOD_END,
+      periodStart: period.start,
+      periodEnd: period.end,
       deliveries: deliveries.filter((d) => d.siteId === s.site.id),
       tankReadings: tankReadings.filter((t) => t.siteId === s.site.id),
       usageReadings: usageReadings.filter((u) => u.siteId === s.site.id),
       tanks,
       meters,
       generatedAt: SEED_AT,
-      runId: `run-seed-${s.scenario}`,
-    }),
-  );
+      runId: `run-seed-${s.site.id}`,
+    });
+  });
 
   return {
     schemaVersion: 1,
+    periods: Object.fromEntries(
+      specs.filter((s) => s.period).map((s) => [s.site.id, s.period!]),
+    ),
     sites: specs.map((s) => s.site),
     tanks,
     meters,

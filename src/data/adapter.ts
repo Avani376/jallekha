@@ -1,21 +1,28 @@
 /**
  * Data access. Both modes run the same domain code:
- *  - LocalDemoAdapter: per-visitor browser localStorage, labeled synthetic
- *    demo data (the shipped mode; no backend credentials required).
- *  - InMemoryAdapter: tests and server rendering.
+ *  - "demo": seeded synthetic sites, resettable, labeled demo data.
+ *  - "real": the operator's own records (starts empty; onboarding creates
+ *    the site/tank/meter). Stored per-browser under its own key — this is a
+ *    single-device workspace, not a shared server; use the JSON export to
+ *    move data between devices.
  * A shared backend implements the same interface; the UI never special-cases
- * storage beyond the visible demo disclosure.
+ * storage beyond the visible mode disclosure.
  */
 
 import type { WorkspaceState } from "@/domain/types";
-import { buildSeedWorkspace } from "./seed";
+import { buildSeedWorkspace, buildEmptyWorkspace } from "./seed";
 
-export const WORKSPACE_STORAGE_KEY = "jallekha.workspace.v1";
+export const STORAGE_KEYS = {
+  demo: "jallekha.workspace.v1",
+  real: "jallekha.real.v1",
+} as const;
+
+export type DataMode = keyof typeof STORAGE_KEYS;
 
 export type Unsubscribe = () => void;
 
 export interface DataAdapter {
-  readonly mode: "local-demo" | "in-memory";
+  readonly mode: DataMode;
   load(): WorkspaceState;
   save(state: WorkspaceState): void;
   /** Applies a mutation and notifies subscribers. Returns the next state. */
@@ -34,73 +41,47 @@ function isValidState(s: unknown): s is WorkspaceState {
   );
 }
 
-export class InMemoryAdapter implements DataAdapter {
-  readonly mode = "in-memory" as const;
-  private state: WorkspaceState;
-  private listeners = new Set<() => void>();
-  constructor(seed?: WorkspaceState) {
-    this.state = seed ?? buildSeedWorkspace();
-  }
-  load(): WorkspaceState {
-    return this.state;
-  }
-  save(state: WorkspaceState): void {
-    this.state = state;
-    this.notify();
-  }
-  update(fn: (s: WorkspaceState) => WorkspaceState): WorkspaceState {
-    this.state = fn(this.state);
-    this.notify();
-    return this.state;
-  }
-  reset(): WorkspaceState {
-    this.state = buildSeedWorkspace();
-    this.notify();
-    return this.state;
-  }
-  clear(): void {
-    this.state = buildSeedWorkspace();
-    this.notify();
-  }
-  subscribe(listener: () => void): Unsubscribe {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
-  }
-  private notify(): void {
-    for (const l of this.listeners) l();
-  }
-}
-
-export class LocalDemoAdapter implements DataAdapter {
-  readonly mode = "local-demo" as const;
+/**
+ * Browser-local adapter. `mode` selects the storage key and the seed policy:
+ * demo reseeds the synthetic sites; real resets to an empty workspace.
+ */
+export class LocalStorageAdapter implements DataAdapter {
+  readonly mode: DataMode;
+  private readonly storageKey: string;
   private memory: WorkspaceState | null = null;
   private listeners = new Set<() => void>();
-  private initialized = false;
+
+  constructor(mode: DataMode) {
+    this.mode = mode;
+    this.storageKey = STORAGE_KEYS[mode];
+  }
+
+  private fresh(): WorkspaceState {
+    return this.mode === "real" ? buildEmptyWorkspace() : buildSeedWorkspace();
+  }
 
   private ensureLoaded(): WorkspaceState {
     if (this.memory) return this.memory;
     if (typeof window === "undefined") {
       // Server render: seed without touching storage; the client snapshot
       // takes over after hydration.
-      return buildSeedWorkspace();
+      return this.fresh();
     }
     try {
-      const raw = window.localStorage.getItem(WORKSPACE_STORAGE_KEY);
+      const raw = window.localStorage.getItem(this.storageKey);
       if (raw) {
         const parsed = JSON.parse(raw);
         if (isValidState(parsed)) {
           this.memory = parsed;
-          this.initialized = true;
           return parsed;
         }
       }
     } catch {
-      // Corrupt storage: fall through to a fresh seed (data is demo-only).
+      // Corrupt or unavailable storage: fall through to a fresh workspace.
     }
-    const seeded = buildSeedWorkspace();
+    const seeded = this.fresh();
     this.persist(seeded);
     this.memory = seeded;
-    this.initialized = true;
     return seeded;
   }
 
@@ -121,19 +102,18 @@ export class LocalDemoAdapter implements DataAdapter {
   }
 
   reset(): WorkspaceState {
-    const seeded = buildSeedWorkspace();
-    this.save(seeded);
-    return seeded;
+    const fresh = this.fresh();
+    this.save(fresh);
+    return fresh;
   }
 
   clear(): void {
     this.memory = null;
-    this.initialized = false;
     if (typeof window !== "undefined") {
       try {
-        window.localStorage.removeItem(WORKSPACE_STORAGE_KEY);
+        window.localStorage.removeItem(this.storageKey);
       } catch {
-        // ignore
+        // Storage unavailable: nothing persisted to remove.
       }
     }
   }
@@ -149,22 +129,17 @@ export class LocalDemoAdapter implements DataAdapter {
 
   private persist(state: WorkspaceState): void {
     try {
-      window.localStorage.setItem(WORKSPACE_STORAGE_KEY, JSON.stringify(state));
+      window.localStorage.setItem(this.storageKey, JSON.stringify(state));
     } catch {
-      // Storage full/unavailable: keep in-memory state for this session.
+      // Storage full/unavailable: keep state in memory for this session.
     }
   }
 }
 
-let singleton: DataAdapter | null = null;
+/** Backwards-compatible alias for existing imports. */
+export const LocalDemoAdapter = LocalStorageAdapter;
 
-/** Returns the process-wide adapter (local demo mode; backend mode later). */
-export function getAdapter(): DataAdapter {
-  if (!singleton) singleton = new LocalDemoAdapter();
-  return singleton;
-}
-
-/** Test seam: inject an adapter (e.g. InMemoryAdapter). */
-export function setAdapter(a: DataAdapter): void {
-  singleton = a;
+/** Returns the adapter for a workspace mode. */
+export function getAdapter(mode: DataMode): DataAdapter {
+  return new LocalStorageAdapter(mode);
 }

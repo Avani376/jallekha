@@ -247,9 +247,11 @@ export interface ImportBatch {
   actor: string;
 }
 
-/** The editable workspace state the demo adapter persists. */
+/** The editable workspace state a data adapter persists. */
 export interface WorkspaceState {
   schemaVersion: 1;
+  /** Reconciliation period per site (ISO UTC); demo seed pre-fills these. */
+  periods?: Record<string, { start: string; end: string }>;
   sites: Site[];
   tanks: Tank[];
   meters: Meter[];

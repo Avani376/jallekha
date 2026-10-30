@@ -78,7 +78,7 @@ try {
   check("after void: interval [-600, 600]", await textVisible(page, "[-600, 600]"));
 
   // ---------- 4. Journey C: missing closing reading ----------
-  await page.getByLabel("Select demo site").selectOption({ label: "Lake View Hostel (Synthetic)" });
+  await page.getByLabel("Select site").selectOption({ label: "Lake View Hostel (Synthetic)" });
   await gotoOverview(page);
   check("scenario C: incomplete status", await textVisible(page, "Incomplete data"));
   check("scenario C: no residual asserted", await textVisible(page, "residual unavailable"));
@@ -103,14 +103,14 @@ try {
   check("scenario C: case resolved with outcome", await textVisible(page, "missing-reading-supplied"));
 
   // ---------- 5. Scenario D: unexplained residual ----------
-  await page.getByLabel("Select demo site").selectOption({ label: "Hillcrest Academy (Synthetic)" });
+  await page.getByLabel("Select site").selectOption({ label: "Hillcrest Academy (Synthetic)" });
   await gotoOverview(page);
   check("scenario D: residual +2,000", await textVisible(page, "+2,000"));
   check("scenario D: bounds [1,400, 2,600]", await textVisible(page, "[1,400, 2,600]"));
   check("scenario D: cause-not-determined wording", await textVisible(page, "not proof of theft"));
 
   // ---------- 6. Import preview + idempotent replay (Sunrise) ----------
-  await page.getByLabel("Select demo site").selectOption({ label: "Sunrise Campus (Synthetic)" });
+  await page.getByLabel("Select site").selectOption({ label: "Sunrise Campus (Synthetic)" });
   await page.getByRole("link", { name: "Deliveries" }).first().click();
   await page.waitForTimeout(600);
   await page.getByRole("button", { name: /Import CSV/i }).click();
@@ -132,7 +132,28 @@ try {
   // ---------- 7. Refresh persistence (localStorage) ----------
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForTimeout(900);
+  await page.getByLabel("Select site").selectOption({ label: "Sunrise Campus — Legacy Ledger Week (Synthetic)" });
+  await page.getByRole("link", { name: "Deliveries" }).first().click();
+  await page.waitForTimeout(800);
   check("refresh: voided correction survives", await textVisible(page, "Voided — kept in history"));
+
+  // ---------- 7b. Dashboard + new features ----------
+  await page.getByLabel("Select site").selectOption({ label: "Riverside Apartments — 14-Day History (Synthetic)" });
+  await page.getByRole("link", { name: "Dashboard" }).first().click();
+  await page.waitForTimeout(1000);
+  check("dashboard: waterfall card", await textVisible(page, "Water balance — waterfall"));
+  check("dashboard: cumulative trend", await textVisible(page, "Cumulative meter — trend"));
+  check("dashboard: runs trend", await textVisible(page, "Residual across saved runs"));
+  check("dashboard: KPI quality tile", await textVisible(page, "Data quality"));
+  await page.getByRole("link", { name: "Readings" }).first().click();
+  await page.waitForTimeout(600);
+  await page.getByRole("button", { name: /Import readings CSV/i }).click();
+  await page.waitForTimeout(600);
+  check("readings import: type tabs", await textVisible(page, "Tank stock readings"));
+  await page.getByRole("button", { name: /Close dialog/i }).click();
+  await page.getByRole("button", { name: "Settings" }).click();
+  await page.waitForTimeout(600);
+  check("settings: AI section", await textVisible(page, "AI assistance"));
 
   // ---------- 8. Console ----------
   check("no console/page errors", consoleErrors.length === 0, consoleErrors.slice(0, 3).join(" | "));

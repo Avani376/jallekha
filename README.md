@@ -30,6 +30,9 @@ your browser** — it is not a shared server. A discrepancy is **not proof of th
 | CSV import with validate-before-commit preview, idempotent replay | Same file twice never doubles totals |
 | Corrections that preserve history + audit trail + superseded runs | Every mutation is an audit event |
 | Printable documented review + safe CSV/JSON export | Reports screen |
+| **Dashboard** with authored SVG charts: balance waterfall, cumulative meter trend with delivery markers, deliveries by day, findings donut, measurement-quality mix, residual-across-runs band, tank gauge | `src/components/charts.tsx`, zero chart dependencies |
+| **Bring your own data**: a real-data workspace (own site/tank/meter, own reconciliation period), readings + deliveries CSV import, JSON workspace backup/restore | "My data" mode in the app |
+| **Bring your own AI key**: AI-assisted finding explanation and note→fields drafting (schema-validated, rule-based fallback) | Settings → AI assistance |
 
 ## The problem
 
@@ -120,13 +123,42 @@ See **[docs/VALIDATION.md](docs/VALIDATION.md)** for the dated run log (commands
 fixture counts, outcomes and limitations). Test fixtures are internal technical validation —
 **not a field pilot and not proof of liters saved**.
 
+## AI assistance (optional, bring your own key)
+
+Settings → **AI assistance**: paste an API key for any OpenAI-compatible
+endpoint (the Z.ai v4 base URL is the default). The key is stored **only in
+your browser** and is sent directly to the provider you configure — never to
+JalLekha servers, exports, or audit records. Two grounded features:
+
+- **Explain with AI** (Reconciliation screen): the model restates the run's
+  evidence; every number in the UI is still rendered from the domain result.
+- **Draft fields from note** (Add delivery): an operator's raw note becomes
+  draft fields with explicit warnings — deterministic validation still gates
+  saving, and nothing is posted automatically.
+
+Responses are schema-validated; on any failure (no key, network/CORS, auth,
+timeout, malformed output) the rule-based explanation is shown with a visible
+label. The engine never depends on AI. Hardening notes for shared
+deployments: `docs/AI.md`.
+
+## Real data
+
+Switch the header toggle to **My data**. A first-run screen creates your
+site, tank and meter; then import deliveries (ledger) and readings
+(readings screen) from CSV — ambiguous dates rejected, unit conversion
+exact (1 kL = 1,000 L = 1 m³), conflicting same-instant readings blocked
+instead of overwritten. Set the reconciliation period from the context
+strip. **Export workspace (JSON)** on Reports backs up or moves everything;
+**Import workspace** restores it. Storage is per-browser (localStorage,
+~5 MB) — a single-device pilot workspace, not a shared server.
+
 ## Limitations
 
 - Synthetic data only; no operator interviews or field evidence yet.
 - Browser-local demo storage (per visitor); shared authenticated mode is designed but not enabled.
 - Exact boundary readings required (`recon-v1.0`, tolerance 0); no reading substitution.
 - Single-meter scope assumption is displayed on every result.
-- No live AI in this build; explanations are rule-based.
+- AI is opt-in with the operator's own key; the shipped default is rule-based only.
 
 ## Team
 

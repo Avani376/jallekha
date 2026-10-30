@@ -3,8 +3,11 @@
 /**
  * Client workspace store. The adapter is the external store; React
  * subscribes via useSyncExternalStore (no setState-in-effect, no hydration
- * mismatch). Mutations write audit events; corrections preserve history; a
- * new reconciliation run supersedes the previous one.
+ * mismatch). Two workspace modes share the same domain code:
+ *  - demo: seeded synthetic sites (resettable)
+ *  - real: the operator's own records (starts empty; onboard first)
+ * Mutations write audit events; corrections preserve history; a new run
+ * supersedes the previous one.
  */
 
 import {
@@ -19,9 +22,12 @@ import { reconcile } from "@/domain/balance";
 import type {
   Delivery,
   InvestigationStatus,
+  Meter,
   Quality,
   ReconciliationResult,
   ResolutionOutcome,
+  Site,
+  Tank,
   TankReading,
   UsageReading,
   VolumeUnit,
@@ -29,7 +35,47 @@ import type {
 } from "@/domain/types";
 import { assertTransition, makeAuditEvent, makeId } from "@/domain/state";
 import { getAdapter } from "./adapter";
-import { DEMO_PERIOD, buildSeedWorkspace, investigationsForRuns } from "./seed";
+import { DEMO_PERIOD, buildSeedWorkspace, buildEmptyWorkspace, investigationsForRuns } from "./seed";
+
+/** Tiny external store for the persistent workspace mode selection. */
+const dataModeStore = (() => {
+  let value: "demo" | "real" = "demo";
+  let initialized = false;
+  const listeners = new Set<() => void>();
+  const init = () => {
+    if (initialized || typeof window === "undefined") return;
+    initialized = true;
+    try {
+      const saved = window.localStorage.getItem("jallekha.data-mode");
+      if (saved === "real" || saved === "demo") value = saved;
+    } catch {
+      // Storage unavailable: keep the demo default.
+    }
+  };
+  return {
+    subscribe(l: () => void): () => void {
+      listeners.add(l);
+      return () => listeners.delete(l);
+    },
+    get(): "demo" | "real" {
+      init();
+      return value;
+    },
+    getServer(): "demo" | "real" {
+      return "demo";
+    },
+    set(v: "demo" | "real"): void {
+      value = v;
+      initialized = true;
+      try {
+        window.localStorage.setItem("jallekha.data-mode", v);
+      } catch {
+        // Storage unavailable: mode stays for this session only.
+      }
+      for (const l of listeners) l();
+    },
+  };
+})();
 
 /** Tiny external store for the persistent reduce-motion preference. */
 const motionStore = (() => {
@@ -44,7 +90,7 @@ const motionStore = (() => {
       if (saved === "1") value = true;
       else if (saved !== "0" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) value = true;
     } catch {
-      // ignore
+      // Storage unavailable: keep the default.
     }
   };
   return {
@@ -65,24 +111,35 @@ const motionStore = (() => {
       try {
         window.localStorage.setItem("jallekha.reduce-motion", v ? "1" : "0");
       } catch {
-        // ignore
+        // Storage unavailable: preference stays for this session only.
       }
       for (const l of listeners) l();
     },
   };
 })();
 
+/** The reconciliation period in effect for a site. */
+export function periodFor(state: WorkspaceState, siteId: string): { start: string; end: string } {
+  return state.periods?.[siteId] ?? DEMO_PERIOD;
+}
+
 export interface WorkspaceStore {
   state: WorkspaceState;
   ready: boolean;
-  mode: "local-demo" | "in-memory";
+  mode: "demo" | "real";
+  setDataMode(mode: "demo" | "real"): void;
   reduceMotion: boolean;
   setReduceMotion(v: boolean): void;
   selectedSiteId: string;
   setSelectedSiteId(id: string): void;
+  period: { start: string; end: string };
   actions: {
     runReconciliation(siteId: string): ReconciliationResult | null;
     runAll(): void;
+    setPeriod(siteId: string, startUTC: string, endUTC: string, actor: string): void;
+    addSite(input: { name: string; timezone: string; description: string; actor: string }): string;
+    addTank(input: { siteId: string; name: string; capacityLiters: number; note: string; actor: string }): string;
+    addMeter(input: { siteId: string; name: string; boundary: string; actor: string }): string;
     addDelivery(input: {
       siteId: string; tankId: string; supplierLabel: string;
       receiptNumber: string; deliveredAtUTC: string;
@@ -107,7 +164,13 @@ export interface WorkspaceStore {
       id: string, outcome: ResolutionOutcome, explanation: string, reviewer: string,
     ): void;
     applyImport(batch: WorkspaceState["importBatches"][number], created: Delivery[]): void;
-    resetDemo(): void;
+    applyReadingImport(
+      batch: WorkspaceState["importBatches"][number],
+      tankReadings: TankReading[],
+      usageReadings: UsageReading[],
+    ): void;
+    importWorkspace(json: string, actor: string): void;
+    resetWorkspace(): void;
   };
 }
 
@@ -120,16 +183,21 @@ export function useWorkspace(): WorkspaceStore {
 }
 
 export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
-  const adapter = useMemo(() => getAdapter(), []);
-  const [selectedSiteId, setSelectedSiteId] = useState("site-legacy");
+  const [dataMode, setDataModeState] = useState<"demo" | "real">(() => dataModeStore.get());
+  const setDataMode = useCallback((m: "demo" | "real") => {
+    dataModeStore.set(m);
+    setDataModeState(m);
+  }, []);
+  const adapter = useMemo(() => getAdapter(dataMode), [dataMode]);
 
-  // The adapter is the external store: server snapshot = fresh seed,
-  // client snapshot = persisted (or seeded) state. No hydration mismatch.
-  // (subscribe is wrapped so `this` is not lost when React calls it.)
+  const [selectedSiteIdRaw, setSelectedSiteId] = useState<string | null>(null);
+
+  // The adapter is the external store: server snapshot = fresh workspace for
+  // the mode, client snapshot = persisted state. No hydration mismatch.
   const state = useSyncExternalStore(
     (cb) => adapter.subscribe(cb),
     () => adapter.load(),
-    () => buildSeedWorkspace(),
+    () => (dataMode === "real" ? buildEmptyWorkspace() : buildSeedWorkspace()),
   );
   const mounted = useSyncExternalStore(
     emptySubscribe,
@@ -142,6 +210,15 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     () => motionStore.getServer(),
   );
 
+  // Keep the selection valid across mode switches and workspace changes.
+  const selectedSiteId =
+    selectedSiteIdRaw && state.sites.some((s) => s.id === selectedSiteIdRaw)
+      ? selectedSiteIdRaw
+      : state.sites[0]?.id ?? "";
+  const period = periodFor(state, selectedSiteId);
+
+  const setReduceMotion = useCallback((v: boolean) => motionStore.set(v), []);
+
   /** Compute + persist a run for a site, supersede the previous, open cases. */
   const runReconciliation = useCallback(
     (siteId: string): ReconciliationResult | null => {
@@ -150,12 +227,13 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         const tank = s.tanks.find((t) => t.siteId === siteId);
         const meter = s.meters.find((m) => m.siteId === siteId);
         if (!tank || !meter) return s;
+        const { start, end } = periodFor(s, siteId);
         const run = reconcile({
           siteId,
           tankId: tank.id,
           meterId: meter.id,
-          periodStart: DEMO_PERIOD.start,
-          periodEnd: DEMO_PERIOD.end,
+          periodStart: start,
+          periodEnd: end,
           deliveries: s.deliveries.filter((d) => d.siteId === siteId),
           tankReadings: s.tankReadings.filter((t) => t.siteId === siteId),
           usageReadings: s.usageReadings.filter((u) => u.siteId === siteId),
@@ -167,7 +245,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         const prevSameScope = s.runs.filter(
           (r) =>
             r.siteId === siteId && r.tankId === tank.id && r.meterId === meter.id &&
-            r.periodStart === DEMO_PERIOD.start && r.periodEnd === DEMO_PERIOD.end &&
+            r.periodStart === start && r.periodEnd === end &&
             !r.supersededByRunId,
         );
         const superseded = new Map(prevSameScope.map((r) => [r.id, run.id] as const));
@@ -200,6 +278,87 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
 
       runAll: () => {
         for (const s of adapter.load().sites) runReconciliation(s.id);
+      },
+
+      setPeriod: (siteId, startUTC, endUTC, actor) => {
+        adapter.update((s) => ({
+          ...s,
+          periods: { ...(s.periods ?? {}), [siteId]: { start: startUTC, end: endUTC } },
+          auditEvents: [
+            ...s.auditEvents,
+            makeAuditEvent(actor, "period.changed", "Site", siteId, {
+              after: { start: startUTC, end: endUTC },
+            }),
+          ],
+        }));
+        recomputeSite(siteId);
+      },
+
+      addSite: (input) => {
+        const id = makeId("site");
+        adapter.update((s) => {
+          const site: Site = {
+            id,
+            name: input.name,
+            timezone: input.timezone,
+            description: input.description || undefined,
+            isDemo: false,
+          };
+          return {
+            ...s,
+            sites: [...s.sites, site],
+            auditEvents: [
+              ...s.auditEvents,
+              makeAuditEvent(input.actor, "site.created", "Site", id, { after: { name: site.name } }),
+            ],
+          };
+        });
+        return id;
+      },
+
+      addTank: (input) => {
+        const id = makeId("tank");
+        adapter.update((s) => {
+          const tank: Tank = {
+            id,
+            siteId: input.siteId,
+            name: input.name,
+            capacityLiters: input.capacityLiters,
+            readingMethodNote: input.note || undefined,
+          };
+          return {
+            ...s,
+            tanks: [...s.tanks, tank],
+            auditEvents: [
+              ...s.auditEvents,
+              makeAuditEvent(input.actor, "tank.created", "Tank", id, { after: { name: tank.name } }),
+            ],
+          };
+        });
+        return id;
+      },
+
+      addMeter: (input) => {
+        const id = makeId("meter");
+        adapter.update((s) => {
+          const meter: Meter = {
+            id,
+            siteId: input.siteId,
+            name: input.name,
+            boundaryDescription: input.boundary,
+            unit: "L",
+            type: "cumulative",
+          };
+          return {
+            ...s,
+            meters: [...s.meters, meter],
+            auditEvents: [
+              ...s.auditEvents,
+              makeAuditEvent(input.actor, "meter.created", "Meter", id, { after: { name: meter.name } }),
+            ],
+          };
+        });
+        return id;
       },
 
       addDelivery: (input) => {
@@ -447,7 +606,44 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         if (siteId) recomputeSite(siteId);
       },
 
-      resetDemo: () => {
+      applyReadingImport: (batch, tankReadings, usageReadings) => {
+        const siteId = tankReadings[0]?.siteId ?? usageReadings[0]?.siteId;
+        adapter.update((s) => ({
+          ...s,
+          tankReadings: [...s.tankReadings, ...tankReadings],
+          usageReadings: [...s.usageReadings, ...usageReadings],
+          importBatches: [...s.importBatches, batch],
+          auditEvents: [
+            ...s.auditEvents,
+            makeAuditEvent(batch.actor, "import.confirmed", "ImportBatch", batch.id, {
+              after: { rows: batch.totalRows, imported: batch.validRowIds.length, kind: "readings" },
+            }),
+          ],
+        }));
+        if (siteId) recomputeSite(siteId);
+      },
+
+      importWorkspace: (json, actor) => {
+        const parsed = JSON.parse(json) as WorkspaceState;
+        if (
+          typeof parsed !== "object" || parsed === null ||
+          (parsed as WorkspaceState).schemaVersion !== 1 ||
+          !Array.isArray((parsed as WorkspaceState).sites)
+        ) {
+          throw new Error("Not a JalLekha workspace export (schemaVersion 1 expected).");
+        }
+        adapter.update((s) => ({
+          ...parsed,
+          auditEvents: [
+            ...s.auditEvents,
+            makeAuditEvent(actor, "workspace.imported", "Workspace", parsed.sites[0]?.id ?? "workspace", {
+              after: { sites: parsed.sites.length },
+            }),
+          ],
+        }));
+      },
+
+      resetWorkspace: () => {
         adapter.reset();
       },
     };
@@ -457,14 +653,16 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     () => ({
       state,
       ready: mounted,
-      mode: adapter.mode,
+      mode: dataMode,
+      setDataMode,
       reduceMotion,
-      setReduceMotion: motionStore.set,
+      setReduceMotion,
       selectedSiteId,
       setSelectedSiteId,
+      period,
       actions,
     }),
-    [state, mounted, adapter.mode, reduceMotion, selectedSiteId, actions],
+    [state, mounted, dataMode, setDataMode, reduceMotion, setReduceMotion, selectedSiteId, period, actions],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

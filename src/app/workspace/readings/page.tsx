@@ -10,6 +10,17 @@ import { useWorkspace } from "@/data/store";
 import { Card, CardHeader, Button, Field, Input, Select, Textarea, Modal, StatusPill } from "@/components/ui";
 import { formatLiters } from "@/domain/units";
 import { istDate, istToUtc } from "@/lib/datetime";
+import { IconUpload } from "@/components/icons";
+import { cx } from "@/components/ui";
+import {
+  buildReadingImportPreview,
+  confirmReadingImport,
+  parseCsv,
+  suggestReadingColumnMapping,
+  SAMPLE_TANK_READINGS_CSV,
+  SAMPLE_METER_READINGS_CSV,
+  type ReadingKind,
+} from "@/domain/import";
 import { DEMO_PERIOD } from "@/data/seed";
 import type { Quality } from "@/domain/types";
 
@@ -21,6 +32,7 @@ export default function ReadingsPage() {
 
   const [addStock, setAddStock] = useState(false);
   const [addMeter, setAddMeter] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   const stockRows = state.tankReadings
@@ -32,7 +44,21 @@ export default function ReadingsPage() {
 
   return (
     <div className="space-y-5">
-      <div>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink">Readings</h1>
+          <p className="mt-0.5 max-w-3xl text-[13px] text-slate-500">
+            <strong>Stock readings</strong> are tank volumes at an instant. <strong>Meter readings</strong> are
+            cumulative outflow totals.
+          </p>
+        </div>
+        <div className="no-print">
+          <Button size="sm" variant="secondary" onClick={() => setImportOpen(true)}>
+            <IconUpload /> Import readings CSV
+          </Button>
+        </div>
+      </div>
+      <div className="hidden">
         <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink">Readings</h1>
         <p className="mt-0.5 max-w-3xl text-[13px] text-slate-500">
           <strong>Stock readings</strong> are tank volumes at an instant (dipstick / gauge).{" "}
@@ -126,6 +152,7 @@ export default function ReadingsPage() {
 
       <StockModal open={addStock} onClose={() => setAddStock(false)} onError={setErr} />
       <MeterModal open={addMeter} onClose={() => setAddMeter(false)} onError={setErr} />
+      <ReadingImportModal open={importOpen} onClose={() => setImportOpen(false)} onError={setErr} />
       {err ? <p role="alert" className="text-[13px] font-semibold text-danger">{err}</p> : null}
     </div>
   );
@@ -249,6 +276,151 @@ function MeterModal({ open, onClose, onError }: { open: boolean; onClose: () => 
           <Button size="sm" disabled={!f.value} onClick={submit}>Save reading</Button>
         </div>
       </div>
+    </Modal>
+  );
+}
+
+/* --------------------------- readings import ------------------------------ */
+
+function ReadingImportModal({ open, onClose, onError }: { open: boolean; onClose: () => void; onError: (s: string | null) => void }) {
+  const { state, selectedSiteId, actions } = useWorkspace();
+  const site = state.sites.find((s) => s.id === selectedSiteId)!;
+  const tanks = state.tanks.filter((t) => t.siteId === site.id);
+  const meters = state.meters.filter((m) => m.siteId === site.id);
+
+  const [kind, setKind] = useState<ReadingKind>("tank");
+  const [csvText, setCsvText] = useState("");
+  const [filename, setFilename] = useState("readings.csv");
+  const [dateFormat, setDateFormat] = useState<"ISO" | "DD/MM/YYYY" | "MM/DD/YYYY">("ISO");
+  const [quality, setQuality] = useState<"measured" | "estimated" | "unknown">("measured");
+  const [preview, setPreview] = useState<ReturnType<typeof buildReadingImportPreview> | null>(null);
+
+  const close = () => { onClose(); setCsvText(""); setPreview(null); };
+
+  const doPreview = () => {
+    const mapping = suggestReadingColumnMapping(parseCsv(csvText).headers, kind);
+    const result = buildReadingImportPreview(
+      csvText, kind, mapping,
+      { filename, dateFormat, quality, actor: "operator@demo (you)" },
+      site.id, tanks, meters,
+      state.tankReadings, state.usageReadings,
+    );
+    setPreview(result);
+  };
+
+  const commit = () => {
+    if (!preview) return;
+    const result = confirmReadingImport(
+      kind, preview,
+      { filename, dateFormat, quality, actor: "operator@demo (you)" },
+      site.id,
+    );
+    actions.applyReadingImport(result.batch, result.tankReadings, result.usageReadings);
+    onError(null);
+    close();
+  };
+
+  const summary = preview?.summary;
+
+  return (
+    <Modal open={open} onClose={close} title="Import readings from CSV" wide>
+      {!preview ? (
+        <div className="space-y-3">
+          <div role="tablist" aria-label="Reading type" className="inline-flex rounded-xl border border-slate-300 bg-slate-50 p-1 text-[13px] font-bold">
+            {(["tank", "meter"] as ReadingKind[]).map((k) => (
+              <button
+                key={k}
+                role="tab"
+                aria-selected={kind === k}
+                onClick={() => setKind(k)}
+                className={cx("rounded-lg px-4 py-1.5", kind === k ? "bg-ink text-white" : "text-slate-500 hover:text-ink")}
+              >
+                {k === "tank" ? "Tank stock readings" : "Cumulative meter readings"}
+              </button>
+            ))}
+          </div>
+          <Field label="Date format in this file" htmlFor="rimp-fmt" required hint="Ambiguous dates are rejected unless a format is chosen">
+            <Select id="rimp-fmt" value={dateFormat} onChange={(e) => setDateFormat(e.target.value as typeof dateFormat)}>
+              <option value="ISO">ISO — 2026-10-28T08:00:00+05:30</option>
+              <option value="DD/MM/YYYY">DD/MM/YYYY — 28/10/2026 08:00</option>
+              <option value="MM/DD/YYYY">MM/DD/YYYY — 10/28/2026 08:00</option>
+            </Select>
+          </Field>
+          <Field label="Default quality if the file has no quality column" htmlFor="rimp-q">
+            <Select id="rimp-q" value={quality} onChange={(e) => setQuality(e.target.value as typeof quality)}>
+              <option value="measured">measured</option>
+              <option value="estimated">estimated</option>
+              <option value="unknown">unknown</option>
+            </Select>
+          </Field>
+          <Field
+            label="Paste CSV"
+            htmlFor="rimp-csv"
+            required
+            hint={kind === "tank" ? "Columns: observed_at, stock_liters (or volume/level), uncertainty, method, quality" : "Columns: observed_at, reading (or cumulative), uncertainty"}
+          >
+            <Textarea id="rimp-csv" rows={7} className="font-mono text-xs" value={csvText} onChange={(e) => setCsvText(e.target.value)} />
+          </Field>
+          <div className="flex flex-wrap justify-between gap-2">
+            <Button variant="ghost" size="sm" onClick={() => { setCsvText(kind === "tank" ? SAMPLE_TANK_READINGS_CSV : SAMPLE_METER_READINGS_CSV); setFilename(kind + "-readings.csv"); }}>
+              Load sample (synthetic)
+            </Button>
+            <div className="flex gap-2">
+              <Button variant="secondary" size="sm" onClick={close}>Cancel</Button>
+              <Button size="sm" disabled={!csvText.trim()} onClick={doPreview}>Validate &amp; preview</Button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-2 text-[13px]">
+            <StatusPill tone="ok">{summary!.valid} valid</StatusPill>
+            <StatusPill tone="warn">{summary!.exactDuplicate} identical replays (skipped)</StatusPill>
+            <StatusPill tone="danger">{summary!.error} row errors</StatusPill>
+          </div>
+          <div className="max-h-[42vh] overflow-auto rounded-xl border border-slate-200">
+            <table className="w-full min-w-[620px] text-left text-xs">
+              <thead className="sticky top-0 bg-slate-50 text-[10px] uppercase tracking-wide text-slate-400">
+                <tr>
+                  <th className="px-3 py-2">#</th>
+                  <th className="px-3 py-2">When (UTC)</th>
+                  <th className="px-3 py-2 text-right">Value</th>
+                  <th className="px-3 py-2">Uncertainty</th>
+                  <th className="px-3 py-2">Decision</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {preview.rows.map((r) => (
+                  <tr key={r.rowNumber} className={cx(
+                    r.status === "error" && "bg-danger-soft/50",
+                    r.status === "exact-duplicate" && "bg-slate-50 text-slate-400",
+                  )}>
+                    <td className="px-3 py-1.5 font-bold">{r.rowNumber}</td>
+                    <td className="tabular px-3 py-1.5">{r.parsed?.observedAtISO ?? r.values.observedAt}</td>
+                    <td className="tabular px-3 py-1.5 text-right">{r.parsed ? r.parsed.liters.toLocaleString("en-IN") + " L" : r.values.value}</td>
+                    <td className="tabular px-3 py-1.5">{r.parsed && r.parsed.uncertaintyLiters !== null ? "\u00b1" + r.parsed.uncertaintyLiters : r.values.uncertainty || "\u2014"}</td>
+                    <td className="px-3 py-1.5">
+                      {r.status === "valid" ? <StatusPill tone="ok">Will import</StatusPill>
+                        : r.status === "exact-duplicate" ? <StatusPill tone="warn">Already recorded (identical)</StatusPill>
+                        : <span className="text-danger">{r.errors.join("; ")}</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-slate-500">
+            Conflicting values at a recorded instant are errors — resolve them instead of overwriting. An empty
+            uncertainty stays &ldquo;not quantified&rdquo; and every result will say so.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button variant="secondary" size="sm" onClick={() => setPreview(null)}>Back</Button>
+            <Button size="sm" disabled={summary!.valid === 0} onClick={commit}>
+              Confirm import of {summary!.valid} reading{summary!.valid === 1 ? "" : "s"}
+            </Button>
+          </div>
+        </div>
+      )}
     </Modal>
   );
 }

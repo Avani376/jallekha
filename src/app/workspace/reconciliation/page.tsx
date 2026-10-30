@@ -10,6 +10,7 @@ import { useState } from "react";
 import { activeRunFor, useWorkspace } from "@/data/store";
 import { EquationCard } from "@/components/equation-card";
 import { Button, Card, CardHeader, StatusPill, EmptyState } from "@/components/ui";
+import { AiExplainPanel } from "@/components/ai/explain-card";
 import { IconRefresh } from "@/components/icons";
 import { formatLiters } from "@/domain/units";
 import { findingTone } from "@/app/workspace/page";
@@ -113,9 +114,14 @@ export default function ReconciliationPage() {
               </Card>
 
               <Card className="print-card">
-                <CardHeader title="Explanation" sub="Rule-based, generated from the run only. No AI was used." />
+                <CardHeader title="Explanation" sub="Rule-based by default; AI assistance (optional, in Settings) only restates this run's evidence." />
                 <div className="px-5 py-4 text-[13px] leading-relaxed text-slate-600">
-                  <RuleBasedExplanation status={run.status} residual={run.residualLiters} bounds={run.boundsLiters} />
+                  <AiExplainPanel
+                    result={run}
+                    ruleBased={
+                      <RuleBasedExplanation status={run.status} residual={run.residualLiters} bounds={run.boundsLiters} />
+                    }
+                  />
                 </div>
               </Card>
             </div>

@@ -37,7 +37,7 @@ export default function DemoPage() {
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Button onClick={() => go("site-legacy")}>Start the guided demo</Button>
-            <Button variant="secondary" onClick={actions.resetDemo}>Reset demo data</Button>
+            <Button variant="secondary" onClick={actions.resetWorkspace}>Reset demo data</Button>
           </div>
         </div>
 

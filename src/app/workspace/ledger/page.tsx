@@ -11,8 +11,10 @@ import { useMemo, useState } from "react";
 import { useWorkspace } from "@/data/store";
 import { Card, Button, Field, Input, Select, Textarea, Modal, StatusPill, EmptyState, cx } from "@/components/ui";
 import { buildImportPreview, confirmImport, parseCsv, SAMPLE_CSV, suggestColumnMapping, type ImportPreview } from "@/domain/import";
-import { istDate, istToUtc } from "@/lib/datetime";
+import { istDate, istToUtc, istToLocalInput } from "@/lib/datetime";
 import { IconPlus, IconUpload } from "@/components/icons";
+import { aiReady, loadAiSettings } from "@/lib/ai/settings";
+import { draftFromNote, AiError } from "@/lib/ai/client";
 import { toLiters, formatLiters } from "@/domain/units";
 import type { Delivery } from "@/domain/types";
 
@@ -235,7 +237,31 @@ function AddDeliveryModal({ open, onClose }: { open: boolean; onClose: () => voi
   const tank = state.tanks.find((t) => t.siteId === site.id)!;
   const [f, setF] = useState({ supplier: "", receipt: "", date: "2026-10-28T14:30", qty: "", unit: "L", uncertainty: "100", note: "" });
   const [err, setErr] = useState<string | null>(null);
+  const [draft, setDraft] = useState<null | { phase: "idle" | "loading" | "error"; message?: string }>({ phase: "idle" });
   const id = "add-dlv";
+  const aiCfg = loadAiSettings();
+
+  const runDraft = async () => {
+    if (!f.note.trim()) return;
+    setDraft({ phase: "loading" });
+    try {
+      const out = await draftFromNote(aiCfg, f.note, tank.name);
+      setF((prev) => ({
+        ...prev,
+        supplier: out.supplier ?? prev.supplier,
+        receipt: out.receipt_number ?? prev.receipt,
+        qty: out.quantity_value !== null ? String(out.quantity_value) : prev.qty,
+        unit: out.quantity_unit ?? prev.unit,
+        date: out.observed_at ? istToLocalInput(out.observed_at) : prev.date,
+        uncertainty: prev.uncertainty,
+        note: out.note ?? prev.note,
+      }));
+      setDraft({ phase: "idle", message: out.warnings.length > 0 ? out.warnings.join(" · ") : "Draft applied — review every field before saving." });
+    } catch (e) {
+      const err2 = e as AiError;
+      setDraft({ phase: "error", message: err2.message });
+    }
+  };
 
   const submit = () => {
     try {
@@ -293,9 +319,26 @@ function AddDeliveryModal({ open, onClose }: { open: boolean; onClose: () => voi
             <Input id={`${id}-unc`} type="number" min="0" value={f.uncertainty} onChange={(e) => setF({ ...f, uncertainty: e.target.value })} />
           </Field>
         </div>
-        <Field label="Note" htmlFor={`${id}-note`}>
-          <Textarea id={`${id}-note`} rows={2} value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} placeholder="Optional context from the operator" />
+        <Field
+          label="Operator note"
+          htmlFor={`${id}-note`}
+          hint={aiReady(aiCfg) ? "Paste the raw note, then draft fields with AI (review before saving)" : "Optional context. AI drafting appears when a key is configured in Settings."}
+        >
+          <Textarea id={`${id}-note`} rows={3} value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} placeholder={"e.g. BlueWave brought 5000L today 2:30pm, receipt R-118, filled T-01"} />
         </Field>
+        {aiReady(aiCfg) ? (
+          <div className="space-y-1.5">
+            <Button size="sm" variant="secondary" type="button" onClick={runDraft} disabled={draft?.phase === "loading" || !f.note.trim()}>
+              {draft?.phase === "loading" ? "Drafting…" : "Draft fields from note (AI)"}
+            </Button>
+            {draft?.message ? (
+              <p role="status" className={`text-xs font-semibold ${draft.phase === "error" ? "text-danger" : "text-slate-500"}`}>
+                {draft.message}
+              </p>
+            ) : null}
+            <p className="text-[11px] text-slate-400">AI output is a draft: deterministic validation still gates saving, and nothing is posted automatically.</p>
+          </div>
+        ) : null}
         {err ? <p role="alert" className="text-[13px] font-semibold text-danger">{err}</p> : null}
         <div className="flex justify-end gap-2">
           <Button variant="secondary" size="sm" onClick={onClose}>Cancel</Button>

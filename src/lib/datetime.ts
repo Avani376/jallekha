@@ -22,3 +22,10 @@ export function istToUtc(local: string): string {
   if (Number.isNaN(t.getTime())) throw new Error(`Invalid date/time: ${local}`);
   return t.toISOString();
 }
+
+/** ISO instant to a datetime-local input value in IST. */
+export function istToLocalInput(iso: string): string {
+  const t = new Date(new Date(iso).getTime() + 5.5 * 3600_000);
+  if (Number.isNaN(t.getTime())) return "";
+  return t.toISOString().slice(0, 16);
+}
