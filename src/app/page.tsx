@@ -362,7 +362,7 @@ function TeamFooter() {
                 Know what came in, what was measured, and what needs checking.
               </h2>
               <p className="mt-3 max-w-xl text-[15px] text-white/60">
-                Built by Arya Jannawar (team lead), Siddhant Santosh Pardeshi and Avni for the Seva First Innovation
+                Built by Arya Jannawar (team lead), Avani Jannawar, Siddhant Santosh Pardeshi and Vijay Sahu for the Seva First Innovation
                 Challenge — Maharashtra Zone. Sector: Sustainability — Energy, Climate and Others.
               </p>
             </div>

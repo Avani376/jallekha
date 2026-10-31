@@ -122,7 +122,7 @@ export default function DemoPage() {
         </Card>
 
         <p className="pb-8 text-center text-xs text-white/35">
-          Prototype by Team SevaForge — Arya Jannawar, Siddhant Santosh Pardeshi, Avni · Seva First Innovation
+          Prototype by Team SevaForge — Arya Jannawar, Avani Jannawar, Siddhant Santosh Pardeshi, Vijay Sahu · Seva First Innovation
           Challenge, Maharashtra Zone 2026. All sites, suppliers, receipts and users are synthetic.
         </p>
       </div>

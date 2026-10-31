@@ -181,7 +181,7 @@ strip. **Export workspace (JSON)** on Reports backs up or moves everything;
 
 ## Team
 
-**SevaForge** — Arya Jannawar (team lead) · Siddhant Santosh Pardeshi · Avni
+**SevaForge** — Arya Jannawar (team lead) · Avani Jannawar · Siddhant Santosh Pardeshi · Vijay Sahu
 
 Built for the Seva First Innovation Challenge (Maharashtra Zone) under
 *Sustainability — Energy, Climate and Others*. All product data, suppliers, receipts and people in
