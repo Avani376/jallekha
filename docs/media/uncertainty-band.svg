@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 250" width="1100" height="250" role="img" aria-label="The residual marker moves from +5,000 L outside the uncertainty band to 0 L inside it after a reviewed void">
+  <defs>
+    <linearGradient id="ub-band" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0E8A5F" stop-opacity=".05"/>
+      <stop offset=".5" stop-color="#0E8A5F" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#0E8A5F" stop-opacity=".05"/>
+    </linearGradient>
+    <style>
+      .ub-axis{animation:ub-draw 1.6s ease-out both}
+      @keyframes ub-draw{from{stroke-dashoffset:1100}to{stroke-dashoffset:0}}
+      .ub-marker{animation:ub-slide 9s cubic-bezier(.65,0,.35,1) infinite}
+      @keyframes ub-slide{
+        0%,18%{transform:translateX(0)}
+        46%,80%{transform:translateX(-365px)}
+        100%{transform:translateX(0)}
+      }
+      .ub-raw{animation:ub-rawfade 9s ease infinite}
+      @keyframes ub-rawfade{0%,18%{opacity:1}40%,82%{opacity:0}100%{opacity:1}}
+      .ub-fixed{animation:ub-fixfade 9s ease infinite}
+      @keyframes ub-fixfade{0%,30%{opacity:0}52%,82%{opacity:1}100%{opacity:0}}
+      .ub-pill{animation:ub-pulse 2.6s ease-in-out infinite}
+      @keyframes ub-pulse{0%,100%{opacity:.75}50%{opacity:1}}
+      .ub-note{animation:ub-notefade 9s ease infinite}
+      @keyframes ub-notefade{0%,26%{opacity:1}46%,84%{opacity:0}100%{opacity:1}}
+      .ub-note2{animation:ub-notefade2 9s ease infinite}
+      @keyframes ub-notefade2{0%,40%{opacity:0}58%,84%{opacity:1}100%{opacity:0}}
+      @media (prefers-reduced-motion: reduce){*{animation:none !important}.ub-marker{transform:none}}
+    </style>
+  </defs>
+
+  <!-- baseline -->
+  <text x="40" y="38" font-family="Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#25D8D1">One residual. Two states. One honest correction.</text>
+
+  <!-- axis -->
+  <line class="ub-axis" x1="60" y1="150" x2="1040" y2="150" stroke="#B9C6CC" stroke-width="3" stroke-dasharray="1100" stroke-dashoffset="0"/>
+  <!-- uncertainty band [-600,+600] -->
+  <rect x="470" y="118" width="160" height="64" rx="10" fill="url(#ub-band)"/>
+  <rect x="470" y="118" width="160" height="64" rx="10" fill="none" stroke="#0E8A5F" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="550" y="206" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#0E8A5F">uncertainty band [−600, +600] L</text>
+  <text x="550" y="108" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="14" fill="#5B7683">0</text>
+
+  <!-- scale labels -->
+  <text x="120" y="176" font-family="Segoe UI, sans-serif" font-size="13" fill="#8AA0AA">+4,300</text>
+  <text x="960" y="176" font-family="Segoe UI, sans-serif" font-size="13" fill="#8AA0AA">+5,700</text>
+
+  <!-- sliding marker: starts at +5,000 (x=915), slides to 0 (x=550) -->
+  <g class="ub-marker">
+    <line x1="915" y1="86" x2="915" y2="150" stroke="#E9AE45" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="915" cy="150" r="9" fill="#E9AE45"/>
+    <g class="ub-raw">
+      <rect x="848" y="52" width="134" height="28" rx="14" fill="#E9AE45"/>
+      <text x="915" y="71" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800" fill="#061A24">R = +5,000 L</text>
+    </g>
+    <g class="ub-fixed">
+      <rect x="452" y="52" width="196" height="28" rx="14" fill="#0E8A5F"/>
+      <text x="550" y="71" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800" fill="#fff">R = 0 L ✓ within band</text>
+    </g>
+  </g>
+
+  <!-- narration pills -->
+  <g class="ub-note">
+    <rect x="60" y="216" width="430" height="26" rx="13" fill="#173748" opacity="0"/>
+    <text x="62" y="234" font-family="Segoe UI, sans-serif" font-size="15" fill="#E9AE45" font-weight="600">raw ledger: double-entered receipt → outside the band</text>
+  </g>
+  <g class="ub-note2">
+    <text x="620" y="234" font-family="Segoe UI, sans-serif" font-size="15" fill="#0E8A5F" font-weight="600">reviewer voids the duplicate with a reason → balance recomputes, history kept</text>
+  </g>
+
+  <g class="ub-pill">
+    <rect x="40" y="220" width="10" height="10" rx="5" fill="#25D8D1"/>
+  </g>
+</svg>

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 320" width="300" height="320" role="img" aria-label="Cutaway tank filled to 55 percent with sloshing water">
+  <defs>
+    <linearGradient id="tk-water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5FE3DD"/>
+      <stop offset="1" stop-color="#3188FF"/>
+    </linearGradient>
+    <clipPath id="tk-clip"><rect x="86" y="60" width="128" height="196" rx="18"/></clipPath>
+    <style>
+      .tk-wave1{animation:tk-slosh 5s ease-in-out infinite}
+      .tk-wave2{animation:tk-slosh2 7s ease-in-out infinite}
+      @keyframes tk-slosh{0%,100%{transform:translateX(0)}50%{transform:translateX(-20px)}}
+      @keyframes tk-slosh2{0%,100%{transform:translateX(0)}50%{transform:translateX(16px)}}
+      .tk-bub{animation:tk-rise 4.6s linear infinite;opacity:0}
+      .tk-bub:nth-of-type(2){animation-delay:1.3s}
+      .tk-bub:nth-of-type(3){animation-delay:2.7s}
+      @keyframes tk-rise{0%{transform:translateY(0);opacity:0}18%{opacity:.8}85%{opacity:.8}100%{transform:translateY(-64px);opacity:0}}
+      .tk-pct{animation:tk-glow 5s ease-in-out infinite}
+      @keyframes tk-glow{0%,100%{opacity:.85}50%{opacity:1}}
+      @media (prefers-reduced-motion: reduce){*{animation:none !important}}
+    </style>
+  </defs>
+
+  <!-- tank body -->
+  <rect x="86" y="60" width="128" height="196" rx="18" fill="#0D2835" stroke="#25D8D1" stroke-opacity=".65" stroke-width="3"/>
+  <rect x="86" y="60" width="128" height="196" rx="18" fill="#061A24" opacity=".35"/>
+
+  <!-- water -->
+  <g clip-path="url(#tk-clip)">
+    <g transform="translate(0 88)">
+      <g class="tk-wave1">
+        <path d="M60 12 Q 80 2 100 12 T 140 12 T 180 12 T 220 12 T 260 12 V 180 H 60 Z" fill="url(#tk-water)" opacity=".95"/>
+      </g>
+      <g class="tk-wave2">
+        <path d="M60 17 Q 85 8 110 16 T 160 16 T 210 16 T 260 16 V 180 H 60 Z" fill="#3188FF" opacity=".45"/>
+      </g>
+      <g fill="#fff" stroke="none">
+        <circle class="tk-bub" cx="120" cy="180" r="5"/>
+        <circle class="tk-bub" cx="160" cy="184" r="3.5"/>
+        <circle class="tk-bub" cx="190" cy="182" r="4.5"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- capacity ticks 25/50/75 -->
+  <line x1="214" y1="109" x2="228" y2="109" stroke="#25D8D1" stroke-opacity=".6" stroke-width="2.5"/>
+  <line x1="214" y1="158" x2="228" y2="158" stroke="#25D8D1" stroke-opacity=".6" stroke-width="2.5"/>
+  <line x1="214" y1="207" x2="228" y2="207" stroke="#25D8D1" stroke-opacity=".6" stroke-width="2.5"/>
+
+  <!-- inlet / outlet -->
+  <path d="M70 84 h14 m-4 -4 4 4 -4 4" stroke="#25D8D1" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M70 232 h14 m-4 -4 4 4 -4 4" stroke="#3188FF" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text class="tk-pct" x="150" y="290" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="21" font-weight="800" fill="#0d2835">11,000 L · 55%</text>
+  <text x="150" y="312" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="13.5" fill="#52656f">every level traces to a stored reading</text>
+</svg>

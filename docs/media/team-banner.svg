@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 270" width="1100" height="270" role="img" aria-label="Team SevaForge — Arya Jannawar, Siddhant Pardeshi, Avani Jannawar and Vijay Sahu, with a sustainability ring of water, leaf and sun">
+  <defs>
+    <linearGradient id="tm-drop" x1="0" y1="0" x2=".7" y2="1">
+      <stop offset="0" stop-color="#5FE3DD"/>
+      <stop offset=".55" stop-color="#25D8D1"/>
+      <stop offset="1" stop-color="#3188FF"/>
+    </linearGradient>
+    <style>
+      .tm-avatar{animation:tm-bob 4.4s ease-in-out infinite}
+      .tm-avatar:nth-of-type(2){animation-delay:.55s}
+      .tm-avatar:nth-of-type(3){animation-delay:1.1s}
+      .tm-avatar:nth-of-type(4){animation-delay:1.65s}
+      @keyframes tm-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+      .tm-ring{animation:tm-spin 14s linear infinite;transform-origin:center;transform-box:fill-box}
+      @keyframes tm-spin{to{transform:rotate(360deg)}}
+      .tm-shine{animation:tm-shine 9s linear infinite}
+      @keyframes tm-shine{0%{transform:translateX(-460px)}100%{transform:translateX(460px)}}
+      .tm-wave1{animation:tm-drift 9s ease-in-out infinite}
+      .tm-wave2{animation:tm-drift2 14s ease-in-out infinite}
+      @keyframes tm-drift{0%,100%{transform:translateX(0)}50%{transform:translateX(-22px)}}
+      @keyframes tm-drift2{0%,100%{transform:translateX(0)}50%{transform:translateX(18px)}}
+      .tm-orb{animation:tm-pulse 6s ease-in-out infinite}
+      .tm-orb:nth-of-type(2){animation-delay:2s}
+      .tm-orb:nth-of-type(3){animation-delay:4s}
+      @keyframes tm-pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.7;transform:scale(1.12)}}
+      @media (prefers-reduced-motion: reduce){*{animation:none !important}}
+    </style>
+  </defs>
+
+  <rect width="1100" height="270" rx="18" fill="#0d2835"/>
+  <rect width="1100" height="270" rx="18" fill="#061a24" opacity=".25"/>
+
+  <!-- sustainability orbs: sun (amber), leaf (verd), water (aqua) -->
+  <circle class="tm-orb" cx="120" cy="70" r="46" fill="#F2B04C" opacity=".3"/>
+  <path d="M120 40a30 30 0 0 1-24 48" fill="none" stroke="#F2B04C" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+  <circle class="tm-orb" cx="975" cy="66" r="44" fill="#0E8A5F" opacity=".3"/>
+  <path d="M975 44c-16 8-22 24-14 38 14-2 26-14 26-30 0-3-1-6-2-8-4 0-7 0-10 0Zm-14 38c-6-2-10-6-12-10" fill="none" stroke="#7FD1A8" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+  <circle class="tm-orb" cx="62" cy="200" r="34" fill="#25D8D1" opacity=".25"/>
+
+  <!-- droplet + recycle ring (sustainable loop) -->
+  <g transform="translate(550 92)">
+    <g class="tm-ring">
+      <path d="M0 -66a66 66 0 0 1 57 33l-14 8a50 50 0 0 0-43-25z" fill="#25D8D1" opacity=".85"/>
+      <path d="M57 -33a66 66 0 0 1 0 66l-14-8a50 50 0 0 0 0-50z" fill="#3188FF" opacity=".85"/>
+      <path d="M57 33a66 66 0 0 1-114 0l14-8a50 50 0 0 0 86 0z" fill="#5FE3DD" opacity=".85"/>
+      <path d="M-57 33a66 66 0 0 1 0-66l14 8a50 50 0 0 0 0 50z" fill="#F2B04C" opacity=".8"/>
+    </g>
+    <g class="tm-avatar">
+      <path d="M0 -52C0 -52 -32 -12 -32 10a32 32 0 0 0 64 0C32 -12 0 -52 0 -52Z" fill="url(#tm-drop)"/>
+      <path d="M-15 16a15 15 0 0 0 22 8" fill="none" stroke="#061A24" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="-10" cy="4" r="6" fill="#fff" opacity=".55"/>
+    </g>
+  </g>
+  <text x="550" y="196" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="26" font-weight="800" fill="#fff">TEAM <tspan fill="#25D8D1">SEVAFORGE</tspan></text>
+  <text x="550" y="219" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="14.5" fill="#9DB8C4">water · conservation · documented truth — Seva First Innovation Challenge, Maharashtra Zone</text>
+
+  <!-- shine sweep -->
+  <rect class="tm-shine" x="300" y="0" width="130" height="270" fill="#9BEFEA" opacity=".05" transform="skewX(-14)"/>
+
+  <!-- bottom waves -->
+  <path class="tm-wave2" d="M-40 244 Q 90 226 220 242 T 480 240 T 740 244 T 1000 236 T 1160 242 V 270 H -40 Z" fill="#25D8D1" opacity=".22"/>
+  <path class="tm-wave1" d="M-40 256 Q 120 240 280 254 T 600 252 T 920 256 T 1160 248 V 270 H -40 Z" fill="#3188FF" opacity=".4"/>
+</svg>

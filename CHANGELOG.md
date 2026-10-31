@@ -4,6 +4,28 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.3.0] - 2026-10-31
+
+README showcase release: animated artwork, live product tour, deep
+feature documentation.
+
+### Added
+- Seven hand-crafted **animated SVG artworks** (CSS keyframes, honored by
+  GitHub's image pipeline, all respecting `prefers-reduced-motion`): the
+  deep-water hero banner, the signature "residual slides into the
+  uncertainty band" story, the three-findings comparison, a sloshing
+  tank cutaway, the record→resolve flow pipeline, the SevaForge team
+  banner with sustainability ring, and the closing "solvers" loop.
+- **Live product tour** — eight retina screenshots of the real running
+  app (demo, overview, ledger, readings, reconciliation, cases,
+  dashboard, reports), each captioned and linked to the live deployment.
+- README rewritten as a full submission document: the problem and why the
+  three finding types matter, the equation and uncertainty rules, a tab
+  by tab tour, the four signature scenarios, a feature deep-dive
+  (engine, uncertainty, duplicates, CSV import, cases + audit, real-data
+  mode, optional provider-neutral AI, accessibility, honest status),
+  architecture, quality gates, configuration and roadmap.
+
 ## [1.2.0] - 2026-10-31
 
 Narrated video walkthrough for the competition submission.

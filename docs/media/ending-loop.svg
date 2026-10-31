@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 240" width="1100" height="240" role="img" aria-label="Problems are everywhere. So are solvers. — an orbiting water loop">
+  <defs>
+    <linearGradient id="el-drop" x1="0" y1="0" x2=".7" y2="1">
+      <stop offset="0" stop-color="#5FE3DD"/>
+      <stop offset=".55" stop-color="#25D8D1"/>
+      <stop offset="1" stop-color="#3188FF"/>
+    </linearGradient>
+    <radialGradient id="el-glow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#25D8D1" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#25D8D1" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .el-glow{animation:el-pulse 4.6s ease-in-out infinite}
+      @keyframes el-pulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.85;transform:scale(1.1)}}
+      .el-orbit{animation:el-spin 12s linear infinite;transform-origin:center;transform-box:fill-box}
+      .el-orbit2{animation:el-spin2 18s linear infinite;transform-origin:center;transform-box:fill-box}
+      @keyframes el-spin{to{transform:rotate(360deg)}}
+      @keyframes el-spin2{to{transform:rotate(-360deg)}}
+      .el-core{animation:el-bob 4.6s ease-in-out infinite}
+      @keyframes el-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+      .el-line1{animation:el-glide 7s ease-in-out infinite}
+      .el-line2{animation:el-glide2 9s ease-in-out infinite}
+      @keyframes el-glide{0%,100%{opacity:.9;letter-spacing:0}50%{opacity:1;letter-spacing:.6px}}
+      @keyframes el-glide2{0%,100%{opacity:.55}50%{opacity:1}}
+      @media (prefers-reduced-motion: reduce){*{animation:none !important}}
+    </style>
+  </defs>
+
+  <rect width="1100" height="240" rx="18" fill="#061a24"/>
+  <circle class="el-glow" cx="550" cy="120" r="86" fill="url(#el-glow)"/>
+
+  <!-- orbit rings with droplets -->
+  <g class="el-orbit" transform="translate(550 120)">
+    <circle r="78" fill="none" stroke="#25D8D1" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 7"/>
+    <g transform="translate(78 0)"><path d="M0 -10C0 -10 -6.5 -2.5 -6.5 2.5a6.5 6.5 0 0 0 13 0C6.5 -2.5 0 -10 0 -10Z" fill="#5FE3DD"/></g>
+    <g transform="translate(-55 -55)"><path d="M0 -10C0 -10 -6.5 -2.5 -6.5 2.5a6.5 6.5 0 0 0 13 0C6.5 -2.5 0 -10 0 -10Z" fill="#3188FF"/></g>
+    <g transform="translate(-55 55)"><path d="M0 -10C0 -10 -6.5 -2.5 -6.5 2.5a6.5 6.5 0 0 0 13 0C6.5 -2.5 0 -10 0 -10Z" fill="#F2B04C"/></g>
+  </g>
+  <g class="el-orbit2" transform="translate(550 120)">
+    <circle r="108" fill="none" stroke="#3188FF" stroke-opacity=".22" stroke-width="1.5" stroke-dasharray="2 9"/>
+    <g transform="translate(0 -108)"><path d="M0 -9C0 -9 -6 -2 -6 2.4a6 6 0 0 0 12 0C6 -2 0 -9 0 -9Z" fill="#25D8D1"/></g>
+    <g transform="translate(108 0)"><path d="M0 -9C0 -9 -6 -2 -6 2.4a6 6 0 0 0 12 0C6 -2 0 -9 0 -9Z" fill="#5FE3DD"/></g>
+  </g>
+
+  <!-- core droplet -->
+  <g transform="translate(550 120)">
+    <g class="el-core">
+      <path d="M0 -46C0 -46 -28 -11 -28 7a28 28 0 0 0 56 0C28 -11 0 -46 0 -46Z" fill="url(#el-drop)"/>
+      <path d="M-13 13a13 13 0 0 0 19 7" fill="none" stroke="#061A24" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="-9" cy="3" r="5" fill="#fff" opacity=".55"/>
+    </g>
+  </g>
+
+  <text class="el-line1" x="550" y="52" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="27" font-weight="800" fill="#fff">Problems are everywhere. So are solvers.</text>
+  <text class="el-line2" x="550" y="214" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="17" font-weight="700" fill="#25D8D1">Be one — open the demo, bring your data, check the balance.</text>
+</svg>
