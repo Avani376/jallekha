@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Local release staging (mirror of the static export):
     ".release/**",
+    "pitch-deck/**",
   ]),
 ]);
 
