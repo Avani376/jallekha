@@ -80,6 +80,21 @@ UI CONVENTIONS
   The mascot (components/mascot.tsx) exposes mascotReact(mood, ms) - call
   it after successful user-visible actions. Keep its button stable too.
 
+  Ambient motion rules (landing water experience, globals.css
+  "Landing water experience" section):
+  - CSS keyframes only, transform/opacity only (compositor-safe); no
+    animation library, no JS-driven loops.
+  - Every infinite loop must SETTLE CLEANLY under .reduce-motion (0.001s,
+    one iteration, fill both): waves end at rest offset, bubbles/rain/
+    ripples/tracks end at opacity 0, rotations end at a full turn.
+  - Never mix Tailwind translate utilities (-translate-x/y) with a
+    transform animation on the same element - the animation overrides the
+    utility mid-flight. Position with inset/margins instead.
+  - Ambient particle fields use static SSR-stable prop arrays; never
+    randomize during render (hydration mismatch).
+  - Scroll reveals (.reveal) must not hide content for print or no-JS:
+    both are forced visible (print media block, <noscript> in layout).
+
 TESTING EXPECTATIONS
 --------------------
   Domain: add a Vitest test for every new engine rule; the four signature

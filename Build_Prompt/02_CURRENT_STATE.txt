@@ -71,6 +71,27 @@ WORKSPACE UI (src/app/workspace/*)
   Reports   : printable documented review, safe CSV, JSON review, full
               workspace JSON export/import
 
+LANDING PAGE (src/app/page.tsx)
+-------------------------------
+  Cinematic single-page product story, fully client-rendered:
+  Hero        : deep-water atmosphere - layered swell surface with caustic
+                shimmer, rising bubbles, drifting droplets, sonar ripple
+                rings behind the receipt-to-ledger panel, animated cutaway
+                tank (onDark captions) and gradient headline.
+  Case compare: interactive duplicate vs missing-reading cards.
+  Workflow    : flow ribbon (droplets travel the Record -> Reconcile ->
+                Investigate -> Resolve pipeline) above the four step cards.
+  Status      : honest working / prototype-boundary / next columns.
+  Team stage  : SevaForge mark (public/brand/sevaforge-mark.png) on deep
+                water - rotating conic halo, orbiting droplets, pulsing
+                glow, shine sweep masked to the artwork - above the
+                four-member roster (Arya Jannawar team lead, Avani Jannawar,
+                Siddhant Santosh Pardeshi, Vijay Sahu) with roles.
+  All motion is CSS keyframes in globals.css ("Landing water experience"
+  section): transform/opacity only, every loop settles in a clean static
+  state under .reduce-motion, reveals forced visible for print and no-JS.
+  Ambient particles use static SSR-stable arrays (no random in render).
+
 MASCOT (src/components/mascot.tsx)
 ----------------------------------
   Bundu, a droplet guide on every screen: reacts to clicks and workspace

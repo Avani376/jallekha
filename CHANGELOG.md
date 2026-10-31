@@ -4,6 +4,39 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.1.0] - 2026-10-31
+
+Landing-page water experience and the SevaForge team stage; contributor
+hygiene pass.
+
+### Added
+- Landing-page water experience, all CSS-only ambient motion: a layered
+  swell surface with caustic shimmer, rising bubbles and drifting droplets
+  in the hero, sonar ripple rings behind the receipt-to-ledger panel, an
+  animated squiggle under section headings, and a flow ribbon whose
+  droplets travel the Record → Reconcile → Investigate → Resolve pipeline.
+  Every loop settles in a clean static state under the reduce-motion
+  control; reveals are forced visible for print and no-JS readers.
+- SevaForge team stage on the landing page: the team mark on deep water
+  (rotating conic halo, orbiting droplets, pulsing glow, shine sweep masked
+  to the artwork) above the four-member roster — Arya Jannawar (team lead),
+  Avani Jannawar, Siddhant Santosh Pardeshi, Vijay Sahu — with roles and
+  focus areas. Mark served from `public/brand/sevaforge-mark.png`.
+- `typecheck` now runs `next typegen` first, so a fresh clone no longer
+  fails on generated route types before the first build.
+
+### Fixed
+- Tank cutaway value label was invisible on dark surfaces (landing hero);
+  captions now take an `onDark` tone.
+- Three lint warnings (unused variable/imports) that had slipped past the
+  0-warnings gate; lint is back to 0 errors / 0 warnings.
+- Stale test counts on the landing page and in the README (38 → 41 domain
+  tests, 27 → 33 e2e checks).
+
+### Removed
+- Stray PowerPoint lock file (`~$…Pitch_Deck.pptx`) from `pitch-deck/`;
+  Office lock files are now gitignored.
+
 ## [1.0.1] - 2026-10-31
 
 Team handoff: onboarding context in the repository, roster of four, and

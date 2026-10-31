@@ -57,3 +57,6 @@ JALLEKHA_RESUME_PRIVATE*.txt
 JALLEKHA_SUBMISSION_PRIVATE*
 *.pem
 *.key
+
+# Office lock/temp files (e.g. "~$Deck.pptx" while PowerPoint is open)
+~$*

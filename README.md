@@ -24,8 +24,8 @@ your browser** — it is not a shared server. A discrepancy is **not proof of th
 | --- | --- |
 | Deterministic reconciliation with conservative uncertainty bounds | `recon-v1.0` rule engine, `src/domain/balance.ts` |
 | 4 signature scenarios computed exactly as specified | Baseline **0 L** in `[-600, +600]` · Duplicate **+5,000 L** in `[4,300, 5,700]` → **0 L** after reviewed void · Missing reading → *no residual* · Unexplained **+2,000 L** in `[1,400, 2,600]` |
-| 38 automated domain tests (Vitest) | `npm test` → **38/38 passing** |
-| 27 browser e2e checks (Playwright) | `node tests/e2e/journeys.spec.mjs` → **27/27 passing** |
+| 41 automated domain tests (Vitest) | `npm test` → **41/41 passing** |
+| 33 browser e2e checks (Playwright) | `node tests/e2e/journeys.spec.mjs` → **33/33 passing** |
 | Duplicate vs missing-reading → different next actions | Guided demo, both journeys scripted |
 | CSV import with validate-before-commit preview, idempotent replay | Same file twice never doubles totals |
 | Corrections that preserve history + audit trail + superseded runs | Every mutation is an audit event |
@@ -36,6 +36,8 @@ your browser** — it is not a shared server. A discrepancy is **not proof of th
 | **Ask Bundu** — grounded Q&A chat over your records: answers cite the exact receipt/reading IDs, suggest follow-ups, and never invent numbers | `src/components/ai/ask-panel.tsx`, `src/lib/ai/context.ts` |
 | **Bundu the mascot** — a reactive droplet guide: blinks, bobs, celebrates closures, flags discrepancies, and offers the next best action on every screen | `src/components/mascot.tsx` |
 | **Animated charts** — bars grow, lines draw, donuts sweep, gauges sweep; all stilled by the reduce-motion control | `src/components/charts.tsx`, `src/app/globals.css` |
+| **Landing water experience** — layered swell, rising bubbles, drifting droplets, sonar ripples and a flow ribbon; CSS-only, ambient, and settled to a clean static state by the reduce-motion control | `src/app/page.tsx`, `src/app/globals.css` |
+| **SevaForge team stage** — the team mark on deep water (rotating halo, orbiting droplets, shine sweep masked to the artwork) above the four-member roster | `src/app/page.tsx`, `public/brand/sevaforge-mark.png` |
 
 ## The problem
 
@@ -104,7 +106,7 @@ Details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 npm install
 npm run dev            # http://localhost:3000
 
-npm test               # 38 domain tests
+npm test               # 41 domain tests
 npm run typecheck      # tsc --noEmit
 npm run lint           # eslint
 npm run build          # production build (server mode)

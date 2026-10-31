@@ -6,7 +6,7 @@ import {
   SAMPLE_TANK_READINGS_CSV,
   SAMPLE_METER_READINGS_CSV,
 } from "../../src/domain/import";
-import { makeTankA, makeSiteA, makeMeterA, SITE_A_ID } from "../../fixtures/synthetic/scenarios";
+import { makeTankA, makeMeterA, SITE_A_ID } from "../../fixtures/synthetic/scenarios";
 
 const OPTIONS = {
   filename: "readings.csv",

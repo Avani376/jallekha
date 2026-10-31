@@ -25,7 +25,10 @@ NPM SCRIPTS
   npm run build:static static export to out/ (+ prefetch shim, 9 routes)
   npm run start        serve the server-mode build
   npm run lint         eslint - must be 0 errors, 0 warnings
-  npm run typecheck    tsc --noEmit - must be 0 errors
+  npm run typecheck    next typegen + tsc --noEmit - must be 0 errors
+                       (typegen first: a fresh clone has no generated route
+                       types until the first build, and tsc alone would
+                       fail on LayoutProps/PageProps)
   npm test             vitest - must be 41/41
   npm run preflight    privacy gate: fails if private paths are tracked
   npm run verify       typecheck + lint + test + build (run before push)
@@ -89,6 +92,7 @@ FOLDERS
   src/data/       adapters, seed, store (useSyncExternalStore)
   src/lib/        datetime + analytics + ai (settings/client/context)
   src/components/ ui kit, charts, mascot, equation card, AI panels
+  public/brand/   sevaforge-mark.png (team mark used by the landing stage)
   fixtures/synthetic/  signature scenarios + expected outcomes
   tests/domain/   Vitest suites        tests/e2e/  Playwright journeys
   scripts/        fix-static-prefetch.mjs, preflight-check.mjs

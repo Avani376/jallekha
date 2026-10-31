@@ -81,7 +81,6 @@ export function FlowWaterfall({
   const residualBar = (() => {
     if (residual === null) return null;
     const x = pad.l + parts.length * colW + 7;
-    const top = Math.min(level, residual);
     const hPx = Math.max((Math.abs(residual - level) / yMax) * plotH, 3);
     const color = Math.abs(residual) < 0.001 ? VERD : AMBER;
     return {

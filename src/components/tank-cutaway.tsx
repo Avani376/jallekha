@@ -13,6 +13,7 @@ export function TankCutaway({
   height = 190,
   tone = "aqua",
   label,
+  onDark = false,
 }: {
   fillFraction: number; // 0..1
   capacityLabel: string;
@@ -20,6 +21,7 @@ export function TankCutaway({
   height?: number;
   tone?: "aqua" | "water" | "amber";
   label?: string;
+  onDark?: boolean; // caption colors for dark surfaces (e.g. the landing hero)
 }) {
   const clamped = Math.max(0, Math.min(1, fillFraction || 0));
   const gradId = `tank-grad-${tone}`;
@@ -94,8 +96,8 @@ export function TankCutaway({
       </svg>
       <figcaption className="mt-2 text-center">
         {label ? <div className="text-[11px] font-bold uppercase tracking-wide text-slate-400">{label}</div> : null}
-        <div className="tabular text-lg font-extrabold text-ink">{valueLabel}</div>
-        <div className="text-[11px] text-slate-400">of {capacityLabel} capacity</div>
+        <div className={`tabular text-lg font-extrabold ${onDark ? "text-white" : "text-ink"}`}>{valueLabel}</div>
+        <div className={onDark ? "text-[11px] text-white/50" : "text-[11px] text-slate-400"}>of {capacityLabel} capacity</div>
       </figcaption>
     </figure>
   );

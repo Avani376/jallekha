@@ -97,3 +97,31 @@ D12. Demo seed includes a rich 14-day history site
      Why: signature scenarios must stay minimal and exact; charts need
      longitudinal data. Riverside reconciles its last complete day so its
      balance card is also honest.
+
+D13. Landing water motion is CSS-only ambient, never a library
+     Decision: the landing page's water experience (swell, bubbles,
+     droplets, ripple rings, flow ribbon, team-stage halo/orbit/shine) is
+     pure CSS keyframes with static SSR-stable props; no framer-motion,
+     GSAP or JS-driven loops.
+     Why: zero bundle cost, compositor-only work (transform/opacity),
+     automatically stilled by the existing .reduce-motion control, and
+     safe for Playwright (nothing interactive animates forever - the
+     motion-stable-button rule from D11 extends to every ambient layer).
+     Each loop's final keyframe is a clean static state, so the reduced-
+     motion one-shot lands somewhere sensible rather than mid-animation.
+     Rejected: an animated hero video/lottie (weight, and it would fight
+     the honest "no simulated numbers" stance), canvas particles (JS main-
+     thread cost for decoration), and intersection-triggered timelines
+     (they reintroduce the hidden-content failure mode the reveals fixed).
+     Note: the team mark is the real SevaForge PNG masked to itself for
+     the shine sweep - the logo is never redrawn by hand in SVG.
+
+D14. typecheck runs `next typegen` first
+     Decision: npm run typecheck = next typegen && tsc --noEmit.
+     Why: Next 16's LayoutProps/PageProps route types are generated
+     artifacts; on a fresh clone tsc alone failed with TS2304 before the
+     first build, so the mandatory gate rejected every new teammate's
+     first verify. Typegen is deterministic and costs ~1s.
+     Rejected: committing generated types (noise, drift risk) or telling
+     people to "run build once first" (a gate that needs tribal knowledge
+     is a broken gate).

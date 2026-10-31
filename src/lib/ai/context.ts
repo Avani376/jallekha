@@ -6,7 +6,6 @@
 
 import type { WorkspaceState } from "@/domain/types";
 import { activeRunFor, periodFor } from "@/data/store";
-import { formatLiters } from "@/domain/units";
 import { istDate } from "@/lib/datetime";
 
 export function buildWorkspaceContext(state: WorkspaceState, siteId: string, maxChars = 4200): string {

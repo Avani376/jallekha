@@ -1,6 +1,6 @@
 {
   "name": "jallekha",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Water delivery and consumption reconciliation for campuses and housing societies — deterministic balance, uncertainty bounds, verification cases, documented audit trail.",
   "author": "Team SevaForge",
@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "preflight": "node scripts/preflight-check.mjs",
