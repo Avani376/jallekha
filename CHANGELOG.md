@@ -4,6 +4,27 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.3.1] - 2026-10-31
+
+Submission deck rebuilt strictly on the official challenge template.
+
+### Changed
+- `pitch-deck/SevaForge_JalLekha_Pitch_Deck.pptx` (+ matching PDF) is now
+  built **on the official Seva First Innovation Challenge template**
+  (10 x 5.62 in, Nirmala UI, navy/orange system, mandated slide order and
+  footers) — replacing the previous custom-branded 13.33 x 7.5 in deck.
+  All submission content is preserved and re-slotted: problem cards with
+  the headline stat, solution brief with the three-step how-it-works and
+  the existing-vs-ours comparison table, feasibility stage tracker marked
+  at Working Prototype, impact stats (1 pilot campus / 4 instrumented
+  metrics / 3 sustainability domains — no invented numbers), the
+  four-member team roster and the support checklist.
+- `pitch-deck/build_template_deck.py` replaces the retired pptxgenjs
+  `build.js`: a reproducible python-pptx fill-in from the official
+  template (`template_source.pptx` committed unmodified as the build
+  input). Verified: zero leftover placeholders, all image relations
+  resolve, render-checked slide by slide.
+
 ## [1.3.0] - 2026-10-31
 
 README showcase release: animated artwork, live product tour, deep
