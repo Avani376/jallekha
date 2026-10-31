@@ -24,7 +24,7 @@ your browser** — it is not a shared server. A discrepancy is **not proof of th
 | --- | --- |
 | Deterministic reconciliation with conservative uncertainty bounds | `recon-v1.0` rule engine, `src/domain/balance.ts` |
 | 4 signature scenarios computed exactly as specified | Baseline **0 L** in `[-600, +600]` · Duplicate **+5,000 L** in `[4,300, 5,700]` → **0 L** after reviewed void · Missing reading → *no residual* · Unexplained **+2,000 L** in `[1,400, 2,600]` |
-| 41 automated domain tests (Vitest) | `npm test` → **41/41 passing** |
+| 41 domain + 14 AI-configuration tests (Vitest) | `npm test` → **55/55 passing** |
 | 33 browser e2e checks (Playwright) | `node tests/e2e/journeys.spec.mjs` → **33/33 passing** |
 | Duplicate vs missing-reading → different next actions | Guided demo, both journeys scripted |
 | CSV import with validate-before-commit preview, idempotent replay | Same file twice never doubles totals |
@@ -106,8 +106,8 @@ Details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 npm install
 npm run dev            # http://localhost:3000
 
-npm test               # 41 domain tests
-npm run typecheck      # tsc --noEmit
+npm test               # 55 tests (41 domain + 14 AI-configuration)
+npm run typecheck      # next typegen + tsc --noEmit
 npm run lint           # eslint
 npm run build          # production build (server mode)
 
@@ -119,8 +119,44 @@ npx playwright install chromium
 node tests/e2e/journeys.spec.mjs http://127.0.0.1:3000
 ```
 
-Environment variables (none required for the demo): see `.env.example`
-(`AI_MODE`, `ZAI_API_KEY`, `ZAI_MODEL`, `ZAI_BASE_URL` — server-only, disabled by default).
+### Configuration (optional — the demo needs none of this)
+
+AI is **disabled by default** and provider-neutral. To enable it, create a
+local `.env` (this file is never committed; there is intentionally no
+`.env.example` in the repository):
+
+```bash
+AI_MODE=disabled          # disabled | live
+AI_PROVIDER=              # openai | anthropic | zai | custom
+AI_MODEL=                 # a model id verified under YOUR plan
+AI_BASE_URL=              # optional override; REQUIRED for zai/custom
+OPENAI_API_KEY=
+ANTHROPIC_API_KEY=
+ZAI_API_KEY=
+```
+
+`src/lib/ai/providers.ts` validates this configuration server-side with
+clear errors; API keys stay server-side and are never exposed to the
+browser. Details in [docs/AI.md](docs/AI.md).
+
+### Local exclusions (repository policy)
+
+This repository intentionally does **not** publish a `.gitignore`. Instead,
+the tracked gate `npm run preflight` fails the push if private material is
+ever staged — internal project knowledge, private context, environment
+files and credentials are all blocked by name. Before your first commit,
+add the same rules to your **local** Git exclude so your client never even
+stages them (`.git/info/exclude` works without creating any tracked file):
+
+```
+.env*
+Build_Prompt/
+.private-context/
+.private-submission/
+node_modules/
+.next/
+out/
+```
 
 ## Validation
 

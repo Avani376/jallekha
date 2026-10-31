@@ -13,8 +13,11 @@ export interface AiSettings {
 }
 
 export const AI_DEFAULTS: Omit<AiSettings, "enabled" | "apiKey"> = {
-  baseUrl: "https://api.z.ai/api/paas/v4",
-  model: "glm-4.6",
+  // Provider-neutral defaults: any OpenAI-compatible endpoint works (OpenAI,
+  // Z.ai, self-hosted gateways). The model id always comes from the
+  // operator's own plan — nothing is hardcoded here.
+  baseUrl: "https://api.openai.com/v1",
+  model: "",
 };
 
 const KEY = "jallekha.ai.v1";

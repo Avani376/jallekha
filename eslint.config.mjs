@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     // Local release staging (mirror of the static export):
     ".release/**",
     "pitch-deck/**",
+    // Local deployment stage (static export mirror):
+    ".deploy-site/**",
   ]),
 ]);
 

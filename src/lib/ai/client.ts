@@ -1,10 +1,11 @@
 /**
- * Browser-direct AI client (OpenAI-compatible chat completions, which the
- * Z.ai v4 endpoint implements). The operator's own key is used from their
- * browser; responses are schema-validated with Zod and anything invalid is
- * rejected — the deterministic rule-based explanation always remains
- * available as the fallback. The model may only explain supplied evidence;
- * every number shown in the UI is rendered from the domain result.
+ * Browser-direct AI client (OpenAI-compatible chat completions — the wire
+ * format used by OpenAI, Z.ai and most gateways). The operator's own key is
+ * used from their browser; responses are schema-validated with Zod and
+ * anything invalid is rejected — the deterministic rule-based explanation
+ * always remains available as the fallback. The model may only explain
+ * supplied evidence; every number shown in the UI is rendered from the
+ * domain result.
  */
 
 import { z } from "zod";

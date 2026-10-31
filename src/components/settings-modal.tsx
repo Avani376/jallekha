@@ -72,8 +72,8 @@ export function SettingsModal({ open, onClose }: { open: boolean; onClose: () =>
                   placeholder={AI_DEFAULTS.baseUrl}
                 />
               </Field>
-              <Field label="Model" htmlFor="ai-model" hint="Must be eligible on your plan">
-                <Input id="ai-model" value={cfg.model} onChange={(e) => setCfg({ ...cfg, model: e.target.value })} placeholder={AI_DEFAULTS.model} />
+              <Field label="Model" htmlFor="ai-model" hint="The model id available under your plan">
+                <Input id="ai-model" value={cfg.model} onChange={(e) => setCfg({ ...cfg, model: e.target.value })} placeholder="your provider's model id" />
               </Field>
             </div>
             <Field

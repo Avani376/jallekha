@@ -105,7 +105,7 @@ export function AskPanel() {
               <p className="font-bold">AI answers need your own API key</p>
               <p className="mt-1.5">
                 Open <strong>Settings → AI assistance</strong>, paste a key for an OpenAI-compatible endpoint
-                (the Z.ai v4 base URL is pre-filled), and press <strong>Test connection</strong>. The key stays in
+                (any provider works — set its base URL and your model id), and press <strong>Test connection</strong>. The key stays in
                 this browser and is sent directly to the provider.
               </p>
               <p className="mt-2">

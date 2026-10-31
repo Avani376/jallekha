@@ -4,6 +4,38 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.1.2] - 2026-10-31
+
+Repository privacy refinement and provider-neutral AI configuration.
+
+### Changed
+- **Internal project knowledge removed from the repository.** The
+  engineering handoff pack is no longer published on GitHub — it is a
+  local-only team resource shared through the team's private channel, and
+  the tracked preflight gate now blocks it (plus `.env*` including
+  templates, and `.gitignore`, which is intentionally untracked) from ever
+  being committed again.
+- `.gitignore` is intentionally untracked (local copies preserved). The
+  committed safeguard is `npm run preflight`, which every contributor runs
+  before pushing; README documents the local `git info/exclude` block.
+
+### Added
+- **Provider-neutral AI configuration** (`src/lib/ai/providers.ts`): a
+  server-side resolver with a declared provider registry — OpenAI,
+  Anthropic Claude, Z.ai, and any custom OpenAI-compatible endpoint —
+  14 unit tests included. `AI_MODE=disabled` is the default and reads no
+  key material; `live` mode requires a provider, a key, and an operator
+  -verified model, with clear actionable errors. No hardcoded model
+  identifiers; endpoints for non-OpenAI providers must be verified and set
+  explicitly.
+- In-app AI defaults are now provider-neutral (operators choose endpoint,
+  key and model; nothing is pre-filled from a specific vendor).
+
+### Removed
+- `.env.example` from the repository; operators create a local `.env`
+  from the README instructions (AI variables per provider; keys never
+  committed, never browser-exposed).
+
 ## [1.1.1] - 2026-10-31
 
 Full-app QA pass (automated gates + guided GUI exploratory testing of

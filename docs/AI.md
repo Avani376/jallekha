@@ -1,13 +1,16 @@
 # AI integration
 
 JalLekha's engine is deterministic and never depends on AI. AI assistance is
-**opt-in** and uses the operator's own key.
+**opt-in** and provider-neutral: any OpenAI-compatible endpoint works
+(OpenAI, Z.ai, self-hosted gateways), and Anthropic's native API is a
+declared provider at the configuration layer.
 
-## How it works
+## How it works (browser-direct, operator's own key)
 
-- Settings → AI assistance: enable, set the base URL (default
-  `https://api.z.ai/api/paas/v4`), paste the API key, choose the model
-  (default `glm-4.6`), then **Test connection**.
+- Settings → AI assistance: enable, set the base URL (default is OpenAI's
+  documented root; change it to your provider's endpoint), paste the API
+  key, type the model id available under your plan (never hardcoded by the
+  app), then **Test connection**.
 - Settings persist in `localStorage` (`jallekha.ai.v1`) in the operator's
   browser only. The key is sent **directly** from the browser to the
   provider endpoint — it never touches JalLekha servers, exports, audit
@@ -17,6 +20,35 @@ JalLekha's engine is deterministic and never depends on AI. AI assistance is
   failure — missing key, network/CORS, auth (401/403), provider error,
   timeout, malformed JSON — falls back to the deterministic rule-based
   explanation, visibly labeled. Nothing partial is ever shown as AI output.
+
+## Provider configuration (server-side, `.env` — never committed)
+
+The repository ships no `.env.example`; each operator creates a local
+`.env` from the README instructions. `AI_MODE` defaults to `disabled`, and
+nothing in the application reads key variables unless it is explicitly set
+to `live` **and** a valid provider configuration exists:
+
+```
+AI_MODE=disabled          # disabled | live
+AI_PROVIDER=              # openai | anthropic | zai | custom
+AI_MODEL=                 # a model id verified under YOUR plan
+AI_BASE_URL=              # optional override; REQUIRED for zai/custom
+OPENAI_API_KEY=
+ANTHROPIC_API_KEY=
+ZAI_API_KEY=
+```
+
+`src/lib/ai/providers.ts` resolves this into a validated configuration or a
+clear error (missing key, unknown provider, missing model/base URL). Design
+rules it enforces:
+
+- No hardcoded model identifiers and no unverified endpoints — OpenAI and
+  Anthropic have documented stable roots; `zai`/`custom` must set
+  `AI_BASE_URL` after verifying it in current provider documentation.
+- Keys live only in the server environment; they never appear in error
+  messages, logs, or anything sent to the browser.
+- Invalid configuration raises `AiConfigError` with an actionable message;
+  `isAiLive()` never throws.
 
 ## Features
 
@@ -39,10 +71,10 @@ Browser-direct calls suit single-operator use. For a shared deployment where
 the key must live server-side, proxy the calls instead of exposing keys:
 
 1. Add a route handler (`src/app/api/ai/route.ts` in a **server-mode**
-   deployment — static exports exclude API routes) that forwards
-   `{ messages, maxTokens }` to the provider using a server-only env key
-   (`AI_MODE=live`, `ZAI_API_KEY`, `ZAI_MODEL`, `ZAI_BASE_URL`), with per-IP
-   rate limiting and the same schema validation.
+   deployment — static exports exclude API routes) that resolves its
+   provider via `resolveAiConfig()` and forwards `{ messages, maxTokens }`
+   using the resolved base URL, key and wire style (`openai-compatible` or
+   `anthropic`), with per-IP rate limiting and the same schema validation.
 2. Point the app at it by setting the Settings base URL to your deployment's
    `/api/ai` path (the proxy returns the same `choices[0].message.content`
    shape, so the client code is unchanged).
