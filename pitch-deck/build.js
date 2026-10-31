@@ -28,7 +28,7 @@ const W = 13.33, H = 7.5, M = 0.55;
 
 const pres = new pptxgen();
 pres.layout = "LAYOUT_WIDE";
-pres.author = "Team SevaForge - Arya Jannawar, Avani, Siddhant Santosh Pardeshi";
+pres.author = "Team SevaForge - Arya Jannawar, Avani Jannawar, Siddhant Santosh Pardeshi, Vijay Sahu";
 pres.title = "JalLekha - SevaForge Pitch Deck (Seva First Innovation Challenge 2026)";
 
 // ---------- helpers ----------
@@ -140,7 +140,7 @@ function logoChip(slide, x, y) {
   shot(s, A("app-workflow.png"), 6.58, 4.85, 6.2, "One workflow, visible end to end - record → reconcile → investigate → resolve", true);
 
   s.addNotes(
-    "OPEN (60-90s). 'Good morning. We are SevaForge - Arya, Avani and Siddhant. JalLekha answers one deceptively simple question for any campus or housing society that buys water by the tanker: did the water that arrived actually match the water that was recorded, measured and paid for?\n\n" +
+    "OPEN (60-90s). 'Good morning. We are SevaForge - Arya, Avani, Siddhant and Vijay. JalLekha answers one deceptively simple question for any campus or housing society that buys water by the tanker: did the water that arrived actually match the water that was recorded, measured and paid for?\n\n" +
     "Point at the screenshot: this is our live product, not a mockup - every figure on screen is recomputed from source records. What came in, what was measured, what needs checking.\n\n" +
     "Status honesty up front builds credibility: this is a working prototype, validated by 41 automated domain tests and 33 browser end-to-end checks, running on synthetic demonstration data. No pilot, no savings claims - yet. That honesty is deliberate; it is the same discipline the product itself enforces.\n\n" +
     "Domain: Sustainability - technology for pollution mitigation, water conservation and waste management. Water you cannot account for is water you cannot conserve.'"
@@ -397,24 +397,25 @@ function logoChip(slide, x, y) {
   s.addText("THE PEOPLE & THE FUTURE", {
     x: 5.6, y: 0.5, w: 7.18, h: 0.3, margin: 0, fontFace: FONT, fontSize: 12, bold: true, color: AQUA, charSpacing: 3, align: "right",
   });
-  s.addText("Three builders. One honest ask.", {
+  s.addText("Four builders. One honest ask.", {
     x: M, y: 1.28, w: 11.5, h: 0.6, margin: 0, fontFace: FONT, fontSize: 30, bold: true, color: "FFFFFF",
   });
 
   // team cards
-  const ty = 2.12, tw = 3.9, tg = 0.16;
+  const ty = 2.12, tw = 2.94, tg = 0.155;
   const team = [
     { init: "AJ", name: "Arya Jannawar", role: "Team Lead · product & reconciliation domain" },
-    { init: "A", name: "Avani", role: "Engineering & data integrity" },
+    { init: "AV", name: "Avani Jannawar", role: "Engineering & data integrity" },
     { init: "SP", name: "Siddhant Santosh Pardeshi", role: "Quality & user workflow" },
+    { init: "VS", name: "Vijay Sahu", role: "Research & validation" },
   ];
   team.forEach((t, i) => {
     const x = M + i * (tw + tg);
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y: ty, w: tw, h: 1.34, rectRadius: 0.1, fill: { color: NAVY_CARD }, line: { color: NAVY_LINE, width: 1 } });
-    s.addShape(pres.shapes.OVAL, { x: x + 0.18, y: ty + 0.31, w: 0.72, h: 0.72, fill: { color: TEAL } });
-    s.addText(t.init, { x: x + 0.18, y: ty + 0.31, w: 0.72, h: 0.72, margin: 0, fontFace: FONT, fontSize: 16, bold: true, color: "FFFFFF", align: "center", valign: "middle" });
-    s.addText(t.name, { x: x + 1.04, y: ty + 0.28, w: tw - 1.2, h: 0.34, margin: 0, fontFace: FONT, fontSize: 15.5, bold: true, color: "FFFFFF", align: "left", valign: "top" });
-    s.addText(t.role, { x: x + 1.04, y: ty + 0.62, w: tw - 1.2, h: 0.56, margin: 0, fontFace: FONT, fontSize: 11.5, color: AQUA, align: "left", valign: "top", lineSpacingMultiple: 1.05 });
+    s.addShape(pres.shapes.OVAL, { x: x + 0.15, y: ty + 0.31, w: 0.62, h: 0.62, fill: { color: TEAL } });
+    s.addText(t.init, { x: x + 0.15, y: ty + 0.31, w: 0.62, h: 0.62, margin: 0, fontFace: FONT, fontSize: 14, bold: true, color: "FFFFFF", align: "center", valign: "middle" });
+    s.addText(t.name, { x: x + 0.9, y: ty + 0.2, w: tw - 1.02, h: 0.52, margin: 0, fontFace: FONT, fontSize: 13.5, bold: true, color: "FFFFFF", align: "left", valign: "middle", lineSpacingMultiple: 1.0 });
+    s.addText(t.role, { x: x + 0.9, y: ty + 0.74, w: tw - 1.02, h: 0.5, margin: 0, fontFace: FONT, fontSize: 10.5, color: AQUA, align: "left", valign: "top", lineSpacingMultiple: 1.05 });
   });
 
   // support required
@@ -444,7 +445,7 @@ function logoChip(slide, x, y) {
 
   footer(s, 6, true);
   s.addNotes(
-    "CLOSE (45-60s). Introduce the team in one line each - Arya leads product and the reconciliation domain, Avani drives engineering and data integrity, Siddhant owns quality and the user workflow.\n\n" +
+    "CLOSE (45-60s). Introduce the team in one line each - Arya leads product and the reconciliation domain, Avani drives engineering and data integrity, Siddhant owns quality and the user workflow, and Vijay anchors research and validation.\n\n" +
     "Then the ask, concretely: one pilot site for four to six weeks - we bring the software, the metrics and the training; the campus brings its existing paper registers as CSVs. Mentorship and lab access to run the reviewer-time study properly. And a route to shared deployment so a whole institution can run on authenticated workspaces.\n\n" +
     "End on the line that is already in the product footer: know what came in, what was measured, and what needs checking. That is the whole product - an honest balance for every litre.\n\n" +
     "Leave the jury with the links: the repo and the live demo are one click away."
