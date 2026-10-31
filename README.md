@@ -8,12 +8,12 @@
 
 **Water delivery & consumption reconciliation for campuses and housing societies.**
 
-[![Live demo](https://img.shields.io/badge/▶_LIVE_DEMO-jallekha.vercel.app-25D8D1?labelColor=061a24&style=for-the-badge)](https://jallekha.vercel.app/demo)
-[![Watch the video](https://img.shields.io/badge/▶_WATCH-6-min_narrated_walkthrough-3188FF?labelColor=061a24&style=for-the-badge)](docs/media/jallekha-walkthrough.mp4)
-[![Tests](https://img.shields.io/badge/tests-55_/_55_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#quality-gates)
-[![Browser checks](https://img.shields.io/badge/e2e-33_/_33_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#quality-gates)
-[![AI](https://img.shields.io/badge/AI-off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance--optional--providerneutral)
-[![Data](https://img.shields.io/badge/demo_data-100%25_synthetic-22414F?labelColor=061a24&style=for-the-badge)](#-honest-status)
+[![Live demo](https://img.shields.io/badge/%E2%96%B6_LIVE_DEMO-jallekha.vercel.app-25D8D1?labelColor=061a24&style=for-the-badge)](https://jallekha.vercel.app/demo)
+[![Watch the video](https://img.shields.io/badge/%E2%96%B6_WATCH-6_min_narrated_walkthrough-3188FF?labelColor=061a24&style=for-the-badge)](docs/media/jallekha-walkthrough.mp4)
+[![Tests](https://img.shields.io/badge/tests-55_%2F_55_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
+[![Browser checks](https://img.shields.io/badge/e2e-33_%2F_33_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
+[![AI](https://img.shields.io/badge/AI-off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance--optional-provider-neutral-off-by-default)
+[![Data](https://img.shields.io/badge/demo_data-100%25_synthetic-22414F?labelColor=061a24&style=for-the-badge)](#honest-status-printed-on-the-product-itself)
 
 **Seva First Innovation Challenge · Maharashtra Zone · Sector: Sustainability — Energy, Climate & Others**
 
