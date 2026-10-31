@@ -452,7 +452,7 @@ function StatusSection() {
               <StatusPill tone="ok">Working</StatusPill>
               <ul className="mt-3 list-disc space-y-2 pl-4 text-[13px] leading-relaxed text-white/65 marker:text-aqua/70">
                 <li>Deterministic reconciliation engine with conservative uncertainty intervals</li>
-                <li>41 automated domain tests covering the four signature scenarios and edge cases</li>
+                <li>55 automated tests — the four signature scenarios asserted to the litre, plus AI-configuration validation</li>
                 <li>Duplicate vs missing-reading journeys with reviewable resolutions and audit trail</li>
                 <li>CSV import with idempotent replay and validate-before-commit preview</li>
                 <li>Printable documented review + safe CSV/JSON export</li>
