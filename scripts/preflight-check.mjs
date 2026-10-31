@@ -9,16 +9,15 @@ import { execSync } from "node:child_process";
 const FORBIDDEN = [
   /\.private-context\//,
   /\.private-submission\//,
-  /JALLEKHA_CONTEXT_PRIVATE/,
-  /JALLEKHA_RESUME_PRIVATE/,
-  /JALLEKHA_SUBMISSION_PRIVATE/,
+  /JALLEKHA_[A-Z_]*PRIVATE/i,
+  /JALLEKHA_.*MASTER_PROMPT/i,
+  /BUILD_PROMPT/,
   /^\.env($|\.)/, // any .env* except .env.example (checked below)
   /\.env\.local/,
   /\.pem$/,
   /\.key$/,
   /SubmissionContentHackathon/,
   /Arya_Sid_EventContextt/,
-  /JalLekha_ZAI_GLM_Master_Prompt/,
 ];
 
 let tracked = "";

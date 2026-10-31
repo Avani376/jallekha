@@ -12,8 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Local deploy staging (mirror of the static export):
-    ".zcode-site/**",
+    // Local release staging (mirror of the static export):
+    ".release/**",
   ]),
 ]);
 
