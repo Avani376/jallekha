@@ -10,10 +10,10 @@ const FORBIDDEN = [
   /\.private-context\//,
   /\.private-submission\//,
   /JALLEKHA_[A-Z_]*PRIVATE/i,
-  /JALLEKHA_.*MASTER_PROMPT/i,
+  /JALLEKHA_.*WORKING/i,
   // Build_Prompt/ is intentionally tracked: it is the team's engineering
-  // handoff pack, committed with nothing private in it. Raw working prompts
-  // and submission drafts at the workspace root stay blocked above.
+  // handoff pack, committed with nothing private in it. Private working
+  // notes and submission drafts at the workspace root stay blocked above.
   /^\.env($|\.)/, // any .env* except .env.example (checked below)
   /\.env\.local/,
   /\.pem$/,

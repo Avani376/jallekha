@@ -127,10 +127,13 @@ TESTS
 
 DEPLOYED
 --------
-  Static export of main at https://jallekha-yp7u.zai-ai.site (health 200,
-  deployed 31 Oct 2026 from this account). The earlier host
-  jallekha-na41.zai-ai.site may still serve an older build; jallekha-yp7u
-  is the canonical demo link from the v1.1.1 release onward.
+  Canonical production deployment (from v1.1.1 onward):
+    https://jallekha.vercel.app        Vercel, Next.js server build -
+    import/alias created 31 Oct 2026; this is the link to share. A backup
+    static export lives at https://jallekha-yp7u.zai-ai.site (older
+    jallekha-na41 host is retired/legacy). The Vercel project was created
+    from the repo checkout via the CLI; repo-owner GitHub access can
+    enable push-to-deploy (vercel git connect) so main always deploys.
   See 03_TECH_STACK_SETUP.txt for the build/deploy procedure.
 
 HONEST GAPS (do not paper over these)

@@ -6,7 +6,7 @@
 
 *Know what came in, what was measured, and what needs checking.*
 
-[Live Demo](https://jallekha-yp7u.zai-ai.site/demo) · [Landing page](https://jallekha-yp7u.zai-ai.site) · [Architecture](docs/ARCHITECTURE.md) · [Validation](docs/VALIDATION.md)
+[Live Demo](https://jallekha.vercel.app/demo) · [Landing page](https://jallekha.vercel.app) · [Architecture](docs/ARCHITECTURE.md) · [Validation](docs/VALIDATION.md)
 
 **Prototype by Team SevaForge — Seva First Innovation Challenge, Maharashtra Zone 2026**
 
@@ -63,7 +63,7 @@ within uncertainty → discrepancy`. A discrepancy is never labelled as theft, l
 
 ## Two-minute tour
 
-1. Open the [guided demo](https://jallekha-yp7u.zai-ai.site/demo) — four pre-loaded synthetic sites.
+1. Open the [guided demo](https://jallekha.vercel.app/demo) — four pre-loaded synthetic sites.
 2. **Baseline**: the balance closes at 0 L within the stated interval.
 3. **Legacy ledger week**: a double-entered receipt produces `R = +5,000 L` and a duplicate
    candidate linked to both rows. Void it as a reviewer → the balance returns to 0 L, history kept.

@@ -1,5 +1,5 @@
 /**
- * Signature synthetic fixtures (master prompt Section 07), versioned v1.
+ * Signature synthetic fixtures, versioned v1.
  * All sites, suppliers, receipts, people and notes are SYNTHETIC.
  *
  * Uncertainty declarations (operational assumption, fixture-level):

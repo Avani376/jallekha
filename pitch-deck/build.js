@@ -136,7 +136,7 @@ function logoChip(slide, x, y) {
     { x: M, y: 5.88, w: 6.4, h: 0.95, margin: 0, fontFace: FONT, fontSize: 12, color: MUTED_D, align: "left", valign: "top", lineSpacingMultiple: 1.18 }
   );
 
-  shot(s, A("app-hero.png"), 6.58, 1.35, 6.2, "The live product - jallekha-yp7u.zai-ai.site/demo", true);
+  shot(s, A("app-hero.png"), 6.58, 1.35, 6.2, "The live product - jallekha.vercel.app/demo", true);
   shot(s, A("app-workflow.png"), 6.58, 4.85, 6.2, "One workflow, visible end to end - record → reconcile → investigate → resolve", true);
 
   s.addNotes(
@@ -439,7 +439,7 @@ function logoChip(slide, x, y) {
     x: qx + 0.3, y: qy + 0.22, w: qw - 0.6, h: 1.3, margin: 0, fontFace: FONT, fontSize: 19.5, bold: true, color: AQUA, align: "left", valign: "top", lineSpacingMultiple: 1.12,
   });
   s.addText("JalLekha - from Team SevaForge", { x: qx + 0.3, y: qy + 1.5, w: qw - 0.6, h: 0.3, margin: 0, fontFace: FONT, fontSize: 12, color: "FFFFFF" });
-  s.addText("github.com/Avani376/jallekha  ·  live demo: jallekha-yp7u.zai-ai.site/demo", {
+  s.addText("github.com/Avani376/jallekha  ·  live demo: jallekha.vercel.app/demo", {
     x: qx + 0.3, y: qy + 1.92, w: qw - 0.6, h: 0.5, margin: 0, fontFace: FONT, fontSize: 11.5, color: MUTED_D, valign: "top", lineSpacingMultiple: 1.15,
   });
 

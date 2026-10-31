@@ -45,7 +45,8 @@ next-env.d.ts
 
 # deploy stage (local only)
 .release/
-.zcode-site.json
+.deploy-site.json
+.deploy-site/
 AGENTS.md
 
 # PRIVATE — never commit (defense in depth; these live OUTSIDE this repo at
@@ -60,6 +61,3 @@ JALLEKHA_SUBMISSION_PRIVATE*
 
 # Office lock/temp files (e.g. "~$Deck.pptx" while PowerPoint is open)
 ~$*
-
-# ZCode Sites deploy stage (local only)
-.zcode-site/
