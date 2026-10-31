@@ -4,6 +4,19 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.2.0] - 2026-10-31
+
+Narrated video walkthrough for the competition submission.
+
+### Added
+- `docs/media/jallekha-walkthrough.mp4` — a 6-minute narrated product
+  walkthrough (720p, 14.6 MB): the problem of scattered water records, the
+  reconciliation approach with conservative uncertainty, all four signature
+  scenarios performed live on the demo (including the duplicate-void journey
+  with run history), the verification-case workflow, CSV import with
+  idempotent replay, dashboard charts, reports, honest limits, and the
+  SevaForge team credits.
+
 ## [1.1.2] - 2026-10-31
 
 Repository privacy refinement and provider-neutral AI configuration.

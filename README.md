@@ -8,6 +8,10 @@
 
 [Live Demo](https://jallekha.vercel.app/demo) · [Landing page](https://jallekha.vercel.app) · [Architecture](docs/ARCHITECTURE.md) · [Validation](docs/VALIDATION.md)
 
+**▶ [Watch the 6-minute narrated walkthrough](docs/media/jallekha-walkthrough.mp4)** — the problem, the four
+signature scenarios (duplicate receipt, missing reading, unexplained residual), the case workflow,
+imports, dashboard, reports, and the team behind it.
+
 **Prototype by Team SevaForge — Seva First Innovation Challenge, Maharashtra Zone 2026**
 
 </div>
