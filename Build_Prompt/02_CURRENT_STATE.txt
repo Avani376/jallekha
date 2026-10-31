@@ -127,7 +127,10 @@ TESTS
 
 DEPLOYED
 --------
-  Static export of main at https://jallekha-na41.zai-ai.site (health 200).
+  Static export of main at https://jallekha-yp7u.zai-ai.site (health 200,
+  deployed 31 Oct 2026 from this account). The earlier host
+  jallekha-na41.zai-ai.site may still serve an older build; jallekha-yp7u
+  is the canonical demo link from the v1.1.1 release onward.
   See 03_TECH_STACK_SETUP.txt for the build/deploy procedure.
 
 HONEST GAPS (do not paper over these)

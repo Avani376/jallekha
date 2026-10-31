@@ -60,3 +60,6 @@ JALLEKHA_SUBMISSION_PRIVATE*
 
 # Office lock/temp files (e.g. "~$Deck.pptx" while PowerPoint is open)
 ~$*
+
+# ZCode Sites deploy stage (local only)
+.zcode-site/
