@@ -1,0 +1,89 @@
+04_ARCHITECTURE_RULES
+======================
+
+LAYER BOUNDARIES (enforced by review, not tooling - keep them)
+--------------------------------------------------------------
+  src/domain/  PURE TypeScript. No React, no storage, no network, no
+               framework imports. Deterministic. This is what the 41 tests
+               protect; anything here must stay testable in Node.
+  src/data/    Adapters (LocalStorageAdapter keyed per workspace mode),
+               seed builder, and the React store. The adapter IS the
+               external store; React subscribes via useSyncExternalStore
+               with server/client snapshots (no setState-in-effect, no
+               hydration mismatch - this fixed a real crash once).
+  src/app/     Client components. Pages read state through useWorkspace()
+               and call actions; they never touch storage directly.
+  src/lib/     Pure helpers (datetime, analytics) and the AI client.
+
+DATA ADAPTER CONTRACT (src/data/adapter.ts)
+-------------------------------------------
+  load() / save() / update(fn) / reset() / clear() / subscribe(listener)
+  update() applies a mutation and notifies subscribers. The store wraps
+  subscribe in an arrow (binding the method) - passing adapter.subscribe
+  directly crashes React (this exact bug shipped once; keep the arrow).
+  A future multi-user backend implements the same interface; nothing in
+  the UI special-cases storage beyond the mode disclosure chip.
+
+RECONCILIATION MATH (src/domain/balance.ts, rule recon-v1.0)
+------------------------------------------------------------
+  R = O + D - U - C
+  R_min = O_min + D_min - U_max - C_max
+  R_max = O_max + D_max - U_min - C_min
+  - O/C: stock at the exact boundary instants. D/U: flows in [start,end).
+  - Deliveries count only if posted AND inside [start,end) - start
+    inclusive, end exclusive; events exactly at boundaries are handled
+    explicitly (start in, end out) and tested.
+  - usage = meterEnd - meterStart, only when the same meter/units/coverage
+    apply. A negative delta is an invalid-reading finding, never abs().
+  - Usage uncertainty = start bound + end bound. Total bounds are the
+    conservative SUM of input bounds (no root-sum-square).
+  - Status precedence: invalid > incomplete (no residual, missing fields
+    named) > provisional (any input uncertainty null -> no interval) >
+    within-uncertainty > discrepancy.
+  - Duplicate boundary readings at the same instant are blocking, not
+    averaged. Stock above capacity is blocking, not clamped.
+  - Cross-site records are rejected by the engine; callers pass only the
+    site's own records (the seed once passed everything - the engine
+    correctly refused; keep callers filtered).
+
+FINDINGS + CASES
+----------------
+  Finding IDs are content-derived (stableHash of type+sourceIds+detail) so
+  they survive reordering and re-runs. Actionable findings (duplicate
+  candidate, missing reading, residual outside uncertainty) open an
+  investigation exactly once (investigationsForRuns, shared by seed and
+  store). Voiding a delivery auto-resolves its open duplicate case with
+  the void reason. Status transitions go through assertTransition.
+
+IMPORT RULES (src/domain/import.ts)
+-----------------------------------
+  CSV is data: manual parser (quotes/commas/CRLF), no eval, HTML-escaped
+  at render, formula prefixes neutralized on export (sanitizeCell).
+  Dates: ISO mode REJECTS slash dates (V8 would parse 05/03/2026 as
+  May 3rd); operator picks DD/MM or MM/DD explicitly. Ambiguity = error.
+  Units: L / kL / m3 only, converted via toLiters (throws on NaN/Inf/neg).
+  Idempotency: content-hash keys (site|file|row|timestamp|qty|supplier)
+  become both the record ID and the batch key - replaying a file posts
+  nothing. Readings: a different value at a recorded instant is an error;
+  an identical replay is skipped.
+
+UI CONVENTIONS
+--------------
+  Palette + fonts live in globals.css @theme (ink/aqua/water/offwhite/
+  amber/verd). Icons: inline SVG from components/icons.tsx - no unicode
+  glyphs in buttons or pills. Status = icon + label (never color alone).
+  Amounts use .tabular. Cards use .shadow-card. The reduce-motion control
+  (header) stills ALL animation via .reduce-motion; new animated elements
+  must be killed by it too. Buttons that animate: keep the <button> itself
+  motion-stable and animate an inner wrapper (Playwright treats a forever-
+  animating button as unstable - this bit us once).
+  The mascot (components/mascot.tsx) exposes mascotReact(mood, ms) - call
+  it after successful user-visible actions. Keep its button stable too.
+
+TESTING EXPECTATIONS
+--------------------
+  Domain: add a Vitest test for every new engine rule; the four signature
+  scenarios must keep their exact numbers (see fixtures/synthetic/
+  scenarios.ts EXPECTED). Browser: extend tests/e2e/journeys.spec.mjs for
+  new user journeys; it must end 33/33 or better with zero console errors.
+  Never fake, skip, or weaken a failing check to get green.

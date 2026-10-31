@@ -1,0 +1,69 @@
+06_CONTRIBUTING_RULES
+======================
+
+BRANCHES AND COMMITS
+--------------------
+  main is protected by convention: always green, always deployable.
+  Branch from main as feat/<topic> or fix/<topic>. Small, meaningful
+  commits in imperative mood ("Add readings tolerance option", not
+  "update files"). One logical change per commit. Commit under your own
+  GitHub identity (a noreply address keeps your email private); the
+  history intentionally shows every member who built the project.
+
+MANDATORY GATES BEFORE ANY PUSH
+-------------------------------
+  npm run typecheck      0 errors
+  npm run lint           0 errors, 0 warnings
+  npm test               41/41 (or more if you added tests)
+  npm run build          green
+  node tests/e2e/journeys.spec.mjs <served build>   33/33 or better
+  npm run preflight      privacy gate passes
+
+  If your change touches src/domain: add or extend a Vitest test first.
+  If it touches a user journey: extend the e2e spec. A push that lowers
+  either count without a written reason is a reverted push.
+
+CLAIMS POLICY (this is what keeps the project credible)
+--------------------------------------------------------
+  - Never claim water savings, theft detection, or pilot results. The
+    honest state is: deterministic prototype, synthetic validation, no
+    field pilot. A corrected duplicate receipt is a data correction, not
+    saved water.
+  - Never describe an unexplained residual as theft or leakage anywhere in
+    UI copy, docs, commits, or the deck.
+  - "Working prototype" is the correct stage description. "Field pilot" is
+    reserved for an actual permissioned deployment.
+  - Numbers in UI copy must match the engine's output (formatLiters /
+    formatSignedLiters are the approved formatters).
+
+PRIVACY RULES
+-------------
+  npm run preflight must pass: private context, submission material, raw
+  working prompts and secret files may never be tracked. The committed
+  Build_Prompt/ pack is the deliberate exception - it is team
+  documentation with nothing private in it. API keys entered by users
+  live in THEIR browser storage only - never log them, never add them to
+  audit events, never include them in exports or screenshots.
+
+RELEASE STEPS (static demo site)
+--------------------------------
+  1. npm run verify && npm test
+  2. npm run build:static
+  3. Stage out/ with the static server used previously (the repo owner
+     keeps the staging directory and host account).
+  4. Smoke-test: "/", "/demo", one signature journey, console clean.
+  5. Push main, then deploy the staged build.
+  Deployment ids and hosting details are recorded in the team's private
+  log, not in the repository.
+
+WHERE THINGS TEND TO BREAK (learn from our scars)
+-------------------------------------------------
+  - Passing adapter.subscribe directly into useSyncExternalStore (lost
+    `this`) - always wrap: (cb) => adapter.subscribe(cb).
+  - Passing ALL sites' records into a single site's reconcile() - the
+    engine rejects cross-site rows by design; filter per site.
+  - Seeding runs without opening investigations - use investigationsForRuns.
+  - Node heredocs/quoting when writing files on Windows - prefer the Write
+    tool / real files over shell heredocs.
+  - Playwright "element is not stable": a button animating forever never
+    stabilizes; animate an inner wrapper instead.

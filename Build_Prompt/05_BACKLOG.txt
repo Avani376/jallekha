@@ -1,0 +1,72 @@
+05_BACKLOG
+===========
+Prioritized, with the acceptance check that defines "done". P0 = next up.
+
+P0-A  Multi-user shared workspaces (the big one)
+      Why  : real deployments need maintenance teams working together.
+      What : server-mode API routes + a hosted Postgres (or Supabase) behind
+             the existing DataAdapter interface; site-membership checks on
+             every operation; row-level security; optimistic version checks
+             so a teammate's update is not silently overwritten.
+      Done : two browser sessions see the same site; cross-workspace access
+             is rejected by tests; the demo mode still works unchanged.
+
+P0-B  Human-factors evaluation
+      Why  : the honest claim today is "no operator feedback collected".
+      What : 5+ consenting operators, planted-error fixture table, task
+             order varied; record detection precision/recall, review time
+             vs a spreadsheet baseline, % of cases closed with evidence.
+      Done : docs/VALIDATION.md gains a measured-results section with raw
+             counts and sample size (or N/A where a denominator is empty).
+
+P0-C  Pilot onboarding kit
+      Why  : the next milestone is one permissioned campus/society.
+      What : printable one-page operator guide, CSV templates matching the
+             import aliases, a measurement-uncertainty worksheet (declared
+             bounds per method), and a consent/data-owner checklist.
+      Done : a non-technical operator can complete setup + first import
+             using only the kit.
+
+P1-A  Reading tolerance option
+      Recon-v1.0 requires exact boundary instants. Add a per-site tolerance
+      (configurable minutes, visible in the UI and the run record) that
+      picks the NEAREST reading and labels it "approximated at HH:MM".
+      Done : engine tests cover nearest-pick, label rendering, and the
+      exact-instant default unchanged.
+
+P1-B  Marathi labels
+      The audience includes Marathi-first operators. Extract strings, add a
+      locale file, have a fluent teammate review every term (especially
+      "residual", "uncertainty", "void").
+      Done : language toggle; screenshots reviewed by the teammate.
+
+P1-C  CI pipeline
+      GitHub Actions: install from lockfile, typecheck, lint, vitest,
+      build, preflight privacy gate; e2e on push if a runner allows.
+      Done : red pipeline blocks merge; badge reflects a real run.
+
+P1-D  Server AI proxy
+      docs/AI.md sketches it: a server route holding the provider key
+      server-side, per-IP rate limits, same schema validation, so shared
+      deployments never need operator keys. Static exports exclude API
+      routes - implement on the server-mode deployment only.
+      Done : browser test proves the key never appears client-side.
+
+P1-E  PDF export without the browser print dialog
+      Server-side render of the documented review (or client html2pdf) so
+      Reports can download a PDF directly. Keep the print CSS as fallback.
+
+P2 (explicitly deferred - do not build without a fresh decision)
+      OCR of receipts; sensor/IoT ingestion; municipal water-board
+      integrations; payments; leakage localization; forecasting; a generic
+      chatbot; native mobile apps; blockchain anything.
+      Each was rejected for scope: none is needed to make one campus's
+      records trustworthy, and each adds attack surface or cost before the
+      first pilot proves value.
+
+OPS BACKLOG
+-----------
+  - GitHub Actions badge once CI exists (badge must reflect real runs).
+  - Walkthrough GIF capture for the README (a scripted Playwright run
+    exists in the owner's toolchain; ask for it).
+  - Localized number formatting audit (en-IN grouping is used today).

@@ -47,7 +47,6 @@ next-env.d.ts
 .release/
 .zcode-site.json
 AGENTS.md
-Build_Prompt/
 
 # PRIVATE — never commit (defense in depth; these live OUTSIDE this repo at
 # the workspace root, but ignore them here too in case of future moves)

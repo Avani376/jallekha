@@ -1,0 +1,121 @@
+02_CURRENT_STATE
+=================
+State as of 31 October 2026. Everything listed here is implemented AND
+covered by the automated suites (41 domain tests, 33 browser e2e checks).
+
+WORKSPACE MODES (src/data)
+--------------------------
+  demo : seeded synthetic sites, resettable; the guided demo and all
+         signature scenarios run here. Storage key jallekha.workspace.v1
+  real : "My data" - the operator's own records. Starts empty, onboarding
+         creates site/tank/meter; storage key jallekha.real.v1; JSON
+         export/import on Reports for backup and device moves.
+  Both modes share one engine and one UI. The header toggle switches with a
+  confirmation dialog; storage is per-browser (localStorage ~5 MB).
+
+SITES IN THE DEMO SEED (src/data/seed.ts, fixtures v1)
+------------------------------------------------------
+  site-sunrise    Scenario A: complete baseline
+                  -> R = 0 L, bounds [-600,+600], within uncertainty
+  site-legacy     Scenario B: legacy ledger contains a duplicate of receipt
+                  R-101 -> raw R = +5,000 L in [4,300,5,700]; after a
+                  reviewed void -> R = 0 L, history retained
+  site-hostel     Scenario C: closing stock reading missing
+                  -> status incomplete, residual unavailable; recording
+                  11,000 L completes the balance
+  site-hillcrest  Scenario D: complete data, residual +2,000 L in
+                  [1,400,2,600] -> investigation, cause NOT determined
+  site-riverside  14-day daily history (35 records) that feeds the
+                  Dashboard charts; reconciles its last complete day
+
+ENGINE (src/domain, pure TypeScript)
+------------------------------------
+  Rule version recon-v1.0:
+  - boundary readings must sit at the exact period instants (tolerance 0)
+  - status precedence: invalid > incomplete > provisional (unknown bounds)
+    > within-uncertainty > discrepancy
+  - conservative summed bounds; usage uncertainty = start + end meter bounds
+  - duplicate detection: exact (supplier+receipt+site) and fuzzy (supplier+
+    volume within 24h with receipt missing) - candidates never auto-void
+  - cross-site records are rejected; stock > capacity rejected; negative
+    meter deltas rejected (never absolute-valued); ambiguous duplicate
+    boundary readings block the balance
+  - content-derived stable finding IDs; investigations open idempotently
+  - runs are immutable; corrections create superseding runs
+
+RECORDS & IMPORT (src/domain/import.ts)
+---------------------------------------
+  Deliveries CSV: column aliases, chosen date format (ambiguous slash
+  dates rejected in ISO mode), exact unit conversion (1 kL = 1,000 L =
+  1 m3), row errors surfaced in preview, exact duplicates skipped,
+  fuzzy candidates staged out; idempotency keys make same-file replays
+  post nothing.
+  Readings CSV (tank + meter): same validation style; a DIFFERENT value at
+  an already-recorded instant is an error (never overwritten); blank
+  uncertainty stays "not quantified".
+
+WORKSPACE UI (src/app/workspace/*)
+----------------------------------
+  Dashboard : KPI tiles + authored SVG charts (balance waterfall,
+              cumulative meter trend with delivery markers, deliveries by
+              day, findings donut, measurement-quality mix, residual band
+              across runs, tank gauge) with entrance animations
+  Overview  : equation card, closing-stock cutaway, findings, cases
+  Deliveries: ledger with search/filter/sort, manual entry (with optional
+              AI note-drafting), CSV import preview, record detail + void
+  Readings  : stock vs meter tables, manual entry, readings CSV import
+  Recon     : equation, uncertainty band, source-by-source provenance,
+              findings, rule-based + optional AI explanation, run history
+  Cases     : investigation list + detail (ownership, status transitions,
+              evidence timeline, resolution with outcome + reviewer)
+  Reports   : printable documented review, safe CSV, JSON review, full
+              workspace JSON export/import
+
+MASCOT (src/components/mascot.tsx)
+----------------------------------
+  Bundu, a droplet guide on every screen: reacts to clicks and workspace
+  events (happy/alert/sad/think/wave), offers the next best action per
+  page/state via a tip engine, and launches the Ask panel. The button is
+  deliberately motion-stable (animation on an inner wrapper).
+
+AI ASSISTANCE (src/lib/ai/*, opt-in)
+------------------------------------
+  Settings dialog: enable, base URL (OpenAI-compatible; Z.ai v4 default),
+  API key (browser-local only), model, Test connection.
+  Features: finding explanation (Reconciliation), note->fields drafting
+  (Add delivery), and grounded Q&A chat ("Ask Bundu" drawer) that answers
+  only from a deterministic snapshot of the selected site and cites record
+  IDs. All responses are Zod-validated; every failure path falls back to
+  rule-based output with a visible label. No key ships with the repo; no
+  AI runs during tests.
+
+EXPORTS (Reports)
+-----------------
+  Printable documented review (works without color/animation), safe CSV
+  (formula prefixes neutralized), JSON review, full workspace JSON.
+
+TESTS
+-----
+  Domain   : 41 Vitest tests (tests/domain) incl. the four signature
+             scenarios asserted to the liter, duplicate policy, units,
+             import idempotency, readings import conflicts.
+  Browser  : 33 Playwright checks (tests/e2e/journeys.spec.mjs) against
+             the production static build - both signature journeys,
+             import replay, refresh persistence, dashboard, settings,
+             zero console errors.
+
+DEPLOYED
+--------
+  Static export of main at https://jallekha-na41.zai-ai.site (health 200).
+  See 03_TECH_STACK_SETUP.txt for the build/deploy procedure.
+
+HONEST GAPS (do not paper over these)
+-------------------------------------
+  - No field pilot; all validation is synthetic fixtures + browser checks.
+  - Real-data storage is single-device (browser localStorage). Multi-user
+    persistence is designed (adapter interface) but not built.
+  - AI is off until the operator adds a personal key; browser-direct calls
+    only (a server proxy for shared deployments is documented, not built).
+  - Boundary tolerance is 0; approximate matching is unimplemented.
+  - Human-factors metrics (review time, detection precision) are planned,
+    not measured.

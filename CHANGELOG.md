@@ -4,6 +4,28 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.0.1] - 2026-10-31
+
+Team handoff: onboarding context in the repository, roster of four, and
+the competition pitch deck.
+
+### Added
+- `Build_Prompt/` engineering handoff pack committed to the repository:
+  product context, current state, toolchain setup, architecture rules,
+  prioritized backlog, contributing rules and the decision log — the
+  onboarding path for every teammate, kept current with the code.
+- 6-slide SevaForge pitch deck under `pitch-deck/`: editable PPTX with
+  presenter notes, matching PDF export, build script and captured
+  product screenshots.
+
+### Changed
+- Team roster is four members — Arya Jannawar (team lead), Avani
+  Jannawar, Siddhant Santosh Pardeshi, Vijay Sahu — across the landing
+  page, demo footer, README and the deck.
+- The privacy gate allowlists the `Build_Prompt/` pack (team
+  documentation, nothing private in it); private context, submission
+  drafts and raw working prompts remain blocked as before.
+
 ## [1.0.0] - 2026-10-31
 
 First public prototype. Deterministic water-accounting engine, dual
