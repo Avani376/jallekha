@@ -80,6 +80,15 @@ UI CONVENTIONS
   The mascot (components/mascot.tsx) exposes mascotReact(mood, ms) - call
   it after successful user-visible actions. Keep its button stable too.
 
+  Card background rule (learned the hard way in the v1.1.1 QA pass):
+  the shared Card component takes tone="paper" (default: light-surface
+  border-slate-200 bg-white) or tone="custom" (no base colors). NEVER
+  pass a background-color override into a tone="paper" Card - Tailwind
+  CSS order decides which wins, and bg-white silently beat bg-aqua/[0.06]
+  to render white text on a white card. Dark surfaces (demo page, the
+  workspace dark tank card) must use tone="custom" and state every color
+  explicitly.
+
   Ambient motion rules (landing water experience, globals.css
   "Landing water experience" section):
   - CSS keyframes only, transform/opacity only (compositor-safe); no

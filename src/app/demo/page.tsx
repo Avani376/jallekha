@@ -111,7 +111,7 @@ export default function DemoPage() {
           </p>
         </Step>
 
-        <Card className="border-white/10 bg-white/[0.04] p-5">
+        <Card tone="custom" className="border-white/10 bg-white/[0.04] p-5">
           <div className="flex flex-wrap items-center gap-2">
             <StatusPill tone="info">AI status</StatusPill>
             <span className="text-[13px] text-white/60">
@@ -134,7 +134,7 @@ function Step({
   n, title, site, children, go, highlight,
 }: { n: string; title: string; site: string; children: React.ReactNode; go: () => void; highlight?: boolean }) {
   return (
-    <Card className={`p-5 ${highlight ? "border-aqua/50 bg-aqua/[0.06]" : "border-white/10 bg-white/[0.03]"}`}>
+    <Card tone="custom" className={`p-5 ${highlight ? "border-aqua/50 bg-aqua/[0.06]" : "border-white/10 bg-white/[0.03]"}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <span className="tabular mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-aqua font-display text-sm font-extrabold text-ink">

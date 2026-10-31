@@ -24,10 +24,26 @@ export function cx(...parts: (string | false | null | undefined)[]): string {
 }
 
 export function Card({
-  children, className, as: As = "section",
-}: { children: ReactNode; className?: string; as?: "section" | "div" | "article" }) {
+  children, className, as: As = "section", tone = "paper",
+}: {
+  children: ReactNode;
+  className?: string;
+  as?: "section" | "div" | "article";
+  /**
+   * "paper" (default) supplies the light-surface border/background.
+   * "custom" omits them so a caller-provided background cannot lose a
+   * Tailwind CSS-order fight with the base classes (the bug behind the
+   * unreadable highlighted demo card — bg-white silently beat bg-aqua/[0.06]).
+   */
+  tone?: "paper" | "custom";
+}) {
   return (
-    <As className={cx("rounded-2xl border border-slate-200 bg-white shadow-card", className)}>
+    <As className={cx(
+      "rounded-2xl border shadow-card",
+      tone === "paper" ? "border-slate-200 bg-white" : "",
+      className,
+    )}
+    >
       {children}
     </As>
   );

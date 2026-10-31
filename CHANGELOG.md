@@ -4,6 +4,23 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.1.1] - 2026-10-31
+
+Full-app QA pass (automated gates + guided GUI exploratory testing of
+every screen) and one visual bug fix.
+
+### Fixed
+- **Highlighted demo card was unreadable** (white text on a white card):
+  `Card` baked `bg-white` into its base classes, so a caller-supplied
+  background (`bg-aqua/[0.06]`) silently lost the Tailwind CSS-order fight.
+  `Card` now takes a `tone` prop — `"paper"` (default, unchanged) or
+  `"custom"` (no base colors) — and the three dark-surface call sites
+  (demo step cards, demo AI-status card, workspace dark tank card) use it.
+- Verified end to end: reconciliation journey (void → superseding run),
+  case lifecycle (evidence, assignee, transitions, resolution), dual
+  workspace isolation, onboarding validation, settings, reduce-motion
+  round-trip; domain 41/41, e2e 33/33, lint 0/0, typecheck 0 errors.
+
 ## [1.1.0] - 2026-10-31
 
 Landing-page water experience and the SevaForge team stage; contributor

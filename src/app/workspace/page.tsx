@@ -56,7 +56,7 @@ export default function OverviewPage() {
       {run ? (
         <>
           <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
-            <Card className="flex flex-col items-center justify-center bg-ink px-4 py-6 text-white print-card">
+            <Card tone="custom" className="flex flex-col items-center justify-center border-slate-200 bg-ink px-4 py-6 text-white print-card">
               <div className="mb-3 text-[11px] font-bold uppercase tracking-widest text-aqua">
                 Closing stock · live reading
               </div>
