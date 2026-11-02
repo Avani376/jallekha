@@ -14,29 +14,27 @@ import { AskPanel } from "@/components/ai/ask-panel";
 import { Button, Modal, cx } from "@/components/ui";
 import { formatLiters } from "@/domain/units";
 import { istDate } from "@/lib/datetime";
+import { useI18n, LocaleProvider, type TranslationKey } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
-const NAV_GROUPS: { label: string | null; items: { href: string; label: string }[] }[] = [
-  { label: null, items: [
-    { href: "/workspace/dashboard", label: "Dashboard" },
-    { href: "/workspace", label: "Overview" },
-  ] },
-  {
-    label: "Records",
-    items: [
-      { href: "/workspace/ledger", label: "Deliveries" },
-      { href: "/workspace/readings", label: "Readings" },
-    ],
-  },
-  {
-    label: "Review",
-    items: [
-      { href: "/workspace/reconciliation", label: "Reconciliation" },
-      { href: "/workspace/investigations", label: "Cases" },
-    ],
-  },
-  { label: "Compare", items: [{ href: "/workspace/multi-site", label: "Sites" }] },
-  { label: null, items: [{ href: "/workspace/reports", label: "Reports" }] },
+const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
+  { href: "/workspace/dashboard", key: "nav.dashboard" },
+  { href: "/workspace", key: "nav.overview" },
+  { href: "/workspace/ledger", key: "nav.deliveries" },
+  { href: "/workspace/readings", key: "nav.readings" },
+  { href: "/workspace/reconciliation", key: "nav.reconciliation" },
+  { href: "/workspace/investigations", key: "nav.cases" },
+  { href: "/workspace/multi-site", key: "nav.sites" },
+  { href: "/workspace/reports", key: "nav.reports" },
 ];
+
+const NAV_GROUP_AT: Record<number, string | null> = {
+  0: null,
+  2: "Records",
+  4: "Review",
+  6: "Compare",
+  7: null,
+};
 
 export default function WorkspaceLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -58,6 +56,7 @@ function ShellFallback() {
 }
 
 function WorkspaceShell({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n();
   const { state, mode, setDataMode, selectedSiteId, setSelectedSiteId } = useWorkspace();
   const pathname = usePathname();
   const site = state.sites.find((s) => s.id === selectedSiteId);
@@ -73,6 +72,7 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
+    <LocaleProvider>
     <div className="min-h-screen bg-offwhite">
       <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center gap-x-4 gap-y-2 px-4 py-2.5">
@@ -130,48 +130,46 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
             )}
             <NotificationCenter />
             <MotionToggle />
+            <LanguageSwitcher />
             <button
               onClick={() => setSettingsOpen(true)}
               className="rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-bold text-slate-600 hover:border-slate-400 hover:text-ink"
             >
-              Settings
+              {t("header.settings")}
             </button>
           </div>
         </div>
 
         <div className="mx-auto max-w-7xl overflow-x-auto px-4">
           <nav aria-label="Workspace sections" className="flex items-center gap-1 pb-1.5 text-sm">
-            {NAV_GROUPS.map((group, gi) => (
-              <div key={gi} className="flex items-center gap-1">
-                {gi > 0 ? <div aria-hidden className="mx-2 h-4 w-px bg-slate-200" /> : null}
-                {group.label ? (
-                  <span className="mr-1 hidden select-none text-[10px] font-extrabold uppercase tracking-widest text-slate-300 lg:inline">
-                    {group.label}
-                  </span>
-                ) : null}
-                {group.items.map((n) => {
-                  const active = n.href === "/workspace" ? pathname === "/workspace" : pathname.startsWith(n.href);
-                  return (
-                    <Link
-                      key={n.href}
-                      href={n.href}
-                      aria-current={active ? "page" : undefined}
-                      className={cx(
-                        "inline-block whitespace-nowrap rounded-lg px-3 py-1.5 font-semibold transition-colors",
-                        active ? "bg-ink text-white" : "text-slate-600 hover:bg-slate-100 hover:text-ink",
-                      )}
-                    >
-                      {n.label}
-                      {n.label === "Cases" && openCases > 0 ? (
-                        <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-amber px-1.5 py-0.5 text-[10px] font-extrabold text-[#3d2a00]">
-                          {openCases}
-                        </span>
-                      ) : null}
-                    </Link>
-                  );
-                })}
-              </div>
-            ))}
+            {NAV_ITEMS.map((n, i) => {
+              const active = n.href === "/workspace" ? pathname === "/workspace" : pathname.startsWith(n.href);
+              return (
+                <div key={n.href} className="flex items-center gap-1">
+                  {NAV_GROUP_AT[i] !== undefined ? <div aria-hidden className="mx-2 h-4 w-px bg-slate-200" /> : null}
+                  {NAV_GROUP_AT[i] ? (
+                    <span className="mr-1 hidden select-none text-[10px] font-extrabold uppercase tracking-widest text-slate-300 lg:inline">
+                      {NAV_GROUP_AT[i]}
+                    </span>
+                  ) : null}
+                  <Link
+                    href={n.href}
+                    aria-current={active ? "page" : undefined}
+                    className={cx(
+                      "inline-block whitespace-nowrap rounded-lg px-3 py-1.5 font-semibold transition-colors",
+                      active ? "bg-ink text-white" : "text-slate-600 hover:bg-slate-100 hover:text-ink",
+                    )}
+                  >
+                    {t(n.key)}
+                    {n.key === "nav.cases" && openCases > 0 ? (
+                      <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-amber px-1.5 py-0.5 text-[10px] font-extrabold text-[#3d2a00]">
+                        {openCases}
+                      </span>
+                    ) : null}
+                  </Link>
+                </div>
+              );
+            })}
           </nav>
         </div>
 
@@ -192,8 +190,8 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
 
       <footer className="no-print mx-auto max-w-7xl px-4 pb-14 pt-2 text-[11.5px] leading-relaxed text-slate-400">
         {mode === "demo"
-          ? "JalLekha prototype · synthetic demo data · Team SevaForge · Seva First Innovation Challenge (Maharashtra Zone). A discrepancy is not proof of theft or leakage."
-          : "JalLekha · your records, stored in this browser · Team SevaForge. A discrepancy is not proof of theft or leakage."}
+          ? t("footer.demo")
+          : t("footer.real")}
       </footer>
 
       <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
@@ -210,6 +208,7 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
         }}
       />
     </div>
+    </LocaleProvider>
   );
 }
 
