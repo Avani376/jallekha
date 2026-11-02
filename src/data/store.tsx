@@ -139,6 +139,7 @@ export interface WorkspaceStore {
     setPeriod(siteId: string, startUTC: string, endUTC: string, actor: string): void;
     setAnomalyConfig(siteId: string, config: { usagePctThreshold: number; meterJumpFactor: number; window: number }, actor: string): void;
     dismissAnomaly(anomalyId: string, reason: string, actor: string): void;
+    setNotificationState(id: string, state: { readAt?: string; snoozedUntil?: string; dismissedAt?: string; dismissReason?: string }): void;
     reopenAnomaly(anomalyId: string, actor: string): void;
     addSite(input: { name: string; timezone: string; description: string; actor: string }): string;
     addTank(input: { siteId: string; name: string; capacityLiters: number; note: string; actor: string }): string;
@@ -336,6 +337,16 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
             ],
           };
         });
+      },
+
+      setNotificationState: (id, nState) => {
+        adapter.update((s) => ({
+          ...s,
+          notificationStates: {
+            ...(s.notificationStates ?? {}),
+            [id]: { ...(s.notificationStates?.[id] ?? {}), ...nState },
+          },
+        }));
       },
 
       addSite: (input) => {

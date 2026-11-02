@@ -7,6 +7,7 @@ import { useWorkspace } from "@/data/store";
 import { IconDroplet, IconInfo } from "@/components/icons";
 import { MotionToggle } from "@/components/motion-preference";
 import { SettingsModal } from "@/components/settings-modal";
+import { NotificationCenter } from "@/components/notification-center";
 import { RealOnboarding } from "@/components/real-onboarding";
 import { MascotAssistant } from "@/components/mascot";
 import { AskPanel } from "@/components/ai/ask-panel";
@@ -126,6 +127,7 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
                 My records · this browser
               </span>
             )}
+            <NotificationCenter />
             <MotionToggle />
             <button
               onClick={() => setSettingsOpen(true)}
