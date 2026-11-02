@@ -87,3 +87,23 @@ the key must live server-side, proxy the calls instead of exposing keys:
 8 for the connection test) and input text is truncated at 6,000 characters.
 Calls happen only on explicit button presses — never automatically, never
 during test runs.
+
+
+## Receipt scanning (vision)
+
+The scanner uses the same operator key with a vision-capable model. The
+receipt image is base64-encoded in the browser and sent directly to the
+provider; it is never stored by JalLekha. Extraction is a DRAFT: the review
+screen shows extracted vs corrected values, missing fields, warnings and
+duplicate flags against posted receipts. Only the operator's confirmation
+creates a record, whose audit note preserves the scan origin. PDFs are
+planned; use a photo or screenshot today.
+
+## Ask Bundu (grounded Q&A)
+
+The Ask drawer sends a deterministic snapshot of the open workspace (sites,
+period, active run numbers, recent deliveries with IDs, readings, cases) as
+the ONLY source for the answer. Record IDs may be cited; the model is
+instructed to quote numbers exactly and to refuse answers the snapshot
+cannot support. Follow-up chips keep the loop tight. The snapshot builder
+lives in `src/lib/ai/context.ts`.

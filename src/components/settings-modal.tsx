@@ -72,7 +72,7 @@ export function SettingsModal({ open, onClose }: { open: boolean; onClose: () =>
                   placeholder={AI_DEFAULTS.baseUrl}
                 />
               </Field>
-              <Field label="Model" htmlFor="ai-model" hint="The model id available under your plan">
+              <Field label="Model" htmlFor="ai-model" hint="The model id available under your plan; use a vision-capable model for receipt scanning">
                 <Input id="ai-model" value={cfg.model} onChange={(e) => setCfg({ ...cfg, model: e.target.value })} placeholder="your provider's model id" />
               </Field>
             </div>
