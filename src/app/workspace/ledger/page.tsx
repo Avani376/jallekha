@@ -15,6 +15,7 @@ import { istDate, istToUtc, istToLocalInput } from "@/lib/datetime";
 import { mascotReact } from "@/components/mascot";
 import { IconPlus, IconUpload } from "@/components/icons";
 import { aiReady, loadAiSettings } from "@/lib/ai/settings";
+import { ReceiptScannerModal } from "@/components/receipt-scanner";
 import { draftFromNote, AiError } from "@/lib/ai/client";
 import { toLiters, formatLiters } from "@/domain/units";
 import type { Delivery } from "@/domain/types";
@@ -31,6 +32,7 @@ export default function LedgerPage() {
   const [sort, setSort] = useState<SortKey>("date-desc");
   const [detail, setDetail] = useState<Delivery | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
 
   const activeRun = state.runs.filter((r) => r.siteId === site.id && !r.supersededByRunId).at(-1);
@@ -193,6 +195,7 @@ export default function LedgerPage() {
       </Modal>
 
       <AddDeliveryModal open={addOpen} onClose={() => setAddOpen(false)} />
+      <ReceiptScannerModal open={scanOpen} onClose={() => setScanOpen(false)} />
 
       <ImportModal open={importOpen} onClose={() => setImportOpen(false)} />
     </div>
