@@ -34,6 +34,7 @@ const NAV_GROUPS: { label: string | null; items: { href: string; label: string }
       { href: "/workspace/investigations", label: "Cases" },
     ],
   },
+  { label: "Compare", items: [{ href: "/workspace/multi-site", label: "Sites" }] },
   { label: null, items: [{ href: "/workspace/reports", label: "Reports" }] },
 ];
 
