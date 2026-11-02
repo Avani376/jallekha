@@ -10,7 +10,9 @@
 import Link from "next/link";
 import { activeRunFor, useWorkspace } from "@/data/store";
 import { STATUS_META } from "@/components/equation-card";
-import { StatusPill, EmptyState, type Tone } from "@/components/ui";
+import { StatusPill, EmptyState, Card, Input, Button, type Tone } from "@/components/ui";
+import { detectAnomalies, configFor, DEFAULT_ANOMALY_CONFIG, isDismissed } from "@/domain/anomalies";
+import { useState } from "react";
 import { IconArrowRight } from "@/components/icons";
 import {
   ChartCard,
@@ -34,7 +36,7 @@ import {
 import { formatLiters, formatSignedLiters } from "@/domain/units";
 
 export default function DashboardPage() {
-  const { state, selectedSiteId } = useWorkspace();
+  const { state, selectedSiteId, actions } = useWorkspace();
   const site = state.sites.find((s) => s.id === selectedSiteId);
   const tank = state.tanks.find((t) => t.siteId === selectedSiteId);
   const meter = state.meters.find((m) => m.siteId === selectedSiteId);
@@ -143,6 +145,8 @@ export default function DashboardPage() {
         </ChartCard>
       </div>
 
+      <AnomaliesCard />
+
       {/* Trends */}
       <div className="grid gap-5 xl:grid-cols-2">
         <ChartCard title="Cumulative meter — trend" sub="Dots ringed in teal mark days with a recorded delivery">
@@ -191,5 +195,141 @@ function Kpi({ label, value, sub, tone = "neutral" }: { label: string; value: st
         </p>
       ) : null}
     </div>
+  );
+}
+
+/* ------------------------------- Anomalies -------------------------------- */
+
+function AnomaliesCard() {
+  const { state, selectedSiteId, actions } = useWorkspace();
+  const cfg = configFor(state, selectedSiteId);
+  const all = detectAnomalies(state, selectedSiteId, cfg);
+  const openList = all.filter((a) => !isDismissed(state, a));
+  const dismissed = all.filter((a) => isDismissed(state, a));
+  const [showConfig, setShowConfig] = useState(false);
+  const [dismissFor, setDismissFor] = useState<string | null>(null);
+  const [reason, setReason] = useState("");
+  const [cfgDraft, setCfgDraft] = useState(cfg);
+  const [showDismissed, setShowDismissed] = useState(false);
+
+  return (
+    <Card className="print-card">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <h3 className="text-[14px] font-bold tracking-tight text-ink">Potential anomalies</h3>
+          <p className="mt-0.5 text-xs text-slate-500">
+            Transparent statistical flags over your records — each one requires verification and is never a
+            conclusion. Separate from the deterministic balance.
+          </p>
+        </div>
+        <Button size="sm" variant="ghost" onClick={() => setShowConfig(!showConfig)}>
+          {showConfig ? "Hide thresholds" : "Thresholds"}
+        </Button>
+      </div>
+
+      {showConfig ? (
+        <div className="mb-4 grid gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-[12px] sm:grid-cols-[1fr_1fr_auto]">
+          <label className="flex items-center gap-2 font-semibold text-slate-600">
+            Usage threshold ±%
+            <Input
+              aria-label="Usage threshold percent"
+              type="number" min="5" max="200" className="w-20"
+              value={cfgDraft.usagePctThreshold}
+              onChange={(e) => setCfgDraft({ ...cfgDraft, usagePctThreshold: Number(e.target.value) || 40 })}
+            />
+          </label>
+          <label className="flex items-center gap-2 font-semibold text-slate-600">
+            Meter jump ×median
+            <Input
+              aria-label="Meter jump factor"
+              type="number" min="1.5" max="10" step="0.1" className="w-20"
+              value={cfgDraft.meterJumpFactor}
+              onChange={(e) => setCfgDraft({ ...cfgDraft, meterJumpFactor: Number(e.target.value) || 2.5 })}
+            />
+          </label>
+          <Button size="sm" variant="secondary" onClick={() => { actions.setAnomalyConfig(selectedSiteId, cfgDraft, "operator@local"); }}>
+            Save thresholds
+          </Button>
+        </div>
+      ) : null}
+
+      {openList.length === 0 ? (
+        <EmptyState
+          title="No open anomalies"
+          body="Statistical checks over usage, meter changes, run history and completeness found nothing to verify."
+        />
+      ) : (
+        <ul className="space-y-3">
+          {openList.map((a) => (
+            <li key={a.id} className="rounded-xl border border-slate-200 px-4 py-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusPill tone={a.severity === "high" ? "danger" : a.severity === "warning" ? "warn" : "info"}>
+                  {a.kind}
+                </StatusPill>
+                <strong className="text-[13.5px] text-ink">{a.title}</strong>
+              </div>
+              <dl className="tabular mt-1.5 grid gap-1 text-[12.5px] text-slate-600 sm:grid-cols-3">
+                <div><dt className="inline font-bold">Observed: </dt><dd className="inline">{a.observed}</dd></div>
+                <div><dt className="inline font-bold">Expected: </dt><dd className="inline">{a.expected}</dd></div>
+                <div><dt className="inline font-bold">Difference: </dt><dd className="inline">{a.difference}</dd></div>
+              </dl>
+              <p className="mt-1.5 text-[12.5px] leading-relaxed text-slate-500">{a.explanation}</p>
+              <p className="mt-1.5 rounded-lg bg-[#e8f1ff] px-3 py-2 text-xs font-semibold text-water-deep">
+                Potential anomaly — requires verification. {a.suggestedAction}
+              </p>
+              <p className="mt-1 text-[10.5px] text-slate-400">method: {a.method} · sources: {a.sourceIds.join(", ") || "run"}</p>
+              {dismissFor === a.id ? (
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <Input
+                    aria-label="Dismissal reason"
+                    placeholder="Reason (recorded permanently)"
+                    className="max-w-xs"
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                  />
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={reason.trim().length < 4}
+                    onClick={() => { actions.dismissAnomaly(a.id, reason.trim(), "operator@local"); setDismissFor(null); setReason(""); }}
+                  >
+                    Dismiss with reason
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => setDismissFor(null)}>Cancel</Button>
+                </div>
+              ) : (
+                <button onClick={() => { setDismissFor(a.id); setReason(""); }} className="no-print mt-1.5 text-[11.5px] font-bold text-slate-400 hover:text-slate-600">
+                  Not a real concern — dismiss (reason required)
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {dismissed.length > 0 ? (
+        <div className="mt-3 border-t border-slate-100 pt-3">
+          <button onClick={() => setShowDismissed(!showDismissed)} className="text-[11.5px] font-bold text-slate-400 hover:text-slate-600">
+            {showDismissed ? "Hide" : "Show"} dismissed ({dismissed.length})
+          </button>
+          {showDismissed ? (
+            <ul className="mt-2 space-y-1.5 text-[12px] text-slate-500">
+              {dismissed.map((a) => {
+                const d = state.anomalyDismissals?.[a.id];
+                return (
+                  <li key={a.id} className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold">{a.title}</span>
+                    <span className="text-slate-400">dismissed — {d?.reason} ({d?.by})</span>
+                    <button onClick={() => actions.reopenAnomaly(a.id, "operator@local")} className="font-bold text-water-deep hover:underline">
+                      reopen
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+        </div>
+      ) : null}
+    </Card>
   );
 }

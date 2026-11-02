@@ -252,6 +252,15 @@ export interface WorkspaceState {
   schemaVersion: 1;
   /** Reconciliation period per site (ISO UTC); demo seed pre-fills these. */
   periods?: Record<string, { start: string; end: string }>;
+  /** Per-site anomaly detection thresholds (missing keys use defaults). */
+  anomalyConfigs?: Record<string, { usagePctThreshold: number; meterJumpFactor: number; window: number }>;
+  /** Dismissed anomaly ids -> recorded reason (dismissal is an audit fact). */
+  anomalyDismissals?: Record<string, { reason: string; at: string; by: string }>;
+  /** Per-notification read/snooze/dismissal state, keyed by notification id. */
+  notificationStates?: Record<
+    string,
+    { readAt?: string; snoozedUntil?: string; dismissedAt?: string; dismissReason?: string }
+  >;
   sites: Site[];
   tanks: Tank[];
   meters: Meter[];

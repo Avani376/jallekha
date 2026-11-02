@@ -137,6 +137,9 @@ export interface WorkspaceStore {
     runReconciliation(siteId: string): ReconciliationResult | null;
     runAll(): void;
     setPeriod(siteId: string, startUTC: string, endUTC: string, actor: string): void;
+    setAnomalyConfig(siteId: string, config: { usagePctThreshold: number; meterJumpFactor: number; window: number }, actor: string): void;
+    dismissAnomaly(anomalyId: string, reason: string, actor: string): void;
+    reopenAnomaly(anomalyId: string, actor: string): void;
     addSite(input: { name: string; timezone: string; description: string; actor: string }): string;
     addTank(input: { siteId: string; name: string; capacityLiters: number; note: string; actor: string }): string;
     addMeter(input: { siteId: string; name: string; boundary: string; actor: string }): string;
@@ -292,6 +295,47 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
           ],
         }));
         recomputeSite(siteId);
+      },
+
+      setAnomalyConfig: (siteId, config, actor) => {
+        adapter.update((s) => ({
+          ...s,
+          anomalyConfigs: { ...(s.anomalyConfigs ?? {}), [siteId]: config },
+          auditEvents: [
+            ...s.auditEvents,
+            makeAuditEvent(actor, "anomaly.config_changed", "Site", siteId, { after: config }),
+          ],
+        }));
+      },
+
+      dismissAnomaly: (anomalyId, reason, actor) => {
+        adapter.update((s) => ({
+          ...s,
+          anomalyDismissals: {
+            ...(s.anomalyDismissals ?? {}),
+            [anomalyId]: { reason, at: new Date().toISOString(), by: actor },
+          },
+          auditEvents: [
+            ...s.auditEvents,
+            makeAuditEvent(actor, "anomaly.dismissed", "Anomaly", anomalyId, { reason }),
+          ],
+        }));
+      },
+
+      reopenAnomaly: (anomalyId, actor) => {
+        adapter.update((s) => {
+          const d = { ...(s.anomalyDismissals ?? {}) };
+          const reason = d[anomalyId]?.reason;
+          delete d[anomalyId];
+          return {
+            ...s,
+            anomalyDismissals: d,
+            auditEvents: [
+              ...s.auditEvents,
+              makeAuditEvent(actor, "anomaly.reopened", "Anomaly", anomalyId, { reason: "reopened" + (reason ? ": was " + reason : "") }),
+            ],
+          };
+        });
       },
 
       addSite: (input) => {
