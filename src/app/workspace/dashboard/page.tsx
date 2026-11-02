@@ -13,6 +13,7 @@ import { STATUS_META } from "@/components/equation-card";
 import { StatusPill, EmptyState, Card, Input, Button, type Tone } from "@/components/ui";
 import { detectAnomalies, configFor, DEFAULT_ANOMALY_CONFIG, isDismissed } from "@/domain/anomalies";
 import { useState } from "react";
+import { forecastDemand, FORECAST_DEFAULTS, type ForecastResult } from "@/lib/forecast";
 import { IconArrowRight } from "@/components/icons";
 import {
   ChartCard,
@@ -146,6 +147,7 @@ export default function DashboardPage() {
       </div>
 
       <AnomaliesCard />
+      <ForecastCard usageIntervals={usageIntervals.map((u) => ({ day: u.day, label: u.label, liters: u.liters }))} />
 
       {/* Trends */}
       <div className="grid gap-5 xl:grid-cols-2">
@@ -333,3 +335,103 @@ function AnomaliesCard() {
     </Card>
   );
 }
+
+/* ------------------------------- Forecast --------------------------------- */
+
+function ForecastCard({ usageIntervals }: { usageIntervals: { day: string; label: string; liters: number }[] }) {
+  const [horizon, setHorizon] = useState(7);
+  const result: ForecastResult = forecastDemand(usageIntervals, { ...FORECAST_DEFAULTS, horizonDays: horizon });
+
+  return (
+    <Card className="print-card">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <h3 className="text-[14px] font-bold tracking-tight text-ink">Water demand forecast</h3>
+          <p className="mt-0.5 text-xs text-slate-500">
+            Moving average over recent metered intervals, with a weekday adjustment. Estimates only — never mixed
+            into the reconciliation balance.
+          </p>
+        </div>
+        <label className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+          Horizon
+          <select
+            aria-label="Forecast horizon days"
+            value={horizon}
+            onChange={(e) => setHorizon(Number(e.target.value))}
+            className="rounded-lg border border-slate-300 px-2 py-1 text-[12px]"
+          >
+            <option value={7}>7 days</option>
+            <option value={10}>10 days</option>
+            <option value={14}>14 days</option>
+          </select>
+        </label>
+      </div>
+
+      {!result.sufficient ? (
+        <div className="rounded-xl border border-dashed border-amber/50 bg-amber-soft px-4 py-6 text-center">
+          <p className="text-[13px] font-bold text-amber-deep">Not enough history to forecast</p>
+          <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-amber-deep/80">{result.reason}</p>
+        </div>
+      ) : (
+        <div>
+          <ForecastSvg intervals={usageIntervals} points={result.points} />
+          <div className="mt-3 grid gap-2 text-[12px] text-slate-500 sm:grid-cols-2">
+            <p><strong className="text-slate-600">Method:</strong> {result.assumptions.method}</p>
+            <p><strong className="text-slate-600">Input range:</strong> {result.assumptions.historyRange} ({result.assumptions.historyIntervals} intervals)</p>
+            <p className="sm:col-span-2"><strong className="text-slate-600">Assumptions:</strong> demand continues at recent metered levels{result.assumptions.weekdayAdjustment ? ", adjusted by weekday pattern from the last 4 weeks" : ""}. {result.assumptions.stabilityNote}</p>
+            <p className="sm:col-span-2 rounded-lg bg-amber-soft px-3 py-2 font-semibold text-amber-deep">
+              Forecast estimate — not a measured water quantity. Generated from recorded data only; forecasts never
+              enter the reconciliation balance.
+            </p>
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+function ForecastSvg({ intervals, points }: { intervals: { label: string; liters: number }[]; points: { label: string; liters: number; low: number; high: number }[] }) {
+  const W = 560;
+  const H = 220;
+  const pad = { l: 52, r: 14, t: 18, b: 30 };
+  const all = [...intervals.map((i) => i.liters), ...points.flatMap((p) => [p.low, p.high])];
+  const max = Math.max(...all, 1) * 1.12;
+  const n = intervals.length + points.length;
+  const x = (i: number) => pad.l + (i / Math.max(n - 1, 1)) * (W - pad.l - pad.r);
+  const y = (v: number) => pad.t + (1 - v / max) * (H - pad.t - pad.b);
+
+  const histPath = intervals.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(p.liters).toFixed(1)}`).join(" ");
+  const fcPath = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(intervals.length + i).toFixed(1)},${y(p.liters).toFixed(1)}`).join(" ");
+  const bandTop = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(intervals.length + i).toFixed(1)},${y(p.high).toFixed(1)}`).join(" ");
+  const bandBottomRev = [...points].map((p, i) => `L${x(intervals.length + points.length - 1 - i).toFixed(1)},${y(points[points.length - 1 - i].low).toFixed(1)}`).join(" ");
+  const labelEvery = Math.ceil(n / 8);
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Usage history and demand forecast">
+      {intervals.map((p, i) => (
+        <rect key={"h" + i} x={x(i) - 4} y={y(p.liters)} width={8} height={Math.max(H - pad.b - y(p.liters), 1)} rx="2" fill={AQUA_C} opacity={0.75}>
+          <title>{`${p.label}: ${p.liters.toLocaleString("en-IN")} L (measured interval)`}</title>
+        </rect>
+      ))}
+      <path d={bandTop + " " + bandBottomRev.replace("L", "L") + " Z"} fill={AMBER_C} opacity={0.22} />
+      <path d={fcPath} fill="none" stroke={AMBER_C} strokeWidth="2.5" strokeDasharray="6 4" />
+      {points.map((p, i) => (
+        <g key={"f" + i}>
+          <circle cx={x(intervals.length + i)} cy={y(p.liters)} r="3.5" fill={AMBER_C}>
+            <title>{`${p.label}: ≈${p.liters.toLocaleString("en-IN")} L (band ${p.low.toLocaleString("en-IN")}–${p.high.toLocaleString("en-IN")})`}</title>
+          </circle>
+        </g>
+      ))}
+      {Array.from({ length: n }).map((_, i) => {
+        const lab = i < intervals.length ? intervals[i].label : points[i - intervals.length].label;
+        return i % labelEvery === 0 ? (
+          <text key={"l" + i} x={x(i)} y={H - 10} textAnchor="middle" fontSize="9.5" fill={i < intervals.length ? "#64748B" : AMBER_C}>{lab}</text>
+        ) : null;
+      })}
+      <text x={pad.l - 6} y={y(max) + 4} textAnchor="end" fontSize="10" fill="#64748B">{Math.round(max).toLocaleString("en-IN")}</text>
+    </svg>
+  );
+}
+
+const AQUA_C = "#25D8D1";
+const AMBER_C = "#E9AE45";
