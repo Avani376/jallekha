@@ -8,6 +8,7 @@
 import { useState } from "react";
 import { useWorkspace } from "@/data/store";
 import { Card, CardHeader, Button, Field, Input, Select, Textarea, Modal, StatusPill } from "@/components/ui";
+import { IoTDevicesSection } from "@/components/iot-devices";
 import { formatLiters } from "@/domain/units";
 import { istDate, istToUtc } from "@/lib/datetime";
 import { mascotReact } from "@/components/mascot";
@@ -151,6 +152,7 @@ export default function ReadingsPage() {
         </Card>
       </div>
 
+      <IoTDevicesSection />
       <StockModal open={addStock} onClose={() => setAddStock(false)} onError={setErr} />
       <MeterModal open={addMeter} onClose={() => setAddMeter(false)} onError={setErr} />
       <ReadingImportModal open={importOpen} onClose={() => setImportOpen(false)} onError={setErr} />

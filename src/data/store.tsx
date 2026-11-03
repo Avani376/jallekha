@@ -36,6 +36,8 @@ import type {
 import { assertTransition, makeAuditEvent, makeId } from "@/domain/state";
 import { getAdapter } from "./adapter";
 import { DEMO_PERIOD, buildSeedWorkspace, buildEmptyWorkspace, investigationsForRuns } from "./seed";
+import { registerDevice, ingestReading, toLedgerReading, isStale, type IoTDevice, type IoTIngest } from "@/domain/iot";
+
 
 /** Tiny external store for the persistent workspace mode selection. */
 const dataModeStore = (() => {
@@ -125,6 +127,8 @@ export function periodFor(state: WorkspaceState, siteId: string): { start: strin
 
 export interface WorkspaceStore {
   state: WorkspaceState;
+  iotDevices: IoTDevice[];
+  iotIngests: IoTIngest[];
   ready: boolean;
   mode: "demo" | "real";
   setDataMode(mode: "demo" | "real"): void;
@@ -175,6 +179,10 @@ export interface WorkspaceStore {
     ): void;
     importWorkspace(json: string, actor: string): void;
     resetWorkspace(): void;
+    registerIoTDevice(input: { siteId: string; targetKind: "tank" | "meter"; targetId: string; label: string; model: string; calibrationOffsetLiters?: number }, actor: string): string | null;
+    receiveIoTReading(deviceId: string, rawValue: number, reportedAt: string): string | null;
+    verifyIoTReading(ingestId: string, actor: string): void;
+    rejectIoTReading(ingestId: string, reason: string, actor: string): void;
   };
 }
 
@@ -700,12 +708,72 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
 
       resetWorkspace: () => {
         adapter.reset();
+        setIotDevices([]);
+        setIotIngests([]);
+      },
+
+      registerIoTDevice: (input, actor) => {
+        const devices = iotDevices;
+        const { device, error } = registerDevice(devices, input, new Date().toISOString());
+        if (error) return null;
+        setIotDevices((prev) => [...prev, device]);
+        adapter.update((s) => ({
+          ...s,
+          auditEvents: [...s.auditEvents, makeAuditEvent(actor, "iot.device_registered", "IoTDevice", device.id, { after: { label: device.label, target: device.targetId } })],
+        }));
+        return device.id;
+      },
+
+      receiveIoTReading: (deviceId, rawValue, reportedAt) => {
+        const dev = iotDevices.find((d) => d.id === deviceId);
+        if (!dev) return "Device not found.";
+        const tank = dev.targetKind === "tank" ? state.tanks.find((t) => t.id === dev.targetId) : undefined;
+        const lastTR = state.tankReadings.filter((r) => r.tankId === dev.targetId).sort((a, b) => b.observedAt.localeCompare(a.observedAt))[0];
+        const lastUR = state.usageReadings.filter((r) => r.meterId === dev.targetId).sort((a, b) => b.observedAt.localeCompare(a.observedAt))[0];
+        const last = lastTR ?? lastUR;
+        const now = new Date().toISOString();
+        const result = ingestReading(dev, rawValue, reportedAt, now, tank, last);
+        setIotIngests((prev) => [...prev, result.ingest]);
+        if (!result.accepted) return result.errors.join("; ");
+        return null;
+      },
+
+      verifyIoTReading: (ingestId, actor) => {
+        const ing = iotIngests.find((i) => i.id === ingestId);
+        const dev = iotDevices.find((d) => d.id === ing?.deviceId);
+        if (!ing || !dev || ing.status !== "pending") return;
+        const now = new Date().toISOString();
+        const reading = toLedgerReading(ing, dev, actor, now);
+        setIotIngests((prev) => prev.map((i) => i.id === ingestId ? { ...i, status: "verified", verifiedRecordId: reading.id } : i));
+        if (dev.targetKind === "tank") {
+          const tr = reading as TankReading;
+          adapter.update((s) => ({ ...s, tankReadings: [...s.tankReadings, tr],
+            auditEvents: [...s.auditEvents, makeAuditEvent(actor, "iot.reading_verified", "TankReading", tr.id, { after: { liters: tr.stockLiters, device: dev.label } })] }));
+        } else {
+          const ur = reading as UsageReading;
+          adapter.update((s) => ({ ...s, usageReadings: [...s.usageReadings, ur],
+            auditEvents: [...s.auditEvents, makeAuditEvent(actor, "iot.reading_verified", "UsageReading", ur.id, { after: { cumulative: ur.cumulativeLiters, device: dev.label } })] }));
+        }
+        runReconciliation(ing.siteId);
+      },
+
+      rejectIoTReading: (ingestId, reason, actor) => {
+        setIotIngests((prev) => prev.map((i) => i.id === ingestId ? { ...i, status: "rejected", rejectReason: reason } : i));
+        adapter.update((s) => ({
+          ...s,
+          auditEvents: [...s.auditEvents, makeAuditEvent(actor, "iot.reading_rejected", "IoTIngest", ingestId, { reason })],
+        }));
       },
     };
   }, [adapter, runReconciliation]);
 
+  const [iotDevices, setIotDevices] = useState<IoTDevice[]>([]);
+  const [iotIngests, setIotIngests] = useState<IoTIngest[]>([]);
+
   const value = useMemo<WorkspaceStore>(
     () => ({
+      iotDevices,
+      iotIngests,
       state,
       ready: mounted,
       mode: dataMode,
