@@ -4,6 +4,60 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.4.0] - 2026-11-04
+
+The intelligence expansion: seven operator-facing features layered over the
+deterministic core — AI and forecasts stay advisory, IoT readings pass
+through human confirmation, and the engine math is untouched.
+
+### Added
+- **Anomaly detection**: transparent statistical flags over usage intervals
+  (moving-average deviations, sudden meter jumps vs the median factor),
+  repeated reconciliation discrepancies across runs, and reporting gaps —
+  each labeled "potential anomaly — requires verification", with per-site
+  thresholds and dismiss-with-reason that can be reopened. Each interval is
+  examined through both lenses independently, so one interval can raise a
+  meter-pair finding and a consumption finding.
+- **Notification center**: header bell with unread count; derived from run
+  findings, missing readings, open/stale investigations and anomalies;
+  mark-read, snooze 24h and dismiss-with-reason persisted per browser.
+- **Multi-site intelligence**: comparison table across every site in the
+  workspace with explicit comparability flags (incomplete or unquantified
+  sites are marked "not comparable" instead of ranked).
+- **Water demand forecasting**: moving-average baseline with optional
+  weekday adjustment over metered intervals; sufficiency gate (7+
+  intervals); linear uncertainty band from historical deviations; clearly
+  labeled as an estimate, never mixed into the reconciliation balance.
+- **IoT smart meter integration**: register one active device per tank and
+  ingest readings behind sensor-quality checks (capacity bounds, delta
+  plausibility, staleness, calibration offset) into a pending queue; an
+  operator confirms or rejects each reading before it reaches the ledger,
+  and silent devices are flagged after 48 h.
+- **Marathi + English interface**: language switcher with persisted
+  preference; typed locale tables covering navigation, header, dashboard,
+  notifications and footer; data-language separation documented.
+- **AI receipt scanner** (bring your own vision-capable key): upload a
+  receipt photo, the model drafts the fields, the operator reviews and
+  confirms; deterministic validation flags missing fields and duplicate
+  receipts; the original extraction is kept in the audit note.
+- AI provider presets in Settings (Z.ai / GLM, OpenAI, OpenRouter, custom
+  endpoint).
+
+### Changed
+- Test suites grew to **97 Vitest unit tests** across 13 files and
+  **33 Playwright browser checks**, adding coverage for anomaly detection,
+  notification derivation, forecast separation, i18n parity, receipt
+  scanning, IoT ingestion and AI configuration.
+
+## [1.3.2] - 2026-11-04
+
+### Added
+- `docs/media/jallekha-feature-walkthrough.mp4` — a 15-minute narrated
+  feature walkthrough (~51 MB) with a female Indian-English voiceover,
+  covering the reconciliation core, dashboard, AI receipt scanner and
+  Ask Bundu, multi-site comparison, anomaly review, notification center,
+  demand forecasting, IoT meter verification and the Marathi interface.
+
 ## [1.3.1] - 2026-10-31
 
 Submission deck rebuilt strictly on the official challenge template.
@@ -163,39 +217,6 @@ the competition pitch deck.
 - The privacy gate allowlists the `Build_Prompt/` pack (team
   documentation, nothing private in it); private context, submission
   drafts and raw working prompts remain blocked as before.
-
-## [1.1.0] - 2026-11-02
-
-### Added
-- **Anomaly detection**: transparent statistical flags over usage intervals
-  (moving-average deviations, sudden meter jumps vs the median factor),
-  repeated reconciliation discrepancies across runs, and reporting gaps —
-  each labeled "potential anomaly — requires verification", with per-site
-  thresholds and dismiss-with-reason that can be reopened.
-- **Notification center**: header bell with unread count; derived from run
-  findings, missing readings, open/stale investigations and anomalies;
-  mark-read, snooze 24h and dismiss-with-reason persisted per browser.
-- **Multi-site intelligence**: comparison table across every site in the
-  workspace with explicit comparability flags (incomplete or unquantified
-  sites are marked "not comparable" instead of ranked).
-- **Water demand forecasting**: moving-average baseline with optional
-  weekday adjustment over metered intervals; sufficiency gate (7+
-  intervals); linear uncertainty band from historical deviations; clearly
-  labeled as an estimate, never mixed into the reconciliation balance.
-- **Marathi + English interface**: language switcher with persisted
-  preference; typed locale tables covering navigation, header, dashboard,
-  notifications and footer; data-language separation documented.
-- **AI receipt scanner** (bring your own vision-capable key): upload a
-  receipt photo, the model drafts the fields, the operator reviews and
-  confirms; deterministic validation flags missing fields and duplicate
-  receipts; the original extraction is kept in the audit note.
-- AI provider presets in Settings (Z.ai / GLM, OpenAI, OpenRouter, custom
-  endpoint).
-
-### Changed
-- e2e and unit suites extended to 41 Vitest tests and 33 browser checks
-  plus new suites for anomalies, notifications, forecasting, i18n and
-  receipt scanning (82 total).
 
 ## [1.0.0] - 2026-10-31
 
