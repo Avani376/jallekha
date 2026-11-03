@@ -349,7 +349,13 @@ first pilot does.
 
 <img src="docs/media/closing-loop.svg" alt="Animated closing: orbiting water drops around the JalLekha message with team credits" width="100%">
 
-**[▶ Open the live demo](https://jallekha.vercel.app/demo) · [▶ Watch the walkthrough](docs/media/jallekha-walkthrough.mp4) · [Explore the workspace](https://jallekha.vercel.app/workspace)**
+<br>
+
+<a href="https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-feature-walkthrough.mp4"><img src="docs/media/video-thumb.jpg" alt="Frame from the walkthrough video: the JalLekha landing hero with delivery receipts, tank gauge and the balance equation" width="640"></a>
+
+**[▶ Watch the full feature walkthrough — 15 min](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-feature-walkthrough.mp4) · [6-minute quick tour](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-walkthrough.mp4)**
+
+**[Open the live demo](https://jallekha.vercel.app/demo) · [Explore the workspace](https://jallekha.vercel.app/workspace)**
 
 *JalLekha — prototype; synthetic demonstration data; no water savings claimed.*
 *All suppliers, receipts, people and numbers in this repository are synthetic.*
