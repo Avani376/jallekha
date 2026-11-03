@@ -39,7 +39,13 @@ const NAV_GROUP_AT: Record<number, string | null> = {
 export default function WorkspaceLayout({ children }: { children: React.ReactNode }) {
   return (
     <Suspense fallback={<ShellFallback />}>
-      <WorkspaceShell>{children}</WorkspaceShell>
+      {/* The provider must sit ABOVE WorkspaceShell: the shell consumes t()
+          for the nav, header and footers — a provider rendered inside the
+          same component that calls useI18n() is invisible to its own hook
+          (the language switcher updated while every label stayed English). */}
+      <LocaleProvider>
+        <WorkspaceShell>{children}</WorkspaceShell>
+      </LocaleProvider>
     </Suspense>
   );
 }
@@ -72,7 +78,6 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LocaleProvider>
     <div className="min-h-screen bg-offwhite">
       <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center gap-x-4 gap-y-2 px-4 py-2.5">
@@ -208,7 +213,6 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
         }}
       />
     </div>
-    </LocaleProvider>
   );
 }
 
