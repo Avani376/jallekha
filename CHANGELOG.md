@@ -4,6 +4,27 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.4.1] - 2026-11-04
+
+Receipt-scanner reachability fix: the feature existed end to end but had no
+way to be opened.
+
+### Fixed
+- **The AI receipt scanner was unreachable in the UI.** The ledger page
+  created the modal state and rendered `ReceiptScannerModal`, but nothing
+  ever called `setScanOpen(true)` — no button, no entry point. The
+  Deliveries toolbar now has a **"Scan receipt (AI)"** button (with a new
+  `IconCamera`) that opens the upload modal.
+- The README receipt-scanner section referenced
+  `docs/media/shots/receipt-scanner.png`, which was never captured — a
+  broken image on GitHub. A real screenshot of the modal over the ledger
+  (1280×720, matching the sibling set) is now captured and committed.
+
+### Changed
+- Two new e2e checks guard the regression — the scan button opens the
+  upload modal and the review-before-save wording is shown — bringing the
+  suite to **35 Playwright checks** (unit suite unchanged at 97).
+
 ## [1.4.0] - 2026-11-04
 
 The intelligence expansion: seven operator-facing features layered over the

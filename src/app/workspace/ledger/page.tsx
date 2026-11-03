@@ -13,7 +13,7 @@ import { Card, Button, Field, Input, Select, Textarea, Modal, StatusPill, EmptyS
 import { buildImportPreview, confirmImport, parseCsv, SAMPLE_CSV, suggestColumnMapping, type ImportPreview } from "@/domain/import";
 import { istDate, istToUtc, istToLocalInput } from "@/lib/datetime";
 import { mascotReact } from "@/components/mascot";
-import { IconPlus, IconUpload } from "@/components/icons";
+import { IconPlus, IconUpload, IconCamera } from "@/components/icons";
 import { aiReady, loadAiSettings } from "@/lib/ai/settings";
 import { ReceiptScannerModal } from "@/components/receipt-scanner";
 import { draftFromNote, AiError } from "@/lib/ai/client";
@@ -71,6 +71,7 @@ export default function LedgerPage() {
           </p>
         </div>
         <div className="no-print flex gap-2">
+          <Button variant="secondary" size="sm" onClick={() => setScanOpen(true)}><IconCamera /> Scan receipt (AI)</Button>
           <Button variant="secondary" size="sm" onClick={() => setImportOpen(true)}><IconUpload /> Import CSV</Button>
           <Button size="sm" onClick={() => setAddOpen(true)}><IconPlus /> Add delivery</Button>
         </div>

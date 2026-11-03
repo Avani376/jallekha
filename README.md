@@ -10,7 +10,7 @@
 
 [![Live demo](https://img.shields.io/badge/▶_LIVE_DEMO-jallekha.vercel.app-25D8D1?labelColor=061a24&style=for-the-badge)](https://jallekha.vercel.app/demo)
 [![Tests](https://img.shields.io/badge/tests-97_/_97_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
-[![E2E](https://img.shields.io/badge/e2e-33_/_33_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
+[![E2E](https://img.shields.io/badge/e2e-35_/_35_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict_0_errors-3188FF?labelColor=061a24&style=for-the-badge)](#-quality-gates)
 [![AI](https://img.shields.io/badge/AI-optional_off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance)
 [![Data](https://img.shields.io/badge/demo_data-100%25_synthetic-22414F?labelColor=061a24&style=for-the-badge)](#-honest-status)
@@ -161,7 +161,7 @@ Duplicates flagged against posted receipts. The original extraction is preserved
 
 | ![Receipt scanner](docs/media/shots/receipt-scanner.png) |
 | --- |
-| *Upload → extract → review extracted vs corrected values → confirm.* |
+| *Opened from the Deliveries ledger — upload → extract → review extracted vs corrected values → confirm.* |
 
 ---
 
@@ -290,7 +290,7 @@ flowchart LR
 | Gate | Result | What it protects |
 | --- | --- | --- |
 | `npm test` — Vitest | **97/97** | 4 signature scenarios to the litre, duplicate policy, units, import idempotency, reading conflicts, anomaly detection, notification derivation, multi-site aggregation, forecast separation, i18n parity, receipt scanning, IoT ingestion, AI config |
-| Playwright e2e | **33/33**, zero console errors | Real user journeys: void → recompute → history, missing-reading completion, import replay, refresh persistence, dashboard rendering |
+| Playwright e2e | **35/35**, zero console errors | Real user journeys: void → recompute → history, missing-reading completion, import replay, receipt-scanner modal, refresh persistence, dashboard rendering |
 | `npm run typecheck` | **0 errors** | Strict TypeScript |
 | `npm run lint` | **0 errors, 0 warnings** | ESLint across app and domain |
 | `npm run preflight` | **green, 128 files** | Privacy gate: no private material tracked |

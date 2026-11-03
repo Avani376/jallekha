@@ -129,6 +129,13 @@ try {
   check("import: replay fully idempotent", await textVisible(page, "4 exact duplicate"));
   await page.getByRole("button", { name: /Close dialog/i }).click();
 
+  // ---------- 6b. Receipt scanner: reachable, review-before-save wording ----------
+  await page.getByRole("button", { name: /Scan receipt \(AI\)/i }).click();
+  await page.getByText("Choose a receipt photo", { exact: false }).first().waitFor({ state: "visible", timeout: 5000 });
+  check("scanner: button opens the upload modal", true);
+  check("scanner: review-before-save wording", await textVisible(page, "you review and confirm before anything is saved"));
+  await page.getByRole("button", { name: /Close dialog/i }).click();
+
   // ---------- 7. Refresh persistence (localStorage) ----------
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForTimeout(900);

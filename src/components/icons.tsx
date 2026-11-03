@@ -100,6 +100,15 @@ export function IconUpload({ className }: { className?: string }) {
   );
 }
 
+export function IconCamera({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" aria-hidden className={className}>
+      <path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h1.6l1-1.5h3.8l1 1.5h1.6A1.5 1.5 0 0 1 14 5.5v6a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-6Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <circle cx="8" cy="8.3" r="2.4" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
 export function IconPlus({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden className={className}>
