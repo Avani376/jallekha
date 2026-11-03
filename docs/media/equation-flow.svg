@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 160" width="700" height="160">
+<defs>
+  <marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 Z" fill="#25D8D1"/>
+  </marker>
+</defs>
+<rect width="700" height="160" fill="#061A24" rx="8"/>
+
+<!-- Term boxes with labels -->
+<rect x="30" y="30" width="90" height="50" rx="8" fill="#3188FF" opacity="0.15"/>
+<rect x="30" y="30" width="90" height="50" rx="8" fill="none" stroke="#3188FF" strokeWidth="1"/>
+<text x="75" y="52" text-anchor="middle" font-family="Manrope,sans-serif" font-size="18" font-weight="800" fill="#3188FF">O</text>
+<text x="75" y="68" text-anchor="middle" font-family="Manrope,sans-serif" font-size="8" fill="#94A3B8">opening stock</text>
+
+<rect x="165" y="30" width="90" height="50" rx="8" fill="#25D8D1" opacity="0.15"/>
+<rect x="165" y="30" width="90" height="50" rx="8" fill="none" stroke="#25D8D1" strokeWidth="1"/>
+<text x="210" y="52" text-anchor="middle" font-family="Manrope,sans-serif" font-size="18" font-weight="800" fill="#25D8D1">D</text>
+<text x="210" y="68" text-anchor="middle" font-family="Manrope,sans-serif" font-size="8" fill="#94A3B8">deliveries</text>
+
+<rect x="300" y="30" width="90" height="50" rx="8" fill="#E9AE45" opacity="0.15"/>
+<rect x="300" y="30" width="90" height="50" rx="8" fill="none" stroke="#E9AE45" strokeWidth="1"/>
+<text x="345" y="52" text-anchor="middle" font-family="Manrope,sans-serif" font-size="18" font-weight="800" fill="#E9AE45">U</text>
+<text x="345" y="68" text-anchor="middle" font-family="Manrope,sans-serif" font-size="8" fill="#94A3B8">metered usage</text>
+
+<rect x="435" y="30" width="90" height="50" rx="8" fill="#94A3B8" opacity="0.15"/>
+<rect x="435" y="30" width="90" height="50" rx="8" fill="none" stroke="#94A3B8" strokeWidth="1"/>
+<text x="480" y="52" text-anchor="middle" font-family="Manrope,sans-serif" font-size="18" font-weight="800" fill="#94A3B8">C</text>
+<text x="480" y="68" text-anchor="middle" font-family="Manrope,sans-serif" font-size="8" fill="#94A3B8">closing stock</text>
+
+<!-- R result box -->
+<rect x="580" y="25" width="90" height="60" rx="10" fill="#0E8A5F" opacity="0.2"/>
+<rect x="580" y="25" width="90" height="60" rx="10" fill="none" stroke="#0E8A5F" strokeWidth="1.5"/>
+<text x="625" y="52" text-anchor="middle" font-family="Manrope,sans-serif" font-size="22" font-weight="800" fill="#0E8A5F">R</text>
+<text x="625" y="72" text-anchor="middle" font-family="Manrope,sans-serif" font-size="8" fill="#94A3B8">residual</text>
+
+<!-- Connecting arrows with flowing animation -->
+<line x1="120" y1="55" x2="160" y2="55" stroke="#25D8D1" strokeWidth="1.5" marker-end="url(#fa)">
+  <animate attributeName="stroke-dashoffset" from="10" to="0" dur="0.7s" repeatCount="indefinite"/>
+</line>
+<text x="140" y="48" text-anchor="middle" font-family="Manrope,sans-serif" font-size="12" font-weight="800" fill="#F5F8F7">+</text>
+
+<line x1="255" y1="55" x2="295" y2="55" stroke="#E9AE45" strokeWidth="1.5" marker-end="url(#fa)">
+  <animate attributeName="stroke-dashoffset" from="10" to="0" dur="0.7s" begin="0.2s" repeatCount="indefinite"/>
+</line>
+<text x="275" y="48" text-anchor="middle" font-family="Manrope,sans-serif" font-size="12" font-weight="800" fill="#F5F8F7">−</text>
+
+<line x1="390" y1="55" x2="430" y2="55" stroke="#94A3B8" strokeWidth="1.5" marker-end="url(#fa)">
+  <animate attributeName="stroke-dashoffset" from="10" to="0" dur="0.7s" begin="0.4s" repeatCount="indefinite"/>
+</line>
+<text x="410" y="48" text-anchor="middle" font-family="Manrope,sans-serif" font-size="12" font-weight="800" fill="#F5F8F7">−</text>
+
+<line x1="525" y1="55" x2="575" y2="55" stroke="#0E8A5F" strokeWidth="1.5" marker-end="url(#fa)">
+  <animate attributeName="stroke-dashoffset" from="10" to="0" dur="0.7s" begin="0.6s" repeatCount="indefinite"/>
+</line>
+<text x="550" y="48" text-anchor="middle" font-family="Manrope,sans-serif" font-size="12" font-weight="800" fill="#F5F8F7">→</text>
+
+<!-- Uncertainty band -->
+<rect x="580" y="95" width="90" height="8" rx="4" fill="#25D8D1" opacity="0.2"/>
+<rect x="600" y="95" width="50" height="8" rx="4" fill="#25D8D1" opacity="0.5">
+  <animate attributeName="x" values="598;602;598" dur="2s" repeatCount="indefinite"/>
+</rect>
+<text x="625" y="115" text-anchor="middle" font-family="Manrope,sans-serif" font-size="7" fill="#94A3B8">± uncertainty band</text>
+
+<!-- Pulsing R indicator -->
+<circle cx="625" cy="55" r="35" fill="none" stroke="#0E8A5F" strokeWidth="0.8" opacity="0">
+  <animate attributeName="r" values="30;42" dur="2s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="0.5;0" dur="2s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Bottom text -->
+<text x="350" y="145" text-anchor="middle" font-family="Manrope,sans-serif" font-size="10" fill="#94A3B8">
+  Every input carries a declared uncertainty bound. The interval is the conservative sum — no RSS.
+</text>
+</svg>

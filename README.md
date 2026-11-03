@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/media/hero-water.svg" alt="JalLekha — a droplet over animated deep water" width="100%">
+<img src="docs/media/hero-animated.svg" alt="JalLekha — animated water drop over layered waves" width="100%">
 
 # JalLekha
 
@@ -8,23 +8,20 @@
 
 **Water delivery & consumption reconciliation for campuses and housing societies.**
 
-[![Live demo](https://img.shields.io/badge/%E2%96%B6_LIVE_DEMO-jallekha.vercel.app-25D8D1?labelColor=061a24&style=for-the-badge)](https://jallekha.vercel.app/demo)
-[![Watch the video](https://img.shields.io/badge/%E2%96%B6_WATCH-6_min_narrated_walkthrough-3188FF?labelColor=061a24&style=for-the-badge)](docs/media/jallekha-walkthrough.mp4)
-[![Tests](https://img.shields.io/badge/tests-97_%2F_97_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
-[![Browser checks](https://img.shields.io/badge/e2e-33_%2F_33_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
-[![AI](https://img.shields.io/badge/AI-optional,_off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance--optional-provider-neutral-off-by-default)
-[![Data](https://img.shields.io/badge/demo_data-100%25_synthetic-22414F?labelColor=061a24&style=for-the-badge)](#honest-status-printed-on-the-product-itself)
+[![Live demo](https://img.shields.io/badge/▶_LIVE_DEMO-jallekha.vercel.app-25D8D1?labelColor=061a24&style=for-the-badge)](https://jallekha.vercel.app/demo)
+[![Tests](https://img.shields.io/badge/tests-97_/_97_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
+[![E2E](https://img.shields.io/badge/e2e-33_/_33_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict_0_errors-3188FF?labelColor=061a24&style=for-the-badge)](#-quality-gates)
+[![AI](https://img.shields.io/badge/AI-optional_off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance)
+[![Data](https://img.shields.io/badge/demo_data-100%25_synthetic-22414F?labelColor=061a24&style=for-the-badge)](#-honest-status)
 
-**Seva First Innovation Challenge · Maharashtra Zone · Sector: Sustainability — Energy, Climate & Others**
-
-<a href="docs/media/jallekha-walkthrough.mp4"><img src="docs/media/video-thumb.jpg" alt="Watch the narrated walkthrough — JalLekha landing page" width="660"></a>
-<sub>▶ **Click the frame to watch the narrated walkthrough** — the problem, all four scenarios performed live, every screen, and the team.</sub>
+**Seva First Innovation Challenge · Maharashtra Zone · Sustainability — Energy, Climate & Others**
 
 </div>
 
 ---
 
-## 🌊 Why JalLekha exists
+## 🌊 The Problem
 
 In campus and housing-society maintenance rooms, water arrives by **tanker**, gets stored in
 **tanks**, and flows out through **meters** — and each of those is written down in a *different
@@ -43,14 +40,16 @@ changes everything:
 Mix these up and real damage follows: a duplicate gets called *theft*, a leak gets called
 *bookkeeping*. JalLekha separates them mechanically, so the response always matches the cause.
 
-<div align="center"><img src="docs/media/three-findings.svg" alt="Three findings: duplicate receipt, missing reading, unexplained residual — each with a different action" width="100%"></div>
+<div align="center"><img src="docs/media/three-findings.svg" alt="Three findings: duplicate receipt, missing reading, unexplained residual" width="100%"></div>
 
 ---
 
-## ⚖️ The honest math at the center
+## ⚖️ The Equation — with honest uncertainty
 
 For one tank and one fully covered period, JalLekha computes one equation — and, critically,
-**an uncertainty interval around it** built from the *declared* measurement bounds of every input:
+**an uncertainty interval around it** built from the *declared* measurement bounds of every input.
+
+<div align="center"><img src="docs/media/equation-flow.svg" alt="Animated equation flow: O → D → U → C → R with flowing arrows and uncertainty band" width="100%"></div>
 
 ```text
 R = O + D − U − C          (opening + deliveries − metered usage − closing)
@@ -61,325 +60,294 @@ R_max = O_max + D_max − U_min − C_min      ← conservative SUM, never a sta
 
 The verdict is then staged, never exaggerated:
 
-- **within uncertainty** → the imbalance is consistent with measurement error. *Not* "perfect balance".
-- **outside uncertainty** → larger than declared error can explain → an investigation is opened.
-- **incomplete** → a required reading is absent → **no residual is asserted at all** (never zero-filled, never borrowed).
-- **invalid** → impossible input (negative meter delta, stock above capacity, cross-site record) → blocked, not clamped.
+| Status | Meaning |
+| --- | --- |
+| **within uncertainty** | The imbalance is consistent with measurement error. *Not* "perfect balance". |
+| **outside uncertainty** | Larger than declared error can explain → investigation opened. |
+| **incomplete** | A required reading is absent → **no residual asserted at all**. |
+| **invalid** | Impossible input → blocked, never clamped. |
 
-And one rule above all: **a discrepancy is never worded as theft, leakage, or any cause.**
-JalLekha raises questions with evidence — people draw conclusions.
-
-<div align="center"><img src="docs/media/uncertainty-band.svg" alt="The residual marker moves from +5,000 L outside the uncertainty band to 0 L inside it after a reviewed void — history preserved" width="100%"></div>
+> **A discrepancy is never worded as theft, leakage, or any cause.**
+> JalLekha raises questions with evidence — people draw conclusions.
 
 ---
 
-## 🧭 One workflow, visible end to end
+## 🖥️ Every screen, live
 
-<div align="center"><img src="docs/media/flow-pipeline.svg" alt="Records flow through the pipeline: record → reconcile → investigate → resolve" width="100%"></div>
+> Every screenshot is the **real running app** with synthetic demonstration data.
 
-## 🖥️ The product, tab by tab
+### 📊 Dashboard — the whole engine in one view
+Hand-built SVG charts (zero charting dependencies): balance waterfall, cumulative meter trend
+with delivery markers, deliveries by day, findings donut, measurement quality, residual band
+across runs, and a live tank gauge. Plus anomaly flags and a demand forecast.
 
-> Every screenshot below is the **real running app** (synthetic demonstration data). Click any image to open the [live demo](https://jallekha.vercel.app/demo) at the same screen.
-
-### ① Guided demo — four scenarios, three minutes, zero setup
-The demo seeds four synthetic sites, each engineered to teach one lesson, and a scripted tour that
-lands you directly inside the interesting one. Everything runs in *your* browser; nothing is uploaded.
-
-| ![Guided demo](docs/media/shots/demo.png) |
+| ![Dashboard KPIs](docs/media/shots/dashboard.png) |
 | --- |
-| *Scenario cards with their expected outcomes printed up-front — the demo teaches before you click.* |
+| *Six KPI tiles: delivered, usage, residual, quality %, open cases, records.* |
+| ![Dashboard charts](docs/media/shots/dashboard-charts.png) |
+| *Waterfall, findings donut, meter trend, quality bar — all from persisted records.* |
 
-### ② Dashboard — the whole engine state in one view
-Hand-built SVG charts (zero charting dependencies, all stilled by the reduce-motion control):
-balance waterfall, cumulative meter trend with delivery markers, deliveries by day, findings mix,
-measurement quality, residual band across runs, and a live tank gauge. Plus anomaly flags and a
-demand forecast — every chart drawn from real stored records.
+### 📖 Overview — the equation, live
+The selected site's state: equation card with residual verdict, uncertainty interval,
+tank cutaway, and the findings the run produced.
 
-| ![Dashboard](docs/media/shots/dashboard.png) |
+| ![Overview](docs/media/shots/overview-a.png) |
 | --- |
-| *KPIs, balance waterfall, anomalies and forecast — all from persisted records, nothing simulated.* |
+| *Scenario B: R = +5,000 L — outside [4,300, 5,700] — duplicate candidate already linked.* |
 
-### ③ Overview — the equation, live
-The selected site's whole state on one screen: the equation card with the residual verdict, an
-uncertainty interval figure, the tank cutaway, and the findings the run produced.
+### 📋 Deliveries — the ledger with a conscience
+Search, filter, sort; manual entry; **validate-before-commit** CSV import; and an
+**AI receipt scanner**. Duplicate candidates are *pills on the rows*, not delete buttons.
 
-| ![Overview](docs/media/shots/overview.png) |
+| ![Ledger with duplicate](docs/media/shots/ledger-duplicate.png) |
 | --- |
-| *Scenario B: the raw ledger shows R = +5,000 L — outside [4,300, 5,700] — with the duplicate candidate already linked.* |
+| *Both R-101 rows visible until a reviewer voids one — with a documented reason.* |
 
-### ④ Deliveries — the ledger with a conscience
-Search, filter, sort; manual entry with deterministic validation; **validate-before-commit**
-CSV import preview; and an **AI receipt scanner** — upload a photo, the model drafts the fields,
-you review and confirm. Duplicate candidates are *pills on the rows*, not delete buttons.
+### 📏 Readings — with IoT smart device integration
+Tank and cumulative meter readings with declared uncertainty and quality labels.
+IoT devices feed readings through **sensor-quality checks** into a pending queue
+that requires **operator verification** before entering the ledger.
 
-| ![Delivery ledger](docs/media/shots/ledger.png) |
+| ![Readings with IoT](docs/media/shots/readings-missing.png) |
 | --- |
-| *Both R-101 rows stay visible and posted until a reviewer voids one — with a reason.* |
+| *Scenario C: no closing reading → residual unavailable → missing field named.* |
 
-### ⑤ Readings — stock and meters, exactly at the boundary
-Tank dipstick readings and cumulative meter readings with declared uncertainty and quality labels.
-IoT smart devices feed readings through **sensor-quality checks** (capacity bounds, delta
-plausibility, staleness) into a pending queue that requires **operator verification** before
-entering the ledger.
-
-| ![Readings](docs/media/shots/readings.png) |
-| --- |
-| *Boundary instants are labelled; usage = end − start over the same meter and units.* |
-
-### ⑥ Reconciliation — the run, explained
-The full run: status precedence, source-by-source provenance for every input, the conservative
-interval figure, a rule-based explanation, and **run history** — corrections create *superseding*
-runs so a reviewer can always see what the ledger looked like *before* the correction.
+### ⚖️ Reconciliation — the run, explained
+Status precedence, source-by-source provenance, the conservative interval, a rule-based
+explanation, and **run history** — corrections create *superseding* runs.
 
 | ![Reconciliation](docs/media/shots/reconciliation.png) |
 | --- |
-| *Scenario B raw state: outside uncertainty, cause not determined — the scope assumption is printed on the result.* |
+| *Scenario B: outside uncertainty, cause not determined — scope assumption printed.* |
+| ![Reconciliation bounds](docs/media/shots/reconciliation-bounds.png) |
+| *Uncertainty band and residual — the comparison that matters is zero-in-interval.* |
 
-### ⑦ Cases — findings become owned, evidence-backed work
-Actionable findings open investigations exactly once. Each case carries an assignee, explicit
-status transitions (open → in review → action required → resolved), a timestamped evidence
-timeline, and a resolution that requires **outcome + explanation + reviewer**. Voiding a duplicate
-auto-resolves its case with the reason attached.
+### 📁 Cases — findings become owned, evidence-backed work
+Actionable findings open investigations exactly once. Each case has an assignee, status
+transitions, evidence timeline, and resolution requiring **outcome + explanation + reviewer**.
 
-| ![Verification cases](docs/media/shots/cases.png) |
+| ![Cases](docs/media/shots/cases.png) |
 | --- |
-| *Two open cases on the legacy-ledger week — each with its own suggested next action.* |
+| *Open cases with their next actions — evidence timeline inside each one.* |
 
-### ⑧ Multi-site intelligence — compare without misleading
-Side-by-side reconciliation state across every site in the workspace. Comparison **reliability is
-explicit**: sites with incomplete runs or unquantified uncertainty are marked "not comparable"
-instead of ranked. No site is called "worst" from raw residual volume alone.
+### 🌐 Multi-Site — compare without misleading
+Side-by-side reconciliation across every site. Comparison **reliability is explicit**:
+sites with incomplete runs are marked "not comparable" instead of ranked.
 
-### ⑨ Reports — the documented review
-A printable documented review that reads correctly **without color or animation**, plus safe CSV
-(formula prefixes neutralized), a JSON review, and a full workspace JSON export/restore for backup
-and device moves.
+| ![Multi-site](docs/media/shots/multi-site.png) |
+| --- |
+| *Three sites compared: Alpha (comparable), Beta (not comparable — incomplete), Gamma (comparable).* |
+
+### 📄 Reports — the documented review
+Printable review that reads correctly **without color or animation**, safe CSV, JSON review,
+and full workspace JSON export/restore.
 
 | ![Reports](docs/media/shots/reports.png) |
 | --- |
-| *Cases & outcomes, delivery history including voids with reasons, and the audit trail.* |
+| *Cases & outcomes, delivery history with voids and reasons, audit trail.* |
+
+### 🔔 Notifications — nothing gets missed
+Derived from real workspace state: missing readings, duplicates, unresolved discrepancies,
+open investigations, and anomalies. Severity-tagged with direct links. Snooze or dismiss
+with a recorded reason.
+
+| ![Notifications](docs/media/shots/notifications.png) |
+| --- |
+| *Bell with unread badge; drawer with severity-tagged actionable items.* |
+
+### 📷 AI Receipt Scanner — photo to record, with review
+Upload a receipt photo → the vision model drafts the fields → you review and confirm.
+Duplicates flagged against posted receipts. The original extraction is preserved in the audit note.
+
+| ![Receipt scanner](docs/media/shots/receipt-scanner.png) |
+| --- |
+| *Upload → extract → review extracted vs corrected values → confirm.* |
 
 ---
 
 ## 🔬 The four signature scenarios
 
-The demo seed is engineered so each reconciliation outcome is asserted **to the litre** in the test
-suite (`fixtures/synthetic/scenarios.ts`):
-
-| Scenario | Inputs (synthetic) | Expected outcome | Status after |
+| Scenario | Inputs | Expected outcome | Status |
 | --- | --- | --- | --- |
-| **A — Baseline** | O 10,000 ±100 · D 5,000 ±100 · U 4,000 (±100×2) · C 11,000 ±200 | **R = 0 L**, bounds [−600, +600] | ✅ within uncertainty |
-| **B — Duplicate receipt** | legacy ledger double-enters receipt R-101 | **R = +5,000 L**, bounds [4,300, 5,700] → duplicate candidate | 🔍 discrepancy → after reviewed void: **R = 0 L**, history kept |
-| **C — Missing reading** | no closing dipstick reading | **no residual asserted** — missing field is *named* | ⏸ incomplete → after recording 11,000 L: **R = 0 L** |
-| **D — Unexplained** | O 10,000 · D 5,000 · U 4,000 · C 9,000 | **R = +2,000 L**, bounds [1,400, 2,600] | 🔍 discrepancy → investigation, **cause not determined** |
+| **A Baseline** | O 10,000 · D 5,000 · U 4,000 · C 11,000 | **R = 0 L** in [−600, +600] | ✅ within uncertainty |
+| **B Duplicate** | Same + posted copy of R-101 | **R = +5,000 L** in [4,300, 5,700] | ⚠️ → after void: **R = 0 L** |
+| **C Missing** | No closing reading | **No residual asserted** | ⏸ → after 11,000 L: **R = 0 L** |
+| **D Unexplained** | O 10,000 · D 5,000 · U 4,000 · C 9,000 | **R = +2,000 L** in [1,400, 2,600] | ⚠️ → cause NOT determined |
 
 ---
 
 ## ✨ Feature deep-dive
 
-<div align="center"><img src="docs/media/tank-fill.svg" alt="Cutaway tank filled to 55 percent with sloshing water" width="230"></div>
-
-### Deterministic reconciliation engine (`src/domain` — pure TypeScript)
-The engine is a framework-free, dependency-free layer: no React, no storage, no network. Boundary
-stock must sit at the **exact period instants** (tolerance 0 in `recon-v1.0`); flows count only
-inside `[start, end)`; units convert exactly (1 kL = 1,000 L = 1 m³); NaN/∞/negatives/over-capacity
-are **rejected, never clamped**; negative meter deltas are invalid findings, never absolute-valued;
-cross-site records are refused. Because it is pure, all tests run in plain Node in under a second.
-
-### Conservative uncertainty, by design
-Input bounds are **declared** (±100 L dipstick, ±100 L receipt, meter ±100×2 for a delta) and
-combined by *conservative summation* — inputs from the same operator are correlated, so root-sum-square
-would understate the error. Unknown bounds make the run **provisional** with no interval asserted:
-uncertainty is never invented and never hidden.
-
-### Duplicate detection that never destroys anything
-Exact matches (supplier + receipt + site) and fuzzy candidates (same supplier + volume within 24 h
-with the receipt number missing) become **linked candidates**. A reviewer voids with a documented
-reason; voided rows stay visible with their history; totals recompute; the old run is superseded —
-the before-picture is always inspectable.
+### Deterministic engine (`src/domain` — pure TypeScript)
+Framework-free, dependency-free. Boundary stock at **exact period instants** (tolerance 0);
+flows in `[start, end)`; units convert exactly (1 kL = 1,000 L = 1 m³); NaN/∞/negatives/over-capacity
+**rejected, never clamped**; negative meter deltas are invalid findings, never absolute-valued;
+cross-site records refused. Pure = all tests run in Node in under a second.
 
 ### Anomaly detection — transparent, never accusatory
-Statistical flags over usage intervals: moving-average deviations, sudden meter jumps vs the median
-factor, repeated discrepancies across runs, and reporting gaps. Each anomaly carries
-observed/expected/difference, the detection method, a data-completeness state, an explanation, and
-a verification action. Per-site thresholds are configurable. Dismissals require a recorded reason
-and can be reopened. Every anomaly is labeled **"potential anomaly — requires verification"** and
-never asserts a cause.
+Moving-average deviations, meter jumps vs median factor, repeated discrepancies across runs,
+and reporting gaps. Per-site thresholds stored in workspace config. Dismissals require a
+recorded reason. Dual-lens: one interval can fire both a meter-pair anomaly and a consumption
+deviation. Every anomaly is labeled **"potential anomaly — requires verification"**.
 
-### CSV import you can trust
-A manual, quote-aware CSV parser (no `eval`, output HTML-escaped), explicit date-format selection —
-ambiguous `05/03/2026`-style dates are **rejected** rather than guessed — exact unit conversion,
-row-level errors surfaced in a validate-before-commit preview, exact duplicates skipped, and
-**content-derived idempotency keys**: replaying the same file posts nothing. Readings import blocks
-a *different* value at an already-recorded instant instead of overwriting it.
+### Conservative uncertainty, by design
+Input bounds are **declared** and combined by *conservative summation*. Unknown bounds make
+the run **provisional** with no interval. Wider bounds don't prove better measurement. The
+comparison that matters: **does zero lie inside the residual interval?**
 
-### Demand forecasting — labeled estimates, never mixed into the balance
-Moving-average baseline over metered usage intervals with optional per-weekday adjustment.
-Sufficiency gate: fewer than 7 intervals produces a data-availability warning, not a guess.
-Uncertainty is a linear band from historical deviations — never called a confidence interval.
-Every forecast carries its method, input range, assumptions, and the label
-**"Forecast estimate — not a measured water quantity"**. Forecast values are structurally
-independent of the reconciliation engine (asserted by test).
+### CSV import + receipt scanning you can trust
+Quote-aware CSV parser (no `eval`), explicit date-format selection — ambiguous dates **rejected**.
+AI receipt scanner: photo → vision model → review screen → operator confirms. Original extraction
+preserved in the audit note. Duplicate receipts flagged against posted records.
 
-### IoT smart meter integration — sensor quality checked, operator verified
-Devices register per target (one active per tank/meter) with a calibration offset. Raw readings
-pass sensor-quality checks: capacity bounds, delta plausibility, staleness (<48h). Verified
-readings become standard `TankReading`/`UsageReading` records with quality `"measured"` — the
-engine treats them identically to manual entries. The device never writes directly to the ledger.
+### IoT smart meter integration — sensor quality checked, human verified
+Devices register per tank/meter with calibration offsets. Raw readings pass sensor-quality checks
+(capacity bounds, delta plausibility, staleness) then require **operator verification** before
+entering the ledger. The device never writes directly to the reconciliation input.
 
-### Owned cases + a complete audit trail
-Content-derived stable finding IDs, idempotent investigation opening, ownership with assignees,
-`assertTransition` status guardrails, evidence notes attributed and timestamped, resolutions that
-require outcome + explanation + reviewer, and an audit event for **every** mutation.
+### Demand forecasting — labeled estimates only
+Moving-average baseline with optional weekday adjustment. Sufficiency gate: fewer than 7
+intervals → data-availability warning, not a guess. Every forecast carries its method, input
+range, assumptions, and the label **"Forecast estimate — not a measured water quantity"**.
+Never mixed into the reconciliation balance.
 
-### Multi-site intelligence — comparison without misleading
-Side-by-side reconciliation state across every site. Comparison **reliability is explicit**: sites
+### Notification center — nothing gets missed
+Derived from real workspace state: missing readings, duplicate candidates, unresolved
+discrepancies, open/stale investigations, and anomalies. Stable dedupe keys. Per-notification
+read/snooze/dismiss state persisted. Header bell with unread count.
+
+### Marathi + English interface — your language, your data
+Persisted language switcher (EN | मराठी). Typed locale tables covering navigation, header,
+dashboard, notifications and footer. **Data-language separation**: stored records and operator
+notes keep their original language.
+
+### Multi-site intelligence — compare without misleading
+Side-by-side reconciliation across every site. Comparison **reliability is explicit**: sites
 with incomplete runs or unquantified uncertainty are marked "not comparable" instead of ranked.
-No site is called "worst" from raw residual volume alone. Per-site isolation by design.
 
 ### Real data mode ("My data") — bring your own site
-A first-run onboarding creates your site, tank and meter; then import your own deliveries and
-readings from CSV and set the reconciliation period. Real records live in **their own storage key**,
-separate from the demo; JSON export/import moves or backs them up. Demo and real workspaces can
-never mix.
-
-### 🌐 Marathi + English interface
-A persisted language switcher (EN | मराठी) in the header. Typed locale tables cover navigation,
-header, dashboard, notifications and footer. Data-language separation: stored records and operator
-notes keep their original language — the interface never rewrites source data.
+First-run onboarding creates your site, tank and meter. Import deliveries and readings from
+CSV. Set the reconciliation period from the context strip. JSON export/import for backup.
+Real records live in **their own storage key**, separate from the demo.
 
 ### 🤖 AI assistance — optional, provider-neutral, off by default
-The engine **never** depends on AI. When an operator opts in, AI can (1) restate a run's evidence in
-plain language, (2) draft fields from an operator's raw note, (3) answer questions about the
-workspace via grounded chat, and (4) extract fields from a receipt photo — drafts only; deterministic
-validation still gates every save. It is provider-neutral by design: any OpenAI-compatible endpoint
-(OpenAI, Z.ai, self-hosted gateways) or Anthropic's declared API — **you** supply endpoint, key and
-model from your own plan. Keys stay in your browser (or server env for shared deployments); the
-model can only explain evidence from the run and can never invent a measurement. See
-[docs/AI.md](docs/AI.md).
+The engine **never** depends on AI. Features: finding explanation, note→fields drafting,
+grounded Q&A chat (Ask Bundu), and receipt scanning. Provider-neutral: any OpenAI-compatible
+endpoint or Anthropic's API. Keys stay in your browser. See [docs/AI.md](docs/AI.md).
 
 ### 🐌 Bundu — the workspace guide
-A reactive droplet mascot (from *boond*, a drop of water) on every screen: blinks, bobs, celebrates
-resolved cases, flags discrepancies, and offers the next best action via a tip engine. The trigger
-button is motion-stable; everything stills under the reduce-motion control.
-
-### Accessibility & motion discipline
-A header control stills **every** animation app-wide (and OS-level reduced-motion is honored);
-statuses are icon + label, never color alone; charts and the ambient water on the landing page all
-settle to clean static states when motion is off.
+A reactive droplet mascot on every screen: blinks, bobs, celebrates resolved cases, flags
+discrepancies, and offers the next best action. All stilled by reduce-motion.
 
 ### Honest status, printed on the product itself
-The demo footer, the overview and the reports all state it: *synthetic demonstration data; per-browser
-storage; prototype stage; no water savings claimed; a discrepancy is not proof of theft or leakage.*
+*Synthetic demonstration data; per-browser storage; prototype stage; no water savings claimed;
+a discrepancy is not proof of theft or leakage.*
 
 ---
 
-## 🏗️ Architecture & technology stack
+## 🏗️ Architecture
 
 ```mermaid
 flowchart LR
-  subgraph UI["src/app — Next.js 16 + React 19 + TypeScript + Tailwind v4"]
+  subgraph UI["src/app — Next.js 16 · React 19 · TypeScript · Tailwind v4"]
     L["/ landing"] --- D["/demo guided"]
     W["/workspace: dashboard · overview · ledger · readings · reconciliation · cases · multi-site · reports"]
   end
   subgraph Domain["src/domain — pure TypeScript, zero framework imports"]
-    B["balance.ts — reconciliation + bounds"] --> F["findings.ts — duplicate + balance findings"]
-    AN["anomalies.ts — statistical detection"] --- I["import.ts — CSV pipeline"]
-    IOT["iot.ts — device ingestion + verification"] --- S["state.ts — investigations + audit"]
-    U["units.ts — L / kL / m³, strict validation"]
+    B["balance.ts"] --> F["findings.ts"]
+    AN["anomalies.ts"] --- IOT["iot.ts"]
+    I["import.ts"] --- S["state.ts"]
+    U["units.ts"]
   end
-  subgraph Lib["src/lib — helpers + AI"]
-    N["notifications.ts — derivation + dedupe"] --- MS["multisite.ts — aggregation"]
-    FC["forecast.ts — moving avg + weekday"] --- AIC["ai/ — settings + client + context + vision"]
-    I18N["i18n.tsx + locales — Marathi + English"]
+  subgraph Lib["src/lib"]
+    N["notifications.ts"] --- MS["multisite.ts"]
+    FC["forecast.ts"] --- I18N["i18n.tsx + locales"]
+    DT["datetime.ts"] --- AN["analytics.ts"]
   end
-  subgraph Data["src/data — adapters"]
-    A["DataAdapter interface"] --> LD["LocalStorageAdapter — per-mode, disclosed"]
-    A --> IM["InMemoryAdapter — tests"]
-    SEED["seed.ts — fixtures v1 + initial runs"]
+  subgraph AI["src/lib/ai — optional"]
+    ST["settings.ts"] --> CL["client.ts"]
+    CT["context.ts"] --- VI["vision.ts"]
+    PR["providers.ts"]
+  end
+  subgraph Data["src/data"]
+    A["DataAdapter"] --> LD["LocalStorageAdapter"]
+    A --> IM["InMemoryAdapter"]
+    SEED["seed.ts — 5 sites"]
   end
   UI --> A
   A --> B
+  AIC --> ST
 ```
 
-- **Engine purity** is the architecture: the same `src/domain` code runs in Node tests today and in
-  a future server-side multi-user backend unchanged.
-- **Adapter pattern** means shared persistence (e.g. Postgres + RLS) is a drop-in implementation of
-  one interface — the UI never touches storage directly.
-- **Deployment**: Next.js server build on [Vercel](https://jallekha.vercel.app) (canonical), plus a
-  fully static export for air-gapped/low-cost hosting.
-- **No heavy dependencies**: routing, validation (Zod) and CSS (Tailwind v4) only — charts, tanks,
-  mascots and every animation on this page are hand-built SVG/CSS.
+- **Engine purity**: the same `src/domain` code runs in Node tests today and in a future
+  server-side multi-user backend unchanged.
+- **Adapter pattern**: shared persistence is a drop-in implementation of one interface.
+- **Deployment**: Next.js server build on Vercel (canonical) + static export mirror.
+- **No heavy dependencies**: charts, tanks, mascots — hand-built SVG/CSS.
 
 ## ✅ Quality gates
 
 | Gate | Result | What it protects |
 | --- | --- | --- |
-| `npm test` — Vitest | **97/97** | The four signature scenarios to the litre, duplicate policy, units, import idempotency, reading conflicts, anomaly detection, notification derivation, multi-site aggregation, forecast separation, i18n parity, receipt scanning, IoT ingestion + verification, AI config validation |
-| `node tests/e2e/journeys.spec.mjs` — Playwright | **33/33**, zero console errors | The real user journeys: void → recompute → history, missing-reading completion, import replay, refresh persistence, dashboard rendering, multi-site comparison, AI settings |
-| `npm run typecheck` / `npm run lint` | **0 errors / 0 warnings** | Strict TypeScript + lint across app and domain |
-| `npm run preflight` | **green, 128 files** | Privacy gate: internal project knowledge, private context and env files can never be tracked |
+| `npm test` — Vitest | **97/97** | 4 signature scenarios to the litre, duplicate policy, units, import idempotency, reading conflicts, anomaly detection, notification derivation, multi-site aggregation, forecast separation, i18n parity, receipt scanning, IoT ingestion, AI config |
+| Playwright e2e | **33/33**, zero console errors | Real user journeys: void → recompute → history, missing-reading completion, import replay, refresh persistence, dashboard rendering |
+| `npm run typecheck` | **0 errors** | Strict TypeScript |
+| `npm run lint` | **0 errors, 0 warnings** | ESLint across app and domain |
+| `npm run preflight` | **green, 128 files** | Privacy gate: no private material tracked |
 
-The full, dated run log lives in [docs/VALIDATION.md](docs/VALIDATION.md) — and its limitations are
-stated as plainly as its results: **synthetic data only, no field pilot, no measured savings**. The
-next milestone is a permissioned pilot at one campus or society.
+Full dated run log in [docs/VALIDATION.md](docs/VALIDATION.md). Limitations stated plainly:
+**synthetic data only, no field pilot, no measured savings**.
 
 ## 🚀 Run it locally
 
 ```bash
-# Node LTS (tested on v24.15.0, npm 11.12.1)
 npm install
 npm run dev            # http://localhost:3000
 
-npm test               # 97 tests (domain + lib + AI)
-npm run typecheck      # next typegen + tsc --noEmit
-npm run lint           # eslint
-npm run build          # production build (server mode)
-npm run build:static   # static export -> out/ (what the public demo ships)
+npm test               # 97 tests
+npm run typecheck      # 0 errors
+npm run lint           # 0 errors, 0 warnings
+npm run build          # production build
+npm run build:static   # static export -> out/
 
 npx playwright install chromium
 node tests/e2e/journeys.spec.mjs http://127.0.0.1:3000
 ```
 
-**Configuration (optional — the demo needs none):** AI is off by default and provider-neutral.
-Create a local `.env` (never committed):
-
-```bash
-AI_MODE=disabled          # disabled | live
-AI_PROVIDER=              # openai | anthropic | zai | custom
-AI_MODEL=                 # a model id verified under YOUR plan
-AI_BASE_URL=              # optional override; REQUIRED for zai/custom
-OPENAI_API_KEY=
-ANTHROPIC_API_KEY=
-ZAI_API_KEY=
-```
-
-`src/lib/ai/providers.ts` validates it server-side with clear errors. Full details in [docs/AI.md](docs/AI.md).
+**Configuration (optional):** See [.env.example](.env.example) for AI proxy variables.
+The in-app AI uses the operator's own key from Settings — no server config needed for the demo.
 
 ## 🗺️ Roadmap
 
-Shared multi-user workspaces (Postgres + RLS behind the adapter) · human-factors evaluation with
-real operators · a permissioned pilot kit (operator guide + CSV templates + uncertainty worksheet) ·
-per-site reading tolerance · Marathi deep form-label coverage · CI badge · IoT transport layer
-(MQTT/webhook to feed `ingestReading()`) · PDF receipt scanning. Deliberately **deferred**: ML-based
-forecasting (needs 60+ days of data), municipal water-board integrations, blockchain anything,
-native mobile apps — none of it makes one campus's records trustworthy before the first pilot does.
+Shared multi-user workspaces (Postgres + RLS behind the adapter) · human-factors evaluation ·
+permissioned pilot kit · per-site reading tolerance · Marathi deep form-label coverage · CI badge ·
+IoT transport layer (MQTT/webhook) · PDF receipt scanning. **Deferred**: ML forecasting, municipal
+integrations, blockchain, native mobile — none makes one campus's records trustworthy before the
+first pilot does.
 
 ## 👥 Team SevaForge
 
-<div align="center"><img src="docs/media/team-banner.svg" alt="Team SevaForge — water, conservation, documented truth" width="100%"></div>
+<div align="center"><img src="docs/media/team-banner.svg" alt="Team SevaForge" width="100%"></div>
 
 | | | | |
 |:---:|:---:|:---:|:---:|
 | **Arya Jannawar** | **Siddhant Pardeshi** | **Avani Jannawar** | **Vijay Sahu** |
 | Team Lead | Quality & User Workflow | Engineering & Data Integrity | Research & Validation |
-| Product & the reconciliation domain — the problem, the math, the story | Test gates, e2e journeys and every operator-facing screen | Repository owner — engine, CSV pipeline, data adapters | Field methods, measurement uncertainty and the evidence trail |
+| Product & the reconciliation domain | Test gates, e2e journeys, operator screens | Repository owner — engine, CSV pipeline, data adapters | Field methods, measurement uncertainty, evidence trail |
+
+---
+
+## 🎬 How it all connects
+
+<div align="center"><img src="docs/media/water-cycle.svg" alt="Animated water cycle: Record → Reconcile → Investigate → Resolve → continuous review loop" width="100%"></div>
+
+<div align="center"><img src="docs/media/mascot-wave.svg" alt="Bundu the droplet mascot waving — with sparkles and blinking animation" width="180"></div>
 
 ---
 
 <div align="center">
 
-<img src="docs/media/ending-loop.svg" alt="Problems are everywhere. So are solvers. — an orbiting water loop" width="88%">
+<img src="docs/media/closing-loop.svg" alt="Animated closing: orbiting water drops around the JalLekha message with team credits" width="100%">
 
 **[▶ Open the live demo](https://jallekha.vercel.app/demo) · [▶ Watch the walkthrough](docs/media/jallekha-walkthrough.mp4) · [Explore the workspace](https://jallekha.vercel.app/workspace)**
 

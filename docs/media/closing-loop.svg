@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 200" width="700" height="200">
+<defs>
+  <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#061A24"/>
+    <stop offset="1" stop-color="#0D2835"/>
+  </linearGradient>
+  <radialGradient id="dropg2" cx="0.4" cy="0.4" r="0.8">
+    <stop offset="0" stop-color="#5FE3DD"/>
+    <stop offset="1" stop-color="#3188FF"/>
+  </radialGradient>
+</defs>
+<rect width="700" height="200" fill="url(#bg2)" rx="8"/>
+
+<!-- Orbiting drops -->
+<g>
+  <animateTransform attributeName="transform" type="rotate" values="0,350,100;360,350,100" dur="12s" repeatCount="indefinite"/>
+  <circle cx="350" cy="40" r="7" fill="url(#dropg2)">
+    <animate attributeName="r" values="5;8;5" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="350" cy="160" r="5" fill="#25D8D1" opacity="0.6"/>
+  <circle cx="440" cy="70" r="4" fill="#3188FF" opacity="0.5"/>
+  <circle cx="260" cy="130" r="6" fill="url(#dropg2)" opacity="0.7"/>
+  <circle cx="440" cy="130" r="5" fill="#25D8D1" opacity="0.4"/>
+  <circle cx="260" cy="70" r="4" fill="#3188FF" opacity="0.4"/>
+</g>
+
+<!-- Orbiting rings -->
+<ellipse cx="350" cy="100" rx="120" ry="80" fill="none" stroke="#25D8D1" strokeWidth="0.8" opacity="0.15">
+  <animate attributeName="opacity" values="0.08;0.2;0.08" dur="4s" repeatCount="indefinite"/>
+</ellipse>
+<ellipse cx="350" cy="100" rx="90" ry="60" fill="none" stroke="#3188FF" strokeWidth="0.6" opacity="0.12">
+  <animate attributeName="opacity" values="0.15;0.05;0.15" dur="5s" repeatCount="indefinite"/>
+</ellipse>
+
+<!-- Central text -->
+<text x="350" y="75" text-anchor="middle" font-family="Manrope,sans-serif" font-size="20" font-weight="800" fill="#F5F8F7">JalLekha</text>
+<text x="350" y="98" text-anchor="middle" font-family="Manrope,sans-serif" font-size="12" fill="#25D8D1" font-weight="700">know what came in,</text>
+<text x="350" y="114" text-anchor="middle" font-family="Manrope,sans-serif" font-size="12" fill="#25D8D1" font-weight="700">what was measured,</text>
+<text x="350" y="130" text-anchor="middle" font-family="Manrope,sans-serif" font-size="12" fill="#25D8D1" font-weight="700">and what needs checking.</text>
+
+<!-- Bottom water waves -->
+<path fill="#25D8D1" opacity="0.05">
+  <animate attributeName="d" dur="8s" repeatCount="indefinite"
+    values="M0,170 Q175,155 350,170 T700,170 V200 H0 Z;
+            M0,170 Q175,185 350,170 T700,170 V200 H0 Z;
+            M0,170 Q175,155 350,170 T700,170 V200 H0 Z"/>
+</path>
+<path fill="#3188FF" opacity="0.04">
+  <animate attributeName="d" dur="10s" begin="2s" repeatCount="indefinite"
+    values="M0,180 Q175,170 350,180 T700,180 V200 H0 Z;
+            M0,180 Q175,190 350,180 T700,180 V200 H0 Z;
+            M0,180 Q175,170 350,180 T700,180 V200 H0 Z"/>
+</path>
+
+<!-- Team credit -->
+<text x="350" y="192" text-anchor="middle" font-family="Manrope,sans-serif" font-size="9" fill="#94A3B8">
+  Arya Jannawar · Siddhant Pardeshi · Avani Jannawar · Vijay Sahu — Team SevaForge
+</text>
+
+<!-- Flowing dashes -->
+<line x1="100" y1="100" x2="220" y2="100" stroke="#25D8D1" strokeWidth="1" strokeDasharray="5,4" opacity="0.25">
+  <animate attributeName="stroke-dashoffset" from="18" to="0" dur="1.2s" repeatCount="indefinite"/>
+</line>
+<line x1="480" y1="100" x2="600" y2="100" stroke="#3188FF" strokeWidth="1" strokeDasharray="5,4" opacity="0.25">
+  <animate attributeName="stroke-dashoffset" from="18" to="0" dur="1.2s" repeatCount="indefinite"/>
+</line>
+</svg>
