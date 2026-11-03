@@ -6,7 +6,7 @@
  * silently.
  */
 
-import { useCallback, useContext, useMemo, useState, useSyncExternalStore, createContext } from "react";
+import { useCallback, useContext, useMemo, useSyncExternalStore, createContext } from "react";
 import { en, type LocaleStrings, type TranslationKey } from "./locales/en";
 import { mr } from "./locales/mr";
 

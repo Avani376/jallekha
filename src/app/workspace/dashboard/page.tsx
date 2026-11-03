@@ -11,7 +11,7 @@ import Link from "next/link";
 import { activeRunFor, useWorkspace } from "@/data/store";
 import { STATUS_META } from "@/components/equation-card";
 import { StatusPill, EmptyState, Card, Input, Button, type Tone } from "@/components/ui";
-import { detectAnomalies, configFor, DEFAULT_ANOMALY_CONFIG, isDismissed } from "@/domain/anomalies";
+import { detectAnomalies, configFor, isDismissed } from "@/domain/anomalies";
 import { useState } from "react";
 import { forecastDemand, FORECAST_DEFAULTS, type ForecastResult } from "@/lib/forecast";
 import { IconArrowRight } from "@/components/icons";
@@ -37,7 +37,7 @@ import {
 import { formatLiters, formatSignedLiters } from "@/domain/units";
 
 export default function DashboardPage() {
-  const { state, selectedSiteId, actions } = useWorkspace();
+  const { state, selectedSiteId } = useWorkspace();
   const site = state.sites.find((s) => s.id === selectedSiteId);
   const tank = state.tanks.find((t) => t.siteId === selectedSiteId);
   const meter = state.meters.find((m) => m.siteId === selectedSiteId);
@@ -400,7 +400,8 @@ function ForecastSvg({ intervals, points }: { intervals: { label: string; liters
   const x = (i: number) => pad.l + (i / Math.max(n - 1, 1)) * (W - pad.l - pad.r);
   const y = (v: number) => pad.t + (1 - v / max) * (H - pad.t - pad.b);
 
-  const histPath = intervals.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(p.liters).toFixed(1)}`).join(" ");
+  const _histPath = intervals.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(p.liters).toFixed(1)}`).join(" ");
+  void _histPath;
   const fcPath = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(intervals.length + i).toFixed(1)},${y(p.liters).toFixed(1)}`).join(" ");
   const bandTop = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(intervals.length + i).toFixed(1)},${y(p.high).toFixed(1)}`).join(" ");
   const bandBottomRev = [...points].map((p, i) => `L${x(intervals.length + points.length - 1 - i).toFixed(1)},${y(points[points.length - 1 - i].low).toFixed(1)}`).join(" ");

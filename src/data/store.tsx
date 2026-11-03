@@ -36,7 +36,7 @@ import type {
 import { assertTransition, makeAuditEvent, makeId } from "@/domain/state";
 import { getAdapter } from "./adapter";
 import { DEMO_PERIOD, buildSeedWorkspace, buildEmptyWorkspace, investigationsForRuns } from "./seed";
-import { registerDevice, ingestReading, toLedgerReading, isStale, type IoTDevice, type IoTIngest } from "@/domain/iot";
+import { registerDevice, ingestReading, toLedgerReading, type IoTDevice, type IoTIngest } from "@/domain/iot";
 
 
 /** Tiny external store for the persistent workspace mode selection. */
@@ -203,6 +203,8 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   const adapter = useMemo(() => getAdapter(dataMode), [dataMode]);
 
   const [selectedSiteIdRaw, setSelectedSiteId] = useState<string | null>(null);
+  const [iotDevices, setIotDevices] = useState<IoTDevice[]>([]);
+  const [iotIngests, setIotIngests] = useState<IoTIngest[]>([]);
 
   // The adapter is the external store: server snapshot = fresh workspace for
   // the mode, client snapshot = persisted state. No hydration mismatch.
@@ -765,10 +767,8 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         }));
       },
     };
-  }, [adapter, runReconciliation]);
+  }, [adapter, runReconciliation, iotDevices, iotIngests, state.tanks, state.tankReadings, state.usageReadings]);
 
-  const [iotDevices, setIotDevices] = useState<IoTDevice[]>([]);
-  const [iotIngests, setIotIngests] = useState<IoTIngest[]>([]);
 
   const value = useMemo<WorkspaceStore>(
     () => ({
@@ -785,7 +785,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
       period,
       actions,
     }),
-    [state, mounted, dataMode, setDataMode, reduceMotion, setReduceMotion, selectedSiteId, period, actions],
+    [state, mounted, dataMode, setDataMode, reduceMotion, setReduceMotion, selectedSiteId, period, actions, iotDevices, iotIngests],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

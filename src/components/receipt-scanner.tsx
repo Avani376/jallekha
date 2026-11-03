@@ -10,7 +10,7 @@
 
 import { useState } from "react";
 import { useWorkspace } from "@/data/store";
-import { aiReady, loadAiSettings } from "@/lib/ai/settings";
+import { loadAiSettings } from "@/lib/ai/settings";
 import { scanReceipt, validateScanFile, validateReceiptDraft, type ReceiptDraft } from "@/lib/ai/vision";
 import { toLiters } from "@/domain/units";
 import { istToLocalInput, istToUtc } from "@/lib/datetime";

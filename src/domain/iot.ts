@@ -12,7 +12,7 @@
  */
 
 import type { Tank, TankReading, UsageReading } from "./types";
-import { roundLiters, validateQuantity, QuantityError } from "./units";
+import { roundLiters, validateQuantity } from "./units";
 
 /* ------------------------------ device model ------------------------------ */
 

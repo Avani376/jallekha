@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   registerDevice, ingestReading, toLedgerReading, isStale,
 } from "../../src/domain/iot";
-import type { IoTDevice, IoTIngest } from "../../src/domain/iot";
+import type { IoTDevice } from "../../src/domain/iot";
 import type { Tank, TankReading, UsageReading } from "../../src/domain/types";
 
 const TANK: Tank = { id: "tank-T01", siteId: "site-x", name: "T-01", capacityLiters: 20000 };

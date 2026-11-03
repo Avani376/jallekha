@@ -11,7 +11,7 @@ import { useWorkspace } from "@/data/store";
 import { isStale } from "@/domain/iot";
 
 import { istDate } from "@/lib/datetime";
-import { Button, Card, CardHeader, Field, Input, Select, StatusPill, EmptyState } from "./ui";
+import { Button, Card, Field, Input, Select, StatusPill, EmptyState } from "./ui";
 import { formatLiters } from "@/domain/units";
 
 export function IoTDevicesSection() {
@@ -24,8 +24,6 @@ export function IoTDevicesSection() {
   const pendingIngests = iotIngests.filter(
     (i) => i.siteId === selectedSiteId && i.status === "pending"
   );
-  const now = new Date().toISOString();
-
   const deviceName = (id: string) => iotDevices.find((d) => d.id === id)?.label ?? id;
 
   return (

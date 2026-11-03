@@ -4,7 +4,7 @@
  * Multi-site intelligence: side-by-side reconciliation state across every
  * site in the workspace. Comparison reliability is explicit — sites with
  * incomplete records or unquantified uncertainty are flagged instead of
- * ranked, and no site is called "worst" from raw residual volume alone.
+ * ranked, and no site is called &quot;worst&quot; from raw residual volume alone.
  */
 
 import { useMemo, useState } from "react";
@@ -56,7 +56,7 @@ export default function MultiSitePage() {
       <div>
         <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink">Multi-site intelligence</h1>
         <p className="mt-0.5 max-w-3xl text-[13px] text-slate-500">
-          Reconciliation state across every site in this workspace. Each row is built only from that site's own
+          Reconciliation state across every site in this workspace. Each row is built only from that site&#39;s own
           records — the engine rejects cross-site joins by design, so nothing leaks between societies.
         </p>
       </div>
@@ -131,7 +131,7 @@ export default function MultiSitePage() {
 
       <p className="text-[11.5px] leading-relaxed text-slate-400">
         Comparison caution: sites differ in size, occupancy and measurement quality, so raw volumes are never ranked
-        as "best" or "worst" here. A site whose run is incomplete or whose uncertainty is not quantified is marked not
+        as &quot;best&quot; or &quot;worst&quot; here. A site whose run is incomplete or whose uncertainty is not quantified is marked not
         comparable instead. Recurring discrepancies and anomalies are visible per site on their dashboards.
       </p>
     </div>
@@ -139,15 +139,6 @@ export default function MultiSitePage() {
 }
 
 function SiteRowView({ row }: { row: SiteRow }) {
-  const tone: Tone = !row.runStatus
-    ? "neutral"
-    : row.runStatus === "within-uncertainty"
-      ? "ok"
-      : row.runStatus === "discrepancy"
-        ? "warn"
-        : row.runStatus === "incomplete"
-          ? "review"
-          : "danger";
   return (
     <tr className={row.comparisonReliable ? "hover:bg-slate-50/70" : "bg-slate-50/40"}>
       <td className="px-4 py-2.5">
@@ -184,7 +175,8 @@ function SiteRowView({ row }: { row: SiteRow }) {
   );
 }
 
-function Kpi({ label, value, sub, tone = "neutral" }: { label: string; value: string; sub?: string; tone?: Tone }) {
+function Kpi({ label, value, sub, tone: _tone = "neutral" }: { label: string; value: string; sub?: string; tone?: Tone }) {
+  void _tone;
   return (
     <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3.5 shadow-card">
       <p className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">{label}</p>
