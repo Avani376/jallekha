@@ -10,15 +10,15 @@
 
 [![Live demo](https://img.shields.io/badge/%E2%96%B6_LIVE_DEMO-jallekha.vercel.app-25D8D1?labelColor=061a24&style=for-the-badge)](https://jallekha.vercel.app/demo)
 [![Watch the video](https://img.shields.io/badge/%E2%96%B6_WATCH-6_min_narrated_walkthrough-3188FF?labelColor=061a24&style=for-the-badge)](docs/media/jallekha-walkthrough.mp4)
-[![Tests](https://img.shields.io/badge/tests-55_%2F_55_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
+[![Tests](https://img.shields.io/badge/tests-97_%2F_97_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
 [![Browser checks](https://img.shields.io/badge/e2e-33_%2F_33_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
-[![AI](https://img.shields.io/badge/AI-off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance--optional-provider-neutral-off-by-default)
+[![AI](https://img.shields.io/badge/AI-optional,_off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance--optional-provider-neutral-off-by-default)
 [![Data](https://img.shields.io/badge/demo_data-100%25_synthetic-22414F?labelColor=061a24&style=for-the-badge)](#honest-status-printed-on-the-product-itself)
 
 **Seva First Innovation Challenge · Maharashtra Zone · Sector: Sustainability — Energy, Climate & Others**
 
 <a href="docs/media/jallekha-walkthrough.mp4"><img src="docs/media/video-thumb.jpg" alt="Watch the narrated walkthrough — JalLekha landing page" width="660"></a>
-<sub>▶ **Click the frame to watch the 6-minute narrated walkthrough** — the problem, all four scenarios performed live, every screen, and the team.</sub>
+<sub>▶ **Click the frame to watch the narrated walkthrough** — the problem, all four scenarios performed live, every screen, and the team.</sub>
 
 </div>
 
@@ -89,7 +89,17 @@ lands you directly inside the interesting one. Everything runs in *your* browser
 | --- |
 | *Scenario cards with their expected outcomes printed up-front — the demo teaches before you click.* |
 
-### ② Overview — the equation, live
+### ② Dashboard — the whole engine state in one view
+Hand-built SVG charts (zero charting dependencies, all stilled by the reduce-motion control):
+balance waterfall, cumulative meter trend with delivery markers, deliveries by day, findings mix,
+measurement quality, residual band across runs, and a live tank gauge. Plus anomaly flags and a
+demand forecast — every chart drawn from real stored records.
+
+| ![Dashboard](docs/media/shots/dashboard.png) |
+| --- |
+| *KPIs, balance waterfall, anomalies and forecast — all from persisted records, nothing simulated.* |
+
+### ③ Overview — the equation, live
 The selected site's whole state on one screen: the equation card with the residual verdict, an
 uncertainty interval figure, the tank cutaway, and the findings the run produced.
 
@@ -97,24 +107,26 @@ uncertainty interval figure, the tank cutaway, and the findings the run produced
 | --- |
 | *Scenario B: the raw ledger shows R = +5,000 L — outside [4,300, 5,700] — with the duplicate candidate already linked.* |
 
-### ③ Deliveries — the ledger with a conscience
-Search, filter, sort; manual entry with deterministic validation; and a **validate-before-commit**
-CSV import preview. Duplicate candidates are *pills on the rows*, not delete buttons.
+### ④ Deliveries — the ledger with a conscience
+Search, filter, sort; manual entry with deterministic validation; **validate-before-commit**
+CSV import preview; and an **AI receipt scanner** — upload a photo, the model drafts the fields,
+you review and confirm. Duplicate candidates are *pills on the rows*, not delete buttons.
 
 | ![Delivery ledger](docs/media/shots/ledger.png) |
 | --- |
 | *Both R-101 rows stay visible and posted until a reviewer voids one — with a reason.* |
 
-### ④ Readings — stock and meters, exactly at the boundary
+### ⑤ Readings — stock and meters, exactly at the boundary
 Tank dipstick readings and cumulative meter readings with declared uncertainty and quality labels.
-A decreasing meter delta is **invalid, never absolute-valued**; a missing boundary reading blocks the
-balance instead of being guessed.
+IoT smart devices feed readings through **sensor-quality checks** (capacity bounds, delta
+plausibility, staleness) into a pending queue that requires **operator verification** before
+entering the ledger.
 
 | ![Readings](docs/media/shots/readings.png) |
 | --- |
 | *Boundary instants are labelled; usage = end − start over the same meter and units.* |
 
-### ⑤ Reconciliation — the run, explained
+### ⑥ Reconciliation — the run, explained
 The full run: status precedence, source-by-source provenance for every input, the conservative
 interval figure, a rule-based explanation, and **run history** — corrections create *superseding*
 runs so a reviewer can always see what the ledger looked like *before* the correction.
@@ -123,7 +135,7 @@ runs so a reviewer can always see what the ledger looked like *before* the corre
 | --- |
 | *Scenario B raw state: outside uncertainty, cause not determined — the scope assumption is printed on the result.* |
 
-### ⑥ Cases — findings become owned, evidence-backed work
+### ⑦ Cases — findings become owned, evidence-backed work
 Actionable findings open investigations exactly once. Each case carries an assignee, explicit
 status transitions (open → in review → action required → resolved), a timestamped evidence
 timeline, and a resolution that requires **outcome + explanation + reviewer**. Voiding a duplicate
@@ -133,16 +145,12 @@ auto-resolves its case with the reason attached.
 | --- |
 | *Two open cases on the legacy-ledger week — each with its own suggested next action.* |
 
-### ⑦ Dashboard — records become insight
-Hand-built SVG charts (zero charting dependencies, all stilled by the reduce-motion control):
-balance waterfall, cumulative meter trend with delivery markers, deliveries by day, findings mix,
-measurement quality, residual band across runs, and a live tank gauge.
+### ⑧ Multi-site intelligence — compare without misleading
+Side-by-side reconciliation state across every site in the workspace. Comparison **reliability is
+explicit**: sites with incomplete runs or unquantified uncertainty are marked "not comparable"
+instead of ranked. No site is called "worst" from raw residual volume alone.
 
-| ![Dashboard](docs/media/shots/dashboard.png) |
-| --- |
-| *KPIs and charts drawn from real stored records — nothing simulated.* |
-
-### ⑧ Reports — the documented review
+### ⑨ Reports — the documented review
 A printable documented review that reads correctly **without color or animation**, plus safe CSV
 (formula prefixes neutralized), a JSON review, and a full workspace JSON export/restore for backup
 and device moves.
@@ -176,7 +184,7 @@ The engine is a framework-free, dependency-free layer: no React, no storage, no 
 stock must sit at the **exact period instants** (tolerance 0 in `recon-v1.0`); flows count only
 inside `[start, end)`; units convert exactly (1 kL = 1,000 L = 1 m³); NaN/∞/negatives/over-capacity
 are **rejected, never clamped**; negative meter deltas are invalid findings, never absolute-valued;
-cross-site records are refused. Because it is pure, all 55 tests run in plain Node in under a second.
+cross-site records are refused. Because it is pure, all tests run in plain Node in under a second.
 
 ### Conservative uncertainty, by design
 Input bounds are **declared** (±100 L dipstick, ±100 L receipt, meter ±100×2 for a delta) and
@@ -190,6 +198,14 @@ with the receipt number missing) become **linked candidates**. A reviewer voids 
 reason; voided rows stay visible with their history; totals recompute; the old run is superseded —
 the before-picture is always inspectable.
 
+### Anomaly detection — transparent, never accusatory
+Statistical flags over usage intervals: moving-average deviations, sudden meter jumps vs the median
+factor, repeated discrepancies across runs, and reporting gaps. Each anomaly carries
+observed/expected/difference, the detection method, a data-completeness state, an explanation, and
+a verification action. Per-site thresholds are configurable. Dismissals require a recorded reason
+and can be reopened. Every anomaly is labeled **"potential anomaly — requires verification"** and
+never asserts a cause.
+
 ### CSV import you can trust
 A manual, quote-aware CSV parser (no `eval`, output HTML-escaped), explicit date-format selection —
 ambiguous `05/03/2026`-style dates are **rejected** rather than guessed — exact unit conversion,
@@ -197,10 +213,29 @@ row-level errors surfaced in a validate-before-commit preview, exact duplicates 
 **content-derived idempotency keys**: replaying the same file posts nothing. Readings import blocks
 a *different* value at an already-recorded instant instead of overwriting it.
 
+### Demand forecasting — labeled estimates, never mixed into the balance
+Moving-average baseline over metered usage intervals with optional per-weekday adjustment.
+Sufficiency gate: fewer than 7 intervals produces a data-availability warning, not a guess.
+Uncertainty is a linear band from historical deviations — never called a confidence interval.
+Every forecast carries its method, input range, assumptions, and the label
+**"Forecast estimate — not a measured water quantity"**. Forecast values are structurally
+independent of the reconciliation engine (asserted by test).
+
+### IoT smart meter integration — sensor quality checked, operator verified
+Devices register per target (one active per tank/meter) with a calibration offset. Raw readings
+pass sensor-quality checks: capacity bounds, delta plausibility, staleness (<48h). Verified
+readings become standard `TankReading`/`UsageReading` records with quality `"measured"` — the
+engine treats them identically to manual entries. The device never writes directly to the ledger.
+
 ### Owned cases + a complete audit trail
 Content-derived stable finding IDs, idempotent investigation opening, ownership with assignees,
 `assertTransition` status guardrails, evidence notes attributed and timestamped, resolutions that
 require outcome + explanation + reviewer, and an audit event for **every** mutation.
+
+### Multi-site intelligence — comparison without misleading
+Side-by-side reconciliation state across every site. Comparison **reliability is explicit**: sites
+with incomplete runs or unquantified uncertainty are marked "not comparable" instead of ranked.
+No site is called "worst" from raw residual volume alone. Per-site isolation by design.
 
 ### Real data mode ("My data") — bring your own site
 A first-run onboarding creates your site, tank and meter; then import your own deliveries and
@@ -208,14 +243,25 @@ readings from CSV and set the reconciliation period. Real records live in **thei
 separate from the demo; JSON export/import moves or backs them up. Demo and real workspaces can
 never mix.
 
+### 🌐 Marathi + English interface
+A persisted language switcher (EN | मराठी) in the header. Typed locale tables cover navigation,
+header, dashboard, notifications and footer. Data-language separation: stored records and operator
+notes keep their original language — the interface never rewrites source data.
+
 ### 🤖 AI assistance — optional, provider-neutral, off by default
 The engine **never** depends on AI. When an operator opts in, AI can (1) restate a run's evidence in
-plain language and (2) draft fields from an operator's raw note — drafts only; deterministic
+plain language, (2) draft fields from an operator's raw note, (3) answer questions about the
+workspace via grounded chat, and (4) extract fields from a receipt photo — drafts only; deterministic
 validation still gates every save. It is provider-neutral by design: any OpenAI-compatible endpoint
 (OpenAI, Z.ai, self-hosted gateways) or Anthropic's declared API — **you** supply endpoint, key and
 model from your own plan. Keys stay in your browser (or server env for shared deployments); the
 model can only explain evidence from the run and can never invent a measurement. See
 [docs/AI.md](docs/AI.md).
+
+### 🐌 Bundu — the workspace guide
+A reactive droplet mascot (from *boond*, a drop of water) on every screen: blinks, bobs, celebrates
+resolved cases, flags discrepancies, and offers the next best action via a tip engine. The trigger
+button is motion-stable; everything stills under the reduce-motion control.
 
 ### Accessibility & motion discipline
 A header control stills **every** animation app-wide (and OS-level reduced-motion is honored);
@@ -234,12 +280,18 @@ storage; prototype stage; no water savings claimed; a discrepancy is not proof o
 flowchart LR
   subgraph UI["src/app — Next.js 16 + React 19 + TypeScript + Tailwind v4"]
     L["/ landing"] --- D["/demo guided"]
-    W["/workspace: overview · ledger · readings · reconciliation · cases · reports · dashboard"]
+    W["/workspace: dashboard · overview · ledger · readings · reconciliation · cases · multi-site · reports"]
   end
   subgraph Domain["src/domain — pure TypeScript, zero framework imports"]
     B["balance.ts — reconciliation + bounds"] --> F["findings.ts — duplicate + balance findings"]
-    I["import.ts — CSV pipeline"] --- S["state.ts — investigations + audit"]
+    AN["anomalies.ts — statistical detection"] --- I["import.ts — CSV pipeline"]
+    IOT["iot.ts — device ingestion + verification"] --- S["state.ts — investigations + audit"]
     U["units.ts — L / kL / m³, strict validation"]
+  end
+  subgraph Lib["src/lib — helpers + AI"]
+    N["notifications.ts — derivation + dedupe"] --- MS["multisite.ts — aggregation"]
+    FC["forecast.ts — moving avg + weekday"] --- AIC["ai/ — settings + client + context + vision"]
+    I18N["i18n.tsx + locales — Marathi + English"]
   end
   subgraph Data["src/data — adapters"]
     A["DataAdapter interface"] --> LD["LocalStorageAdapter — per-mode, disclosed"]
@@ -263,10 +315,10 @@ flowchart LR
 
 | Gate | Result | What it protects |
 | --- | --- | --- |
-| `npm test` — Vitest | **55/55** | The four signature scenarios to the litre, duplicate policy, units, import idempotency, reading conflicts, AI config validation |
-| `node tests/e2e/journeys.spec.mjs` — Playwright | **33/33**, zero console errors | The real user journeys: void → recompute → history, missing-reading completion, import replay, refresh persistence |
+| `npm test` — Vitest | **97/97** | The four signature scenarios to the litre, duplicate policy, units, import idempotency, reading conflicts, anomaly detection, notification derivation, multi-site aggregation, forecast separation, i18n parity, receipt scanning, IoT ingestion + verification, AI config validation |
+| `node tests/e2e/journeys.spec.mjs` — Playwright | **33/33**, zero console errors | The real user journeys: void → recompute → history, missing-reading completion, import replay, refresh persistence, dashboard rendering, multi-site comparison, AI settings |
 | `npm run typecheck` / `npm run lint` | **0 errors / 0 warnings** | Strict TypeScript + lint across app and domain |
-| `npm run preflight` | **green, 86 files** | Privacy gate: internal project knowledge, private context and env files can never be tracked |
+| `npm run preflight` | **green, 128 files** | Privacy gate: internal project knowledge, private context and env files can never be tracked |
 
 The full, dated run log lives in [docs/VALIDATION.md](docs/VALIDATION.md) — and its limitations are
 stated as plainly as its results: **synthetic data only, no field pilot, no measured savings**. The
@@ -279,7 +331,7 @@ next milestone is a permissioned pilot at one campus or society.
 npm install
 npm run dev            # http://localhost:3000
 
-npm test               # 55 tests (41 domain + 14 AI-configuration)
+npm test               # 97 tests (domain + lib + AI)
 npm run typecheck      # next typegen + tsc --noEmit
 npm run lint           # eslint
 npm run build          # production build (server mode)
@@ -308,9 +360,10 @@ ZAI_API_KEY=
 
 Shared multi-user workspaces (Postgres + RLS behind the adapter) · human-factors evaluation with
 real operators · a permissioned pilot kit (operator guide + CSV templates + uncertainty worksheet) ·
-per-site reading tolerance · Marathi labels · CI badge. Deliberately **deferred**: OCR, IoT
-ingestion, blockchain anything — none of it makes one campus's records trustworthy before the first
-pilot does.
+per-site reading tolerance · Marathi deep form-label coverage · CI badge · IoT transport layer
+(MQTT/webhook to feed `ingestReading()`) · PDF receipt scanning. Deliberately **deferred**: ML-based
+forecasting (needs 60+ days of data), municipal water-board integrations, blockchain anything,
+native mobile apps — none of it makes one campus's records trustworthy before the first pilot does.
 
 ## 👥 Team SevaForge
 
