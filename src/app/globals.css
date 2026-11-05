@@ -377,6 +377,26 @@ body {
   transform: translateY(0);
 }
 
+
+/* ---------------- Dashboard launch suite ----------------
+ * Entrance + ambient motion for the operator dashboard. Every loop is
+ * transform/opacity only and settles clean under .reduce-motion. */
+@keyframes rise-in { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes kpi-pop { 0% { opacity: 0; transform: translateY(12px) scale(.94); } 55% { opacity: 1; } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes aqua-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes live-ping { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, .45); } 70% { box-shadow: 0 0 0 9px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+@keyframes shimmer-x { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.dash-reveal { opacity: 0; transform: translateY(16px); transition: opacity .65s cubic-bezier(.22, 1, .36, 1), transform .65s cubic-bezier(.22, 1, .36, 1); }
+.dash-reveal.in-view { opacity: 1; transform: none; }
+.kpi-pop { animation: kpi-pop .65s cubic-bezier(.22, 1, .36, 1) both; }
+.aqua-line { height: 3px; border-radius: 999px; background: linear-gradient(90deg, #25d8d1, #3188ff, #25d8d1); background-size: 200% 100%; animation: aqua-flow 5s ease-in-out infinite; }
+.aqua-hairline { height: 2px; background: linear-gradient(90deg, transparent, #25d8d1 30%, #3188ff 70%, transparent); background-size: 200% 100%; animation: aqua-flow 6s linear infinite; opacity: .55; }
+.live-dot { width: 7px; height: 7px; border-radius: 999px; background: #10b981; animation: live-ping 2.2s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .dash-reveal { opacity: 1; transform: none; transition: none; }
+}
+/* ---------------- end dashboard suite ---------------- */
+
 /* Printable review: readable without color or animation */
 @media print {
   .no-print { display: none !important; }

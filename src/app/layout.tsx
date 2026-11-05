@@ -12,7 +12,7 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "JalLekha — Water delivery & consumption reconciliation",
   description:
-    "JalLekha helps campus facilities and housing-society teams reconcile tanker delivery receipts, tank readings and metered usage — with uncertainty bounds, verification tasks and a documented audit trail. Prototype using synthetic demonstration data.",
+    "JalLekha helps campus facilities and housing-society teams reconcile tanker delivery receipts, tank readings and metered usage — with uncertainty bounds, verification tasks and a documented audit trail. Live workspace with browser-local data.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

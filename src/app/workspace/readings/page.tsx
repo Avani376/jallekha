@@ -367,7 +367,7 @@ function ReadingImportModal({ open, onClose, onError }: { open: boolean; onClose
           </Field>
           <div className="flex flex-wrap justify-between gap-2">
             <Button variant="ghost" size="sm" onClick={() => { setCsvText(kind === "tank" ? SAMPLE_TANK_READINGS_CSV : SAMPLE_METER_READINGS_CSV); setFilename(kind + "-readings.csv"); }}>
-              Load sample (synthetic)
+              Load sample data
             </Button>
             <div className="flex gap-2">
               <Button variant="secondary" size="sm" onClick={close}>Cancel</Button>

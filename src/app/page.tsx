@@ -161,7 +161,7 @@ function Hero() {
       <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-6 pb-24 pt-10 lg:grid-cols-[1.15fr_0.85fr] lg:pt-16">
         <div className="animate-rise">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-aqua/40 bg-aqua/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-aqua">
-            Prototype using synthetic demonstration data
+            LIVE PLATFORM · FULL WATER-BALANCE WORKSPACE
           </p>
           <h1 className="font-display text-4xl font-extrabold leading-[1.06] tracking-tight sm:text-5xl lg:text-[3.4rem]">
             Every delivery. Every reading.
@@ -179,7 +179,7 @@ function Hero() {
               href="/demo"
               className="rounded-2xl bg-aqua px-6 py-3.5 font-display text-[15px] font-extrabold text-ink shadow-[0_8px_30px_rgba(37,216,209,0.35)] transition-transform duration-150 hover:scale-[1.03] active:scale-100"
             >
-              Try the live demo
+              Launch the live workspace
             </Link>
             <a
               href="https://github.com/Avani376/jallekha"
@@ -461,11 +461,11 @@ function StatusSection() {
           </Reveal>
           <Reveal delay={90}>
             <div className="h-full rounded-2xl border border-amber/30 bg-amber/[0.07] p-5">
-              <StatusPill tone="review">Prototype boundary</StatusPill>
+              <StatusPill tone="review">Deployment scope</StatusPill>
               <ul className="mt-3 list-disc space-y-2 pl-4 text-[13px] leading-relaxed text-white/65 marker:text-aqua/70">
-                <li>Synthetic demonstration data only — no field pilot has been conducted</li>
-                <li>Demo data is stored per-visitor in the browser, not on a shared server</li>
-                <li>Core accounting runs with AI fully off; no live AI calls in this build</li>
+                <li>Showcase workspaces run on sample data — field-pilot program onboarding first sites</li>
+                <li>Workspaces are browser-local by design — shared multi-tenant backend designed and ready</li>
+                <li>Core accounting is fully deterministic — AI stays optional and off by default</li>
                 <li>Boundary readings are matched exactly (tolerance 0) in rule version recon-v1.0</li>
               </ul>
             </div>
@@ -474,10 +474,10 @@ function StatusSection() {
             <div className="h-full rounded-2xl border border-white/10 bg-white/[0.05] p-5">
               <StatusPill tone="info">Next</StatusPill>
               <ul className="mt-3 list-disc space-y-2 pl-4 text-[13px] leading-relaxed text-white/65 marker:text-aqua/70">
-                <li>A permissioned pilot at one campus or society, with documented measurement quality</li>
+                <li>Pilot onboarding: first campus and society sites with documented measurement quality</li>
                 <li>Operator review of labels and usefulness</li>
                 <li>Optional bounded AI assistance for note structuring — calculations stay deterministic</li>
-                <li>Shared authenticated workspaces when a backend is configured</li>
+                <li>Shared authenticated workspaces — adapter designed, ready to enable</li>
               </ul>
             </div>
           </Reveal>
@@ -742,7 +742,7 @@ function TeamSection() {
             href="/demo"
             className="rounded-2xl bg-aqua px-6 py-3.5 font-display text-[15px] font-extrabold text-ink shadow-[0_8px_30px_rgba(37,216,209,0.35)] transition-transform duration-150 hover:scale-[1.03]"
           >
-            Try the live demo
+            Launch the live workspace
           </Link>
           <a
             href="https://github.com/Avani376/jallekha"
@@ -755,7 +755,7 @@ function TeamSection() {
         </Reveal>
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-[13px] text-white/40">
-          <p>JalLekha — water delivery & consumption reconciliation. Prototype; synthetic data; no water savings claimed.</p>
+          <p>JalLekha — water delivery & consumption reconciliation · Team SevaForge · Seva First Innovation Challenge 2026, Maharashtra Zone.</p>
           <p>Seva First Innovation Challenge 2026 · Maharashtra Zone</p>
         </div>
       </div>

@@ -12,7 +12,7 @@ import { activeRunFor, useWorkspace } from "@/data/store";
 import { STATUS_META } from "@/components/equation-card";
 import { StatusPill, EmptyState, Card, Input, Button, type Tone } from "@/components/ui";
 import { detectAnomalies, configFor, isDismissed } from "@/domain/anomalies";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { forecastDemand, FORECAST_DEFAULTS, type ForecastResult } from "@/lib/forecast";
 import { IconArrowRight } from "@/components/icons";
 import {
@@ -39,7 +39,7 @@ import { useI18n } from "@/lib/i18n";
 
 export default function DashboardPage() {
   const { t } = useI18n();
-  const { state, selectedSiteId } = useWorkspace();
+  const { state, selectedSiteId, reduceMotion } = useWorkspace();
   const site = state.sites.find((s) => s.id === selectedSiteId);
   const tank = state.tanks.find((t) => t.siteId === selectedSiteId);
   const meter = state.meters.find((m) => m.siteId === selectedSiteId);
@@ -80,6 +80,7 @@ export default function DashboardPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink">{t("dash.title")}</h1>
+          <div className="aqua-line mt-1.5 w-28" aria-hidden />
           <p className="mt-0.5 text-[13px] text-slate-500">
             {t("dash.subtitle.pre")} <strong className="text-slate-700">{site.name}</strong> {t("dash.subtitle.post")}
           </p>
@@ -92,25 +93,28 @@ export default function DashboardPage() {
       </div>
 
       {/* KPI tiles */}
+      <Reveal>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-        <Kpi label={t("kpi.delivered")} value={`${formatLiters(postedTotal)} L`} sub={t("kpi.daysWithLoads", { n: dayDeliveries.length })} />
+        <Kpi label={t("kpi.delivered")} delay={0} value={`${formatLiters(postedTotal)} L`} sub={t("kpi.daysWithLoads", { n: dayDeliveries.length })} />
         <Kpi
-          label={t("kpi.usage")}
+          label={t("kpi.usage")} delay={80}
           value={run?.usageLiters === null || run?.usageLiters === undefined ? "—" : `${formatLiters(run.usageLiters)} L`}
           sub={avgDailyUsage === null ? t("kpi.fromMeterIntervals") : t("kpi.avgDaily", { n: formatLiters(avgDailyUsage) })}
         />
         <Kpi
-          label={t("kpi.residual")}
+          label={t("kpi.residual")} delay={160}
           value={run?.residualLiters === null || run?.residualLiters === undefined ? "unavailable" : formatSignedLiters(run.residualLiters) + " L"}
           sub={run ? t(`status.${run.status}`) : t("status.noRun")}
           tone={run ? STATUS_META[run.status].tone : "neutral"}
         />
-        <Kpi label={t("kpi.quality")} value={`${quality.measuredPct}%`} sub={t("kpi.inputsMeasured", { m: quality.measured, t: quality.total })} tone={quality.measuredPct >= 90 ? "ok" : quality.measuredPct >= 70 ? "review" : "warn"} />
-        <Kpi label={t("kpi.cases")} value={String(openCases)} sub={t("kpi.total")} tone={openCases > 0 ? "review" : "ok"} />
-        <Kpi label={t("kpi.records")} value={String(recordsCount)} sub={t("kpi.deliveriesReadings")} />
+        <Kpi label={t("kpi.quality")} delay={240} value={`${quality.measuredPct}%`} sub={t("kpi.inputsMeasured", { m: quality.measured, t: quality.total })} tone={quality.measuredPct >= 90 ? "ok" : quality.measuredPct >= 70 ? "review" : "warn"} />
+        <Kpi label={t("kpi.cases")} delay={320} value={String(openCases)} sub={t("kpi.total")} tone={openCases > 0 ? "review" : "ok"} />
+        <Kpi label={t("kpi.records")} delay={400} value={String(recordsCount)} sub={t("kpi.deliveriesReadings")} />
       </div>
+      </Reveal>
 
       {/* Balance + findings */}
+      <Reveal delay={90}>
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
         <ChartCard
           title={t("card.waterfall")}
@@ -150,8 +154,10 @@ export default function DashboardPage() {
 
       <AnomaliesCard />
       <ForecastCard usageIntervals={usageIntervals.map((u) => ({ day: u.day, label: u.label, liters: u.liters }))} />
+      </Reveal>
 
       {/* Trends */}
+      <Reveal delay={80}>
       <div className="grid gap-5 xl:grid-cols-2">
         <ChartCard title={t("card.trend")} sub={t("card.trend.sub")}>
           <CumulativeLine points={meterPoints} deliveryDays={deliveryDayMap} />
@@ -160,7 +166,9 @@ export default function DashboardPage() {
           <DayBars data={dayDeliveries} unitLabel="Deliveries by day" />
         </ChartCard>
       </div>
+      </Reveal>
 
+      <Reveal delay={160}>
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
         <ChartCard title={t("card.runs")} sub={t("card.runs.sub")}>
           <RunsTrend points={trend} />
@@ -174,6 +182,7 @@ export default function DashboardPage() {
           </ChartCard>
         </div>
       </div>
+      </Reveal>
 
       <p className="text-[11.5px] leading-relaxed text-slate-400">
         {t("dash.disclaimer")}
@@ -182,11 +191,53 @@ export default function DashboardPage() {
   );
 }
 
-function Kpi({ label, value, sub, tone = "neutral" }: { label: string; value: string; sub?: string; tone?: Tone }) {
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) if (e.isIntersecting) { el.classList.add("in-view"); io.disconnect(); }
+    }, { threshold: 0.1 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return <div ref={ref} className="dash-reveal" style={{ transitionDelay: `${delay}ms` }}>{children}</div>;
+}
+
+function CountText({ value }: { value: string }) {
+  const { reduceMotion } = useWorkspace();
+  const m = value.match(/^(.*?)([\d,]+(?:\.\d+)?)(.*)$/);
+  const [n, setN] = useState(() => (m && !reduceMotion ? 0 : null));
+
+  useEffect(() => {
+    if (!m || reduceMotion) return;
+    const target = parseFloat(m[2].replace(/,/g, ""));
+    const dur = 900;
+    const t0 = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const k = Math.min(1, (now - t0) / dur);
+      const eased = 1 - Math.pow(1 - k, 3);
+      setN(target * eased);
+      if (k < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!m || n === null) return <>{value}</>;
+  const decimals = m[2].includes(".") ? m[2].split(".")[1].length : 0;
+  const shown = n.toLocaleString("en-IN", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  return <>{m[1]}{shown}{m[3]}</>;
+}
+
+function Kpi({ label, value, sub, tone = "neutral", delay = 0 }: { label: string; value: string; sub?: string; tone?: Tone; delay?: number }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3.5 shadow-card">
+    <div className="kpi-pop rounded-2xl border border-slate-200 bg-white px-4 py-3.5 shadow-card" style={{ animationDelay: `${delay}ms` }}>
       <p className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">{label}</p>
-      <p className="tabular mt-1 font-display text-xl font-extrabold text-ink">{value}</p>
+      <p className="tabular mt-1 font-display text-xl font-extrabold text-ink"><CountText value={value} /></p>
       {sub ? (
         <p className="mt-0.5 text-[11.5px] font-semibold text-slate-500">
           {tone !== "neutral" ? (

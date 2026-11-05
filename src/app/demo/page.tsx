@@ -26,14 +26,14 @@ export default function DemoPage() {
       <div className="mx-auto max-w-3xl space-y-6 px-6">
         <div className="text-center">
           <p className="inline-flex items-center gap-2 rounded-full border border-aqua/40 bg-aqua/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-aqua">
-            Guided demo · synthetic data · ~3 minutes
+            Guided tour · ~3 minutes · runs in your browser
           </p>
           <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight">
             See why a duplicate receipt and a missing reading need different actions.
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/60">
             Four synthetic sites are pre-loaded below. The calculation is deterministic — the same inputs always
-            produce the same numbers. Your demo data lives only in this browser; “Reset demo” reseeds everything.
+            produce the same numbers. Your workspace lives only in this browser — reset any time for a clean run.
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Button onClick={() => go("site-legacy")}>Start the guided demo</Button>
@@ -122,8 +122,8 @@ export default function DemoPage() {
         </Card>
 
         <p className="pb-8 text-center text-xs text-white/35">
-          Prototype by Team SevaForge — Arya Jannawar, Avani Jannawar, Siddhant Santosh Pardeshi, Vijay Sahu · Seva First Innovation
-          Challenge, Maharashtra Zone 2026. All sites, suppliers, receipts and users are synthetic.
+          JalLekha — built by Team SevaForge: Arya Jannawar, Avani Jannawar, Siddhant Santosh Pardeshi and Vijay Sahu ·
+          Seva First Innovation Challenge, Maharashtra Zone 2026.
         </p>
       </div>
     </div>

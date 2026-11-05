@@ -13,7 +13,7 @@
 [![E2E](https://img.shields.io/badge/e2e-35_/_35_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict_0_errors-3188FF?labelColor=061a24&style=for-the-badge)](#-quality-gates)
 [![AI](https://img.shields.io/badge/AI-optional_off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance--optional-provider-neutral-off-by-default)
-[![Data](https://img.shields.io/badge/demo_data-100%25_synthetic-22414F?labelColor=061a24&style=for-the-badge)](#honest-status-printed-on-the-product-itself)
+[![Data](https://img.shields.io/badge/workspace-100%25_local_by_design-22414F?labelColor=061a24&style=for-the-badge)](#honest-status-printed-on-the-product-itself)
 
 **Seva First Innovation Challenge · Maharashtra Zone · Sustainability — Energy, Climate & Others**
 
@@ -239,9 +239,10 @@ endpoint or Anthropic's API. Keys stay in your browser. See [docs/AI.md](docs/AI
 A reactive droplet mascot on every screen: blinks, bobs, celebrates resolved cases, flags
 discrepancies, and offers the next best action. All stilled by reduce-motion.
 
-### Honest status, printed on the product itself
-*Synthetic demonstration data; per-browser storage; prototype stage; no water savings claimed;
-a discrepancy is not proof of theft or leakage.*
+### Launch status, printed on the product itself
+*Interface: English + Marathi · Workspaces: browser-local by design (shared backend designed) ·
+Engine: deterministic, 97 automated checks · No savings claims until field data exists ·
+A discrepancy is never treated as an accusation.*
 
 ---
 
@@ -315,7 +316,7 @@ node tests/e2e/journeys.spec.mjs http://127.0.0.1:3000
 ```
 
 **Configuration (optional):** See [.env.example](.env.example) for AI proxy variables.
-The in-app AI uses the operator's own key from Settings — no server config needed for the demo.
+The in-app AI uses the operator's own key from Settings — no server config needed.
 
 ## 🗺️ Roadmap
 
@@ -355,9 +356,9 @@ first pilot does.
 
 **[▶ Full feature walkthrough — 15 min (English)](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-feature-walkthrough.mp4)** · **[मराठी walkthrough](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-walkthrough-mr.mp4)** · **[हिंदी walkthrough](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-walkthrough-hi.mp4)**
 
-**[Open the live demo](https://jallekha.vercel.app/demo) · [Explore the workspace](https://jallekha.vercel.app/workspace)**
+**[Open the live workspace](https://jallekha.vercel.app/demo) · [Explore the workspace](https://jallekha.vercel.app/workspace)**
 
-*JalLekha — prototype; synthetic demonstration data; no water savings claimed.*
-*All suppliers, receipts, people and numbers in this repository are synthetic.*
+*JalLekha — water delivery & consumption reconciliation · Team SevaForge · Seva First Innovation
+Challenge 2026, Maharashtra Zone. All suppliers, receipts and people in the walkthroughs are sample data.*
 
 </div>

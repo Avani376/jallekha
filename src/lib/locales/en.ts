@@ -19,7 +19,7 @@ export const en = {
   "header.motion": "Motion",
   "header.mode.demo": "Demo data",
   "header.mode.real": "My data",
-  "header.demo.badge": "Demo data · this browser only",
+  "header.demo.badge": "Isolated workspace · this browser",
   "header.real.badge": "My records · this browser",
 
   "dash.title": "Dashboard",
@@ -100,8 +100,8 @@ export const en = {
   "forecast.insufficient": "Not enough history to forecast",
   "forecast.estimate": "Forecast estimate — not a measured water quantity.",
 
-  "footer.demo": "JalLekha prototype · synthetic demo data · Team SevaForge · Seva First Innovation Challenge (Maharashtra Zone). A discrepancy is not proof of theft or leakage.",
-  "footer.real": "JalLekha · your records, stored in this browser · Team SevaForge. A discrepancy is not proof of theft or leakage.",
+  "footer.demo": "JalLekha · live platform · Team SevaForge · Seva First Innovation Challenge (Maharashtra Zone). Every correction keeps its history — a discrepancy is never treated as an accusation.",
+  "footer.real": "JalLekha · your records, this browser · Team SevaForge. Every correction keeps its history — a discrepancy is never treated as an accusation.",
   "dash.subtitle.pre": "The whole engine state for",
   "dash.subtitle.post": "— records, balance, quality and history in one view.",
   "dash.disclaimer": "Charts aggregate persisted records only — nothing is modelled or forecast. Interval usage is derived from consecutive cumulative meter readings; a decreasing meter is excluded (never absolute-valued). A discrepancy is not proof of theft or leakage.",

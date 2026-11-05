@@ -187,6 +187,7 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         ) : null}
+              <div className="aqua-hairline absolute inset-x-0 bottom-0" aria-hidden />
       </header>
 
       <main id="main" className="mx-auto max-w-7xl px-4 py-6">
@@ -278,7 +279,7 @@ function PeriodEditor({ siteId }: { siteId: string }) {
             change
           </button>
         ) : (
-          <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-400">demo period</span>
+          <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-400">sample period</span>
         )}
       </span>
     );

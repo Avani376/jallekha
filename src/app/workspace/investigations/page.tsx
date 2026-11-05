@@ -317,7 +317,7 @@ function CaseDetail({ id }: { id: string }) {
           </Card>
 
           <p className="text-xs text-slate-400">
-            Site: {site.name} (synthetic). Role actions in this demo are demonstrations, not authentication.
+            Site: {site.name} (synthetic). Role actions are workspace demonstrations, not authentication.
           </p>
         </div>
       </div>

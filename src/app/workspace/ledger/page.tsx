@@ -411,7 +411,7 @@ function ImportModal({ open, onClose }: { open: boolean; onClose: () => void }) 
           </Field>
           <div className="flex flex-wrap justify-between gap-2">
             <Button variant="ghost" size="sm" onClick={() => { setCsvText(SAMPLE_CSV); setFilename("sample-deliveries.csv"); }}>
-              Load sample file (synthetic)
+              Load sample file
             </Button>
             <div className="flex gap-2">
               <Button variant="secondary" size="sm" onClick={close}>Cancel</Button>
