@@ -184,9 +184,6 @@ export default function DashboardPage() {
       </div>
       </Reveal>
 
-      <p className="text-[11.5px] leading-relaxed text-slate-400">
-        {t("dash.disclaimer")}
-      </p>
     </div>
   );
 }
