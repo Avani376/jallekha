@@ -39,8 +39,8 @@ try {
   // ---------- 1. Landing ----------
   await page.goto(BASE + "/", { waitUntil: "domcontentloaded" });
   check("landing: hero headline", await textVisible(page, "A clearer water balance"));
-  check("landing: synthetic-data label", await textVisible(page, "synthetic demonstration data"));
-  check("landing: CTA", (await page.getByRole("link", { name: /Try the live demo/i }).count()) >= 1);
+  check("landing: platform badge", await textVisible(page, "LIVE PLATFORM"));
+  check("landing: CTA", (await page.getByRole("link", { name: /Launch the live workspace/i }).count()) >= 1);
 
   // ---------- 2. Guided demo -> legacy site (Scenario B) ----------
   await page.goto(BASE + "/demo", { waitUntil: "domcontentloaded" });
