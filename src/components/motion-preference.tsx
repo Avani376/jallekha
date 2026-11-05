@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 /**
  * Reduce-motion toggle, placed in the app chrome (not a floating widget).
  * Honors prefers-reduced-motion, persists the user's choice, and disables
@@ -11,7 +13,8 @@ import { IconMotion } from "./icons";
 import { cx } from "./ui";
 
 export function MotionToggle({ onDark = false }: { onDark?: boolean }) {
-  const { reduceMotion, setReduceMotion } = useWorkspace();
+
+  const { t } = useI18n();  const { reduceMotion, setReduceMotion } = useWorkspace();
   return (
     <button
       type="button"
@@ -28,7 +31,7 @@ export function MotionToggle({ onDark = false }: { onDark?: boolean }) {
       )}
     >
       <IconMotion />
-      <span className="hidden sm:inline">{reduceMotion ? "Motion off" : "Motion"}</span>
+      <span className="hidden sm:inline">{reduceMotion ? t("header.motion.off") : t("header.motion")}</span>
     </button>
   );
 }

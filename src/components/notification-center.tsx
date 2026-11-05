@@ -11,6 +11,7 @@ import { useWorkspace } from "@/data/store";
 import { deriveNotifications, unreadCount } from "@/lib/notifications";
 import { Button, Input, cx } from "./ui";
 import { IconClose } from "./icons";
+import { useI18n } from "@/lib/i18n";
 
 const SEV_STYLE: Record<string, string> = {
   high: "border-danger/40 bg-danger-soft text-danger",
@@ -18,13 +19,14 @@ const SEV_STYLE: Record<string, string> = {
   info: "border-water/30 bg-[#e8f1ff] text-water-deep",
 };
 
-const SEV_LABEL: Record<string, string> = {
-  high: "Overdue / blocking",
-  warning: "Needs attention",
-  info: "For awareness",
+const SEV_KEY: Record<string, "notif.high" | "notif.warning" | "notif.info"> = {
+  high: "notif.high",
+  warning: "notif.warning",
+  info: "notif.info",
 };
 
 export function NotificationCenter() {
+  const { t } = useI18n();
   const { state, selectedSiteId, actions } = useWorkspace();
   const [open, setOpen] = useState(false);
   const [dismissFor, setDismissFor] = useState<string | null>(null);
@@ -51,11 +53,11 @@ export function NotificationCenter() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        aria-label={`Notifications (${unread} unread)`}
+        aria-label={t("notif.title") + ` (${unread})`}
         aria-expanded={open}
         className="relative rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-bold text-slate-600 hover:border-slate-400 hover:text-ink"
       >
-        Alerts
+        {t("header.alerts")}
         {unread > 0 ? (
           <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[9px] font-extrabold text-white">
             {unread > 9 ? "9+" : unread}
@@ -69,9 +71,9 @@ export function NotificationCenter() {
           <div className="absolute right-0 top-11 z-50 max-h-[70vh] w-[380px] overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-pop">
             <div className="sticky top-0 flex items-center justify-between border-b border-slate-100 bg-white px-4 py-3">
               <div>
-                <p className="text-[13.5px] font-extrabold text-ink">Notifications</p>
+                <p className="text-[13.5px] font-extrabold text-ink">{t("notif.title")}</p>
                 <p className="text-[11px] font-semibold text-slate-400">
-                  {unread} unread · {list.length} total{snoozedCount > 0 ? ` · ${snoozedCount} snoozed` : ""}
+                  {t("notif.unread", { n: unread, t: list.length })}{snoozedCount > 0 ? ` · ${snoozedCount} ` : ""}
                 </p>
               </div>
               <button onClick={() => setOpen(false)} aria-label="Close notifications" className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-ink">
@@ -81,7 +83,7 @@ export function NotificationCenter() {
 
             {visible.length === 0 ? (
               <p className="px-4 py-8 text-center text-[13px] text-slate-400">
-                Nothing needs attention for this site.
+                {t("notif.none")}
               </p>
             ) : (
               <ul className="divide-y divide-slate-100">
@@ -89,7 +91,7 @@ export function NotificationCenter() {
                   <li key={n.id} className={cx("px-4 py-3", !n.read ? "bg-slate-50/60" : "")}>
                     <div className="flex flex-wrap items-center gap-2">
                       <span className={cx("rounded-full border px-2 py-0.5 text-[10px] font-extrabold", SEV_STYLE[n.severity])}>
-                        {SEV_LABEL[n.severity]}
+                        {t(SEV_KEY[n.severity])}
                       </span>
                       {!n.read ? <span className="h-1.5 w-1.5 rounded-full bg-water" aria-label="unread" /> : null}
                       <span className="ml-auto text-[10.5px] font-semibold text-slate-400">{n.linkLabel}</span>
@@ -102,11 +104,11 @@ export function NotificationCenter() {
                       </a>
                       {!n.read ? (
                         <button onClick={() => markRead(n.id)} className="rounded-lg border border-slate-300 px-2.5 py-1 text-[11px] font-bold text-slate-500 hover:text-ink">
-                          Mark read
+                          {t("btn.markRead")}
                         </button>
                       ) : null}
                       <button onClick={() => snooze(n.id)} className="rounded-lg border border-slate-300 px-2.5 py-1 text-[11px] font-bold text-slate-500 hover:text-ink">
-                        Snooze 24h
+                        {t("btn.snooze")}
                       </button>
                       {dismissFor === n.id ? (
                         <span className="flex items-center gap-1.5">
@@ -123,7 +125,7 @@ export function NotificationCenter() {
                         </span>
                       ) : (
                         <button onClick={() => { setDismissFor(n.id); setReason(""); }} className="rounded-lg border border-slate-300 px-2.5 py-1 text-[11px] font-bold text-slate-400 hover:text-slate-600">
-                          Dismiss
+                          {t("btn.dismiss")}
                         </button>
                       )}
                     </div>

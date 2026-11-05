@@ -28,11 +28,11 @@ const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
   { href: "/workspace/reports", key: "nav.reports" },
 ];
 
-const NAV_GROUP_AT: Record<number, string | null> = {
+const NAV_GROUP_AT: Record<number, TranslationKey | null> = {
   0: null,
-  2: "Records",
-  4: "Review",
-  6: "Compare",
+  2: "nav.group.records",
+  4: "nav.group.review",
+  6: "nav.group.compare",
   7: null,
 };
 
@@ -107,7 +107,7 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
                 onClick={() => requestMode("demo")}
                 className={cx("px-2.5 py-1.5 transition-colors", mode === "demo" ? "bg-ink text-white" : "bg-white text-slate-500 hover:text-ink")}
               >
-                Demo data
+                {t("header.mode.demo")}
               </button>
               <button
                 role="radio"
@@ -115,7 +115,7 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
                 onClick={() => requestMode("real")}
                 className={cx("px-2.5 py-1.5 transition-colors", mode === "real" ? "bg-ink text-white" : "bg-white text-slate-500 hover:text-ink")}
               >
-                My data
+                {t("header.mode.real")}
               </button>
             </div>
             {mode === "demo" ? (
@@ -123,14 +123,14 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
                 className="hidden rounded-full bg-verd-soft px-2.5 py-1 text-[11px] font-bold text-verd xl:inline-block"
                 title="Synthetic demonstration data stored per-visitor in this browser (localStorage). Not a shared server or a pilot system."
               >
-                Demo data · this browser only
+                {t("header.demo.badge")}
               </span>
             ) : (
               <span
                 className="hidden rounded-full bg-amber-soft px-2.5 py-1 text-[11px] font-bold text-amber-deep xl:inline-block"
                 title="Your real records, stored per-browser (localStorage). Use Reports to export or import a workspace JSON backup."
               >
-                My records · this browser
+                {t("header.real.badge")}
               </span>
             )}
             <NotificationCenter />
@@ -154,7 +154,7 @@ function WorkspaceShell({ children }: { children: React.ReactNode }) {
                   {NAV_GROUP_AT[i] !== undefined ? <div aria-hidden className="mx-2 h-4 w-px bg-slate-200" /> : null}
                   {NAV_GROUP_AT[i] ? (
                     <span className="mr-1 hidden select-none text-[10px] font-extrabold uppercase tracking-widest text-slate-300 lg:inline">
-                      {NAV_GROUP_AT[i]}
+                      {t(NAV_GROUP_AT[i]!)}
                     </span>
                   ) : null}
                   <Link

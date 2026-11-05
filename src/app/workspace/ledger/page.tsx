@@ -2,6 +2,7 @@
 
 /**
  * Delivery ledger: manual entry, CSV import with column mapping and a
+KEEP_MARK
  * validate-before-commit preview (valid / error / exact-duplicate /
  * fuzzy-duplicate), search, filters, sorting, and a record detail panel.
  * Flagged records are NEVER removed: a reviewer voids with a reason.
@@ -9,6 +10,7 @@
 
 import { useMemo, useState } from "react";
 import { useWorkspace } from "@/data/store";
+import { useI18n } from "@/lib/i18n";
 import { Card, Button, Field, Input, Select, Textarea, Modal, StatusPill, EmptyState, cx } from "@/components/ui";
 import { buildImportPreview, confirmImport, parseCsv, SAMPLE_CSV, suggestColumnMapping, type ImportPreview } from "@/domain/import";
 import { istDate, istToUtc, istToLocalInput } from "@/lib/datetime";
@@ -23,6 +25,8 @@ import type { Delivery } from "@/domain/types";
 type SortKey = "date-desc" | "date-asc" | "qty-desc" | "qty-asc";
 
 export default function LedgerPage() {
+
+  const { t } = useI18n();
   const { state, selectedSiteId, actions } = useWorkspace();
   const site = state.sites.find((s) => s.id === selectedSiteId)!;
   const tank = state.tanks.find((t) => t.siteId === site.id)!;
@@ -71,9 +75,9 @@ export default function LedgerPage() {
           </p>
         </div>
         <div className="no-print flex gap-2">
-          <Button variant="secondary" size="sm" onClick={() => setScanOpen(true)}><IconCamera /> Scan receipt (AI)</Button>
-          <Button variant="secondary" size="sm" onClick={() => setImportOpen(true)}><IconUpload /> Import CSV</Button>
-          <Button size="sm" onClick={() => setAddOpen(true)}><IconPlus /> Add delivery</Button>
+          <Button variant="secondary" size="sm" onClick={() => setScanOpen(true)}><IconCamera /> {t("btn.scanReceipt")}</Button>
+          <Button variant="secondary" size="sm" onClick={() => setImportOpen(true)}><IconUpload /> {t("btn.importCsv")}</Button>
+          <Button size="sm" onClick={() => setAddOpen(true)}><IconPlus /> {t("btn.addDelivery")}</Button>
         </div>
       </div>
 

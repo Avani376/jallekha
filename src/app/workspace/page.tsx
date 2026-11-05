@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 import { activeRunFor, useWorkspace } from "@/data/store";
 import { EquationCard } from "@/components/equation-card";
 import { TankCutaway } from "@/components/tank-cutaway";
@@ -18,7 +19,8 @@ const INV_TONE: Record<string, Tone> = {
 };
 
 export default function OverviewPage() {
-  const { state, selectedSiteId, actions } = useWorkspace();
+
+  const { t } = useI18n();  const { state, selectedSiteId, actions } = useWorkspace();
   const site = state.sites.find((s) => s.id === selectedSiteId)!;
   const tank = state.tanks.find((t) => t.siteId === site.id)!;
   const run = activeRunFor(state, site.id);
@@ -39,10 +41,10 @@ export default function OverviewPage() {
         </div>
         <div className="no-print flex flex-wrap gap-2">
           <Link href="/workspace/ledger">
-            <Button size="sm" variant="secondary"><IconPlus /> Add delivery</Button>
+            <Button size="sm" variant="secondary"><IconPlus /> {t("btn.addDelivery")}</Button>
           </Link>
           <Link href="/workspace/ledger">
-            <Button size="sm" variant="secondary"><IconUpload /> Import CSV</Button>
+            <Button size="sm" variant="secondary"><IconUpload /> {t("btn.importCsv")}</Button>
           </Link>
           <Button size="sm" variant="secondary" onClick={() => { mascotReact("think", 1400); actions.runReconciliation(site.id); mascotReact("happy", 2000); }}>
             <IconRefresh /> Recompute

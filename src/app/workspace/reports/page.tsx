@@ -12,7 +12,7 @@ import { Button, Card, CardHeader, StatusPill } from "@/components/ui";
 import { EquationCard } from "@/components/equation-card";
 import { formatLiters } from "@/domain/units";
 import { sanitizeCell } from "@/domain/import";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { IconUpload } from "@/components/icons";
 import { istDate } from "@/lib/datetime";
 
@@ -26,13 +26,15 @@ function download(name: string, content: string, type: string) {
   URL.revokeObjectURL(url);
 }
 
+const subscribeNoop = () => () => {};
+
 export default function ReportsPage() {
   const { state, selectedSiteId, mode, actions } = useWorkspace();
   const fileInput = useRef<HTMLInputElement>(null);
   // The generated-at timestamp is client-only: rendering `new Date()` during
   // SSR/prerender hydrated against a stale build-time value (React #418).
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  // useSyncExternalStore: false on the server snapshot, true on the client.
+  const mounted = useSyncExternalStore(subscribeNoop, () => true, () => false);
   const generatedAt = mounted ? istDate(new Date().toISOString()) + " IST" : "—";
   const site = state.sites.find((s) => s.id === selectedSiteId)!;
   const run = activeRunFor(state, site.id);

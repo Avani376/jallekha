@@ -8,6 +8,7 @@
  */
 
 import { useMemo, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useWorkspace } from "@/data/store";
 import { siteRows, totals, type SiteRow } from "@/lib/multisite";
@@ -33,6 +34,7 @@ const STATUS_LABEL: Record<string, string> = {
 type StatusFilter = "all" | "discrepancy" | "incomplete" | "within-uncertainty" | "unreliable";
 
 export default function MultiSitePage() {
+  const { t } = useI18n();
   const { state } = useWorkspace();
   const rows = useMemo(() => siteRows(state), [state]);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -49,12 +51,12 @@ export default function MultiSitePage() {
     return true;
   });
 
-  const t = totals(rows);
+  const sums = totals(rows);
 
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink">Multi-site intelligence</h1>
+        <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink">{t("ms.title")}</h1>
         <p className="mt-0.5 max-w-3xl text-[13px] text-slate-500">
           Reconciliation state across every site in this workspace. Each row is built only from that site&#39;s own
           records — the engine rejects cross-site joins by design, so nothing leaks between societies.
@@ -63,19 +65,19 @@ export default function MultiSitePage() {
 
       {/* KPI row */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-        <Kpi label="Sites" value={String(t.sites)} />
-        <Kpi label="Outside uncertainty" value={String(t.withDiscrepancy)} tone={t.withDiscrepancy > 0 ? "warn" : "ok"} sub="needs verification" />
-        <Kpi label="Incomplete" value={String(t.withIncomplete)} tone={t.withIncomplete > 0 ? "review" : "ok"} sub="readings missing" />
-        <Kpi label="Open cases" value={String(t.openCases)} tone={t.openCases > 0 ? "review" : "ok"} />
-        <Kpi label="Open anomalies" value={String(t.openAnomalies)} tone={t.openAnomalies > 0 ? "review" : "ok"} />
-        <Kpi label="Comparable sites" value={`${t.reliableCount}/${t.sites}`} sub="complete + quantified" />
+        <Kpi label={t("kpi.sites")} value={String(sums.sites)} />
+        <Kpi label={t("status.discrepancy")} value={String(sums.withDiscrepancy)} tone={sums.withDiscrepancy > 0 ? "warn" : "ok"} sub={t("anom.verified")} />
+        <Kpi label={t("status.incomplete")} value={String(sums.withIncomplete)} tone={sums.withIncomplete > 0 ? "review" : "ok"} sub="readings missing" />
+        <Kpi label={t("kpi.cases")} value={String(sums.openCases)} tone={sums.openCases > 0 ? "review" : "ok"} />
+        <Kpi label={t("card.anomalies")} value={String(sums.openAnomalies)} tone={sums.openAnomalies > 0 ? "review" : "ok"} />
+        <Kpi label={t("kpi.comparableSites")} value={`${sums.reliableCount}/${sums.sites}`} sub="complete + quantified" />
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-card">
         <input
-          aria-label="Search sites"
-          placeholder="Search site name…"
+          aria-label={t("ms.searchAria")}
+          placeholder={t("ms.search")}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           className="w-52 rounded-xl border border-slate-300 px-3 py-2 text-[13px]"
@@ -86,15 +88,15 @@ export default function MultiSitePage() {
           onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
           className="rounded-xl border border-slate-300 px-3 py-2 text-[13px]"
         >
-          <option value="all">All statuses</option>
+          <option value="all">{t("ms.allStatuses")}</option>
           <option value="discrepancy">Outside uncertainty</option>
           <option value="incomplete">Incomplete</option>
           <option value="within-uncertainty">Within uncertainty</option>
-          <option value="unreliable">Not comparable</option>
+          <option value="unreliable">{t("ms.notComparable")}</option>
         </select>
         <label className="flex items-center gap-2 text-[13px] font-semibold text-slate-600">
           <input type="checkbox" checked={reliableOnly} onChange={(e) => setReliableOnly(e.target.checked)} className="h-4 w-4 rounded border-slate-300" />
-          Only comparable sites
+          {t("ms.comparableOnly")}
         </label>
         <span className="tabular ml-auto text-xs font-semibold text-slate-400">{filtered.length} of {rows.length} sites</span>
       </div>
@@ -102,7 +104,7 @@ export default function MultiSitePage() {
       {/* Comparison table */}
       <Card className="overflow-hidden">
         {filtered.length === 0 ? (
-          <p className="px-5 py-10 text-center text-[13px] text-slate-400">No sites match the filters.</p>
+          <p className="px-5 py-10 text-center text-[13px] text-slate-400">{t("ms.noMatch")}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-left text-[13px]">
@@ -139,6 +141,7 @@ export default function MultiSitePage() {
 }
 
 function SiteRowView({ row }: { row: SiteRow }) {
+  const { t } = useI18n();
   return (
     <tr className={row.comparisonReliable ? "hover:bg-slate-50/70" : "bg-slate-50/40"}>
       <td className="px-4 py-2.5">
@@ -168,7 +171,7 @@ function SiteRowView({ row }: { row: SiteRow }) {
       <td className="tabular px-3 py-2.5 text-right">{row.openCases > 0 ? <span className="font-bold text-amber-deep">{row.openCases}</span> : "0"}</td>
       <td className="px-3 py-2.5">
         <span className={row.comparisonReliable ? "text-[11.5px] font-semibold text-verd" : "text-[11.5px] font-semibold text-amber-deep"}>
-          {row.comparisonReliable ? "comparable" : "not comparable"}
+          {row.comparisonReliable ? t("ms.comparable") : t("ms.notComparable")}
         </span>
       </td>
     </tr>

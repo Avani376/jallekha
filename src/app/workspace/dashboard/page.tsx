@@ -35,8 +35,10 @@ import {
   usageByInterval,
 } from "@/lib/analytics";
 import { formatLiters, formatSignedLiters } from "@/domain/units";
+import { useI18n } from "@/lib/i18n";
 
 export default function DashboardPage() {
+  const { t } = useI18n();
   const { state, selectedSiteId } = useWorkspace();
   const site = state.sites.find((s) => s.id === selectedSiteId);
   const tank = state.tanks.find((t) => t.siteId === selectedSiteId);
@@ -77,42 +79,42 @@ export default function DashboardPage() {
     <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink">Dashboard</h1>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink">{t("dash.title")}</h1>
           <p className="mt-0.5 text-[13px] text-slate-500">
-            The whole engine state for <strong className="text-slate-700">{site.name}</strong> — records, balance, quality and history in one view.
+            {t("dash.subtitle.pre")} <strong className="text-slate-700">{site.name}</strong> {t("dash.subtitle.post")}
           </p>
         </div>
         <div className="no-print flex gap-2">
-          <Link href="/workspace"><span className="text-[13px] font-bold text-water-deep hover:underline">Equation detail</span></Link>
+          <Link href="/workspace"><span className="text-[13px] font-bold text-water-deep hover:underline">{t("dash.link.equation")}</span></Link>
           <IconArrowRight className="mt-1 text-slate-300" />
-          <Link href="/workspace/reconciliation"><span className="text-[13px] font-bold text-water-deep hover:underline">Reconciliation</span></Link>
+          <Link href="/workspace/reconciliation"><span className="text-[13px] font-bold text-water-deep hover:underline">{t("dash.link.reconciliation")}</span></Link>
         </div>
       </div>
 
       {/* KPI tiles */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-        <Kpi label="Delivered (posted)" value={`${formatLiters(postedTotal)} L`} sub={`${dayDeliveries.length} day(s) with loads`} />
+        <Kpi label={t("kpi.delivered")} value={`${formatLiters(postedTotal)} L`} sub={t("kpi.daysWithLoads", { n: dayDeliveries.length })} />
         <Kpi
-          label="Metered usage (period)"
+          label={t("kpi.usage")}
           value={run?.usageLiters === null || run?.usageLiters === undefined ? "—" : `${formatLiters(run.usageLiters)} L`}
-          sub={avgDailyUsage === null ? "from meter intervals" : `avg ${formatLiters(avgDailyUsage)} L/day`}
+          sub={avgDailyUsage === null ? t("kpi.fromMeterIntervals") : t("kpi.avgDaily", { n: formatLiters(avgDailyUsage) })}
         />
         <Kpi
-          label="Residual"
+          label={t("kpi.residual")}
           value={run?.residualLiters === null || run?.residualLiters === undefined ? "unavailable" : formatSignedLiters(run.residualLiters) + " L"}
-          sub={run?.status.replace(/-/g, " ") ?? "no run"}
+          sub={run ? t(`status.${run.status}`) : t("status.noRun")}
           tone={run ? STATUS_META[run.status].tone : "neutral"}
         />
-        <Kpi label="Data quality" value={`${quality.measuredPct}%`} sub={`${quality.measured}/${quality.total} inputs measured`} tone={quality.measuredPct >= 90 ? "ok" : quality.measuredPct >= 70 ? "review" : "warn"} />
-        <Kpi label="Open cases" value={String(openCases)} sub={`${state.investigations.filter((i) => i.siteId === site.id).length} total`} tone={openCases > 0 ? "review" : "ok"} />
-        <Kpi label="Records" value={String(recordsCount)} sub="deliveries + readings" />
+        <Kpi label={t("kpi.quality")} value={`${quality.measuredPct}%`} sub={t("kpi.inputsMeasured", { m: quality.measured, t: quality.total })} tone={quality.measuredPct >= 90 ? "ok" : quality.measuredPct >= 70 ? "review" : "warn"} />
+        <Kpi label={t("kpi.cases")} value={String(openCases)} sub={t("kpi.total")} tone={openCases > 0 ? "review" : "ok"} />
+        <Kpi label={t("kpi.records")} value={String(recordsCount)} sub={t("kpi.deliveriesReadings")} />
       </div>
 
       {/* Balance + findings */}
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
         <ChartCard
-          title="Water balance — waterfall"
-          sub={run ? `Period ${run.periodStart.slice(0, 10)} → ${run.periodEnd.slice(0, 10)} (IST days) · O + D − U − C` : "Run a reconciliation to draw the balance"}
+          title={t("card.waterfall")}
+          sub={run ? `Period ${run.periodStart.slice(0, 10)} → ${run.periodEnd.slice(0, 10)} (IST days) · ${t("card.waterfall.sub")}` : t("card.noRunSub")}
         >
           {run ? (
             <FlowWaterfall
@@ -124,12 +126,12 @@ export default function DashboardPage() {
             />
           ) : (
             <p className="py-10 text-center text-[13px] text-slate-400">
-              No active run for this site yet.
+              {t("card.noRunBody")}
             </p>
           )}
           {run ? (
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <StatusPill tone={STATUS_META[run.status].tone}>{STATUS_META[run.status].label}</StatusPill>
+              <StatusPill tone={STATUS_META[run.status].tone}>{t(`status.${run.status}`)}</StatusPill>
               {run.boundsLiters ? (
                 <span className="tabular text-xs font-semibold text-slate-500">
                   bounds [{formatLiters(run.boundsLiters.min)}, {formatLiters(run.boundsLiters.max)}] L
@@ -141,8 +143,8 @@ export default function DashboardPage() {
           ) : null}
         </ChartCard>
 
-        <ChartCard title="Findings in the active run" sub="Record issues and balance findings by type">
-          <Donut slices={findings} centerLabel="findings" centerValue={String(findings.reduce((a, s) => a + s.value, 0))} />
+        <ChartCard title={t("card.findings")} sub={t("card.findings.sub")}>
+          <Donut slices={findings} centerLabel={t("card.findings.center")} centerValue={String(findings.reduce((a, s) => a + s.value, 0))} />
         </ChartCard>
       </div>
 
@@ -151,32 +153,30 @@ export default function DashboardPage() {
 
       {/* Trends */}
       <div className="grid gap-5 xl:grid-cols-2">
-        <ChartCard title="Cumulative meter — trend" sub="Dots ringed in teal mark days with a recorded delivery">
+        <ChartCard title={t("card.trend")} sub={t("card.trend.sub")}>
           <CumulativeLine points={meterPoints} deliveryDays={deliveryDayMap} />
         </ChartCard>
-        <ChartCard title="Deliveries by day" sub="Posted tanker loads (as-recorded, voided excluded)">
+        <ChartCard title={t("card.byDay")} sub={t("card.byDay.sub")}>
           <DayBars data={dayDeliveries} unitLabel="Deliveries by day" />
         </ChartCard>
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
-        <ChartCard title="Residual across saved runs" sub="Band = conservative bounds; green bands contain zero; faded = superseded">
+        <ChartCard title={t("card.runs")} sub={t("card.runs.sub")}>
           <RunsTrend points={trend} />
         </ChartCard>
         <div className="grid gap-5">
-          <ChartCard title="Tank level — latest reading" sub={tank.readingMethodNote}>
+          <ChartCard title={t("card.gauge")} sub={tank.readingMethodNote}>
             <LevelGauge fraction={level.fraction} liters={level.liters} capacity={tank.capacityLiters} />
           </ChartCard>
-          <ChartCard title="Measurement quality — active run" sub="Share of inputs that are measured vs estimated vs unknown">
+          <ChartCard title={t("card.quality")}>
             <QualityMixBar measured={quality.measured} estimated={quality.estimated} unknown={quality.unknown} />
           </ChartCard>
         </div>
       </div>
 
       <p className="text-[11.5px] leading-relaxed text-slate-400">
-        Charts aggregate persisted records only — nothing is modelled or forecast. Interval usage is derived from
-        consecutive cumulative meter readings; a decreasing meter is excluded (never absolute-valued). A discrepancy is
-        not proof of theft or leakage.
+        {t("dash.disclaimer")}
       </p>
     </div>
   );
@@ -203,6 +203,7 @@ function Kpi({ label, value, sub, tone = "neutral" }: { label: string; value: st
 /* ------------------------------- Anomalies -------------------------------- */
 
 function AnomaliesCard() {
+  const { t } = useI18n();
   const { state, selectedSiteId, actions } = useWorkspace();
   const cfg = configFor(state, selectedSiteId);
   const all = detectAnomalies(state, selectedSiteId, cfg);
@@ -218,14 +219,13 @@ function AnomaliesCard() {
     <Card className="print-card">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h3 className="text-[14px] font-bold tracking-tight text-ink">Potential anomalies</h3>
+          <h3 className="text-[14px] font-bold tracking-tight text-ink">{t("card.anomalies")}</h3>
           <p className="mt-0.5 text-xs text-slate-500">
-            Transparent statistical flags over your records — each one requires verification and is never a
-            conclusion. Separate from the deterministic balance.
+            {t("card.anomalies.sub")} {t("card.anomalies.sub2")}
           </p>
         </div>
         <Button size="sm" variant="ghost" onClick={() => setShowConfig(!showConfig)}>
-          {showConfig ? "Hide thresholds" : "Thresholds"}
+          {showConfig ? t("anom.hideThresholds") : t("anom.thresholds")}
         </Button>
       </div>
 
@@ -339,21 +339,21 @@ function AnomaliesCard() {
 /* ------------------------------- Forecast --------------------------------- */
 
 function ForecastCard({ usageIntervals }: { usageIntervals: { day: string; label: string; liters: number }[] }) {
-  const [horizon, setHorizon] = useState(7);
+
+  const { t } = useI18n();  const [horizon, setHorizon] = useState(7);
   const result: ForecastResult = forecastDemand(usageIntervals, { ...FORECAST_DEFAULTS, horizonDays: horizon });
 
   return (
     <Card className="print-card">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h3 className="text-[14px] font-bold tracking-tight text-ink">Water demand forecast</h3>
+          <h3 className="text-[14px] font-bold tracking-tight text-ink">{t("card.forecast")}</h3>
           <p className="mt-0.5 text-xs text-slate-500">
-            Moving average over recent metered intervals, with a weekday adjustment. Estimates only — never mixed
-            into the reconciliation balance.
+            {t("card.forecast.sub")}
           </p>
         </div>
         <label className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-          Horizon
+          {t("forecast.horizon")}
           <select
             aria-label="Forecast horizon days"
             value={horizon}
@@ -369,7 +369,7 @@ function ForecastCard({ usageIntervals }: { usageIntervals: { day: string; label
 
       {!result.sufficient ? (
         <div className="rounded-xl border border-dashed border-amber/50 bg-amber-soft px-4 py-6 text-center">
-          <p className="text-[13px] font-bold text-amber-deep">Not enough history to forecast</p>
+          <p className="text-[13px] font-bold text-amber-deep">{t("forecast.insufficient")}</p>
           <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-amber-deep/80">{result.reason}</p>
         </div>
       ) : (
@@ -380,8 +380,7 @@ function ForecastCard({ usageIntervals }: { usageIntervals: { day: string; label
             <p><strong className="text-slate-600">Input range:</strong> {result.assumptions.historyRange} ({result.assumptions.historyIntervals} intervals)</p>
             <p className="sm:col-span-2"><strong className="text-slate-600">Assumptions:</strong> demand continues at recent metered levels{result.assumptions.weekdayAdjustment ? ", adjusted by weekday pattern from the last 4 weeks" : ""}. {result.assumptions.stabilityNote}</p>
             <p className="sm:col-span-2 rounded-lg bg-amber-soft px-3 py-2 font-semibold text-amber-deep">
-              Forecast estimate — not a measured water quantity. Generated from recorded data only; forecasts never
-              enter the reconciliation balance.
+              {t("forecast.estimate")}
             </p>
           </div>
         </div>
