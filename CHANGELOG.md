@@ -4,6 +4,25 @@ All notable changes to JalLekha are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [SemVer](https://semver.org/).
 
+## [1.5.0] - 2026-11-04
+
+Walkthrough videos in three languages; retired the original quick tour.
+
+### Added
+- **Marathi narration walkthrough** (`docs/media/jallekha-walkthrough-mr.mp4`)
+  — recorded with the interface switched to Marathi (the language switcher
+  feature demonstrated live), covering every feature: the problem, all four
+  signature scenarios, cases, CSV import, AI receipt scanner, notification
+  center, multi-site comparison, demand forecasting, IoT meter verification,
+  reports, testing and the team credits.
+- **Hindi narration walkthrough** (`docs/media/jallekha-walkthrough-hi.mp4`)
+  — the same complete tour with the English interface.
+
+### Removed
+- `docs/media/jallekha-walkthrough.mp4` (the original 6-minute quick tour)
+  — superseded by the 15-minute English walkthrough; README video section
+  now lists all three languages.
+
 ## [1.4.1] - 2026-11-04
 
 Receipt-scanner reachability fix: the feature existed end to end but had no

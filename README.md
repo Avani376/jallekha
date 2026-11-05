@@ -12,8 +12,8 @@
 [![Tests](https://img.shields.io/badge/tests-97_/_97_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
 [![E2E](https://img.shields.io/badge/e2e-35_/_35_passing-0E8A5F?labelColor=061a24&style=for-the-badge)](#-quality-gates)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict_0_errors-3188FF?labelColor=061a24&style=for-the-badge)](#-quality-gates)
-[![AI](https://img.shields.io/badge/AI-optional_off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance)
-[![Data](https://img.shields.io/badge/demo_data-100%25_synthetic-22414F?labelColor=061a24&style=for-the-badge)](#-honest-status)
+[![AI](https://img.shields.io/badge/AI-optional_off_by_default-8A5A00?labelColor=061a24&style=for-the-badge)](#-ai-assistance--optional-provider-neutral-off-by-default)
+[![Data](https://img.shields.io/badge/demo_data-100%25_synthetic-22414F?labelColor=061a24&style=for-the-badge)](#honest-status-printed-on-the-product-itself)
 
 **Seva First Innovation Challenge · Maharashtra Zone · Sustainability — Energy, Climate & Others**
 
@@ -353,7 +353,7 @@ first pilot does.
 
 <a href="https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-feature-walkthrough.mp4"><img src="docs/media/video-thumb.jpg" alt="Frame from the walkthrough video: the JalLekha landing hero with delivery receipts, tank gauge and the balance equation" width="640"></a>
 
-**[▶ Watch the full feature walkthrough — 15 min](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-feature-walkthrough.mp4) · [6-minute quick tour](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-walkthrough.mp4)**
+**[▶ Full feature walkthrough — 15 min (English)](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-feature-walkthrough.mp4)** · **[मराठी walkthrough](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-walkthrough-mr.mp4)** · **[हिंदी walkthrough](https://github.com/Avani376/jallekha/blob/main/docs/media/jallekha-walkthrough-hi.mp4)**
 
 **[Open the live demo](https://jallekha.vercel.app/demo) · [Explore the workspace](https://jallekha.vercel.app/workspace)**
 
